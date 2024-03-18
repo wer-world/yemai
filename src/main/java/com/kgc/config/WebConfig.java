@@ -24,6 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
                 "/user/login",
                 "/user/register",
                 "/replay/getRandom",
+                "/category/**",
                 "/error"
         };
         // 拦截器开放登录与注册接口
