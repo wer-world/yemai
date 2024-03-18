@@ -1,16 +1,11 @@
 package com.kgc.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.kgc.constant.EasyBuyConstant;
 import com.kgc.entity.Message;
 import com.kgc.entity.User;
 import com.kgc.service.UserService;
-import com.kgc.service.UserService;
-import com.kgc.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,33 +40,23 @@ public class UserController {
     }
 
     @RequestMapping("register")
-    public Message regist(@RequestBody Map map){
+    public Message register(@RequestBody Map<String, Object> map){
         Object userObj  = map.get("user");
         User user = JSON.parseObject(JSON.toJSONString(userObj),User.class);
-        Message msg = userService.registUser(user);
-        return msg;
+        return userService.register(user);
     }
 
 
     @RequestMapping("checkLoginName")
-    public Message checkLoginName(@RequestBody Map map){
+    public Message checkLoginName(@RequestBody Map<String, Object> map){
         String loginName = (String)map.get("loginName") ;
-        Message msg = userService.checkLoginName(loginName);
-        return msg;
+        return userService.checkLoginName(loginName);
     }
 
     @RequestMapping("checkLogin")
-    public Message checkLogin(@RequestBody Map map){
+    public Message checkLogin(@RequestBody Map<String, Object> map){
         String loginName = (String)map.get("loginName") ;
-        Message msg = userService.checkLogin(loginName);
-        return msg;
-    }
-    @RequestMapping("loginCheck")
-    public Message loginCheck(@RequestBody Map map,HttpServletResponse response){
-        String loginName = (String)map.get("loginName") ;
-        String password = (String)map.get("password") ;
-        Message msg = userService.loginCheck(loginName,password);
-        return msg;
+        return userService.checkLogin(loginName);
     }
 
     @GetMapping("delUser")

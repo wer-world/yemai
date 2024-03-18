@@ -20,7 +20,7 @@ logging:
   level:
     root: debug
 replay:
-  maxRandom: 100
+  maxRandom: 10
   minRandom: 20
 mail:
   host: smtp.qq.com

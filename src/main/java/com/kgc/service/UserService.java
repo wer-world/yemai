@@ -26,11 +26,19 @@ public interface UserService {
      */
     Message register(User user);
 
-    Message registUser(User user);
-
+    /**
+     * 检查用户登录名
+     *
+     * @param loginName 需要校验的用户名
+     * @return 返回消息类
+     */
     Message checkLoginName(String loginName);
 
+    /**
+     * 登录检查(可优化，一般登录不需要失焦校验，避免性能浪费)
+     *
+     * @param loginName 需要登录的用户名
+     * @return 返回消息类
+     */
     Message checkLogin(String loginName);
-
-    Message loginCheck(String loginName, String password);
 }
