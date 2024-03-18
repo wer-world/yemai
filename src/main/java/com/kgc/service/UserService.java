@@ -25,4 +25,12 @@ public interface UserService {
      * @return 返回消息类
      */
     Message register(User user);
+
+    Message registUser(User user);
+
+    Message checkLoginName(String loginName);
+
+    Message checkLogin(String loginName);
+
+    Message loginCheck(String loginName, String password);
 }
