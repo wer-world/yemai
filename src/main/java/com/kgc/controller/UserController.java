@@ -1,14 +1,10 @@
 package com.kgc.controller;
 
-import com.kgc.constant.EasyBuyConstant;
 import com.kgc.entity.Message;
 import com.kgc.entity.User;
-import com.kgc.util.JWTUtil;
+import com.kgc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -24,22 +20,26 @@ import javax.servlet.http.HttpServletResponse;
 public class UserController {
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private UserService userService;
 
-    @RequestMapping("login")
-    public Message login(User user, HttpServletResponse response) {
-        // 1、用户登录业务
-        // 2、判断登录状态
+    @PostMapping("login")
+    public Message login(@RequestBody User user, HttpServletResponse response) {
+        Message message = userService.login(user);
         // 3、成功
-        if (true) {
-            String token = JWTUtil.getToken(user);
-            ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-            operations.set(token, token, EasyBuyConstant.TOKEN_OVER_HOURS);
-            Cookie cookie = new Cookie("token", token);
-            response.addCookie(cookie);
+        if ("200".equals(message.getCode())) {
+            response.addCookie((Cookie) message.getData());
             return Message.success();
         }
-
         return Message.error();
+    }
+
+    @PostMapping("register")
+    public Message register(@RequestBody User user) {
+        return null;
+    }
+
+    @GetMapping("delUser")
+    public Message delUser(User user) {
+        return Message.success();
     }
 }

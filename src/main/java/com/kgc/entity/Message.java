@@ -33,4 +33,12 @@ public class Message {
     public static Message error(String message) {
         return new Message("200", message, null);
     }
+
+    public static Message tokenError(String message) {
+        return new Message("201", message, null);
+    }
+
+    public static Message illegalRequest() {
+        return new Message("202", "非法请求,请正常访问!", null);
+    }
 }

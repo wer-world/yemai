@@ -23,6 +23,8 @@ public class WebConfig implements WebMvcConfigurer {
         String[] excludeStr = new String[]{
                 "/user/login",
                 "/user/register",
+                "/replay/getRandom",
+                "/error"
         };
         // 拦截器开放登录与注册接口
         registry.addInterceptor(loginInterceptor).excludePathPatterns(excludeStr);

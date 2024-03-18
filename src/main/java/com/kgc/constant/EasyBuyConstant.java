@@ -4,7 +4,7 @@ package com.kgc.constant;
  * 易买网常量类
  *
  * @Author: 魏小可
- * @Date: 2024-03-17-23:03
+ * @Date: 2024-03-18-13:52
  */
 public class EasyBuyConstant {
     public static final String TOKEN_SIGN = "EasyBuyNet"; // 令牌签名
