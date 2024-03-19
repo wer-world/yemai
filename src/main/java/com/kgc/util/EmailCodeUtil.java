@@ -11,8 +11,8 @@ public final class EmailCodeUtil {
     public static Session createSession() {
 
         //	账号信息
-        String username = "2358560084@qq.com";//	邮箱发送账号
-        String password = "zijwdlyltnwqdihe";//	邮箱授权码
+        String username = "1348466224@qq.com";//	邮箱发送账号
+        String password = "usrjvofaiemphcdj";//	邮箱授权码
 
         //	创建一个配置文件，并保存
         Properties props = new Properties();

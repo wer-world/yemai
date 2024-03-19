@@ -41,4 +41,6 @@ public interface UserService {
      * @return 返回消息类
      */
     Message checkLogin(String loginName);
+    Message findPsw(User user);
+    Message identityCheck(String identityCode);
 }
