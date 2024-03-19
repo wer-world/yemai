@@ -54,9 +54,11 @@ public class UserServiceImpl implements UserService {
             message = new Message("400", "fail", null);
             return message;
         }
-        userMapper.registerUser(user);
-        message = new Message("200", "success", null);
-        return message;
+        int count = userMapper.registerUser(user);
+        if (count == 1){
+            return Message.success();
+        }
+        return Message.error();
     }
 
     @Override
@@ -89,5 +91,29 @@ public class UserServiceImpl implements UserService {
             message = new Message("400", "该账号不存在", user);
         }
         return message;
+    }
+
+    @Override
+    public Message findPsw(User user) {
+        if (user == null){
+            return  Message.error();
+        }
+        int count = userMapper.findPsw(user);
+        if (count == 1){
+            return Message.success();
+        }
+        return Message.error();
+    }
+
+    @Override
+    public Message identityCheck(String identityCode) {
+        if (identityCode == null || "".equals(identityCode)){
+            return Message.error();
+        }
+        User user = userMapper.identityCheck(identityCode);
+        if (user == null){
+            return Message.success(user);
+        }
+        return Message.error();
     }
 }

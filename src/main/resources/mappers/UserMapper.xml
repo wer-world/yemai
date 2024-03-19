@@ -27,4 +27,17 @@
             </if>
         </where>
     </select>
+    <select id="identityCheck" resultType="User">
+        select id,loginName,userName,password,sex,identityCode,email,mobile,type,isDelete
+        from easybuy_user
+        <where>
+            isDelete = 0
+            <if test="identityCode!=null and identityCode!=''">
+                and identityCode = #{identityCode}
+            </if>
+        </where>
+    </select>
+    <update id="findPsw">
+        update easybuy_user set password=#{password} where loginName=#{loginName}
+    </update>
 </mapper>

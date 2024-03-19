@@ -4,12 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.kgc.entity.Message;
 import com.kgc.entity.User;
 import com.kgc.service.UserService;
+import com.kgc.util.EmailCodeUtil;
+import com.kgc.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -23,7 +29,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("user")
 public class UserController {
-
+    @Autowired
+    private RedisUtil redisUtil;
     @Autowired
     private UserService userService;
 
@@ -62,5 +69,59 @@ public class UserController {
     @GetMapping("delUser")
     public Message delUser(User user) {
         return Message.success();
+    }
+
+    /**
+     * 发送邮箱
+     *
+     * @param email
+     */
+    @RequestMapping("/sendEmailCode")
+    public Message sendEmailCode(String email) {
+        Session session = EmailCodeUtil.createSession();
+        //	创建邮件对象
+        MimeMessage message = new MimeMessage(session);
+        String sixNum = EmailCodeUtil.getSixNum();
+        try {
+            message.setSubject("主题");
+            message.setText(sixNum);
+            message.setFrom(new InternetAddress("1348466224@qq.com"));
+            message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(email));
+            Transport.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        redisUtil.setValueToRedis(sixNum,sixNum);
+        return Message.success();
+    }
+    @RequestMapping("checkEmailCode")
+    public Message checkEmailCode(String code) {
+        if (code == null || "".equals(code)){
+            return Message.error("请填写验证码");
+        }
+        String valueForRedis = redisUtil.getValueForRedis(code);
+        if (valueForRedis == null || "".equals(valueForRedis)){
+            return Message.error("验证失败");
+        }
+        return Message.success("验证成功");
+    }
+    @RequestMapping("findPsw")
+    public Message findPsw(@RequestBody Map map) {
+        Object userObj = map.get("user");
+        User user = JSON.parseObject(JSON.toJSONString(userObj),User.class);
+        if (user == null || "".equals(user)){
+            return Message.error();
+        }
+        Message message = userService.findPsw(user);
+        return message;
+    }
+    @RequestMapping("identityCheck")
+    public Message identityCheck(@RequestBody Map map) {
+        String identityCode =(String)map.get("identityCode");
+        if (identityCode == null || "".equals(identityCode)){
+            return Message.error();
+        }
+        Message message = userService.identityCheck(identityCode);
+        return message;
     }
 }
