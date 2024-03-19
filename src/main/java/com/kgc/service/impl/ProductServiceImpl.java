@@ -1,6 +1,6 @@
 package com.kgc.service.impl;
 
-import com.kgc.config.ProductESRepository;
+import com.kgc.util.ProductESRepositoryUtil;
 import com.kgc.dao.ProductDao;
 import com.kgc.entity.Message;
 import com.kgc.entity.Page;
@@ -51,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
     private ElasticsearchRestTemplate template;
 
     @Autowired
-    private ProductESRepository productESRepository;
+    private ProductESRepositoryUtil productESRepository;
 
     @Override
     public Boolean isNotInitEs() {

@@ -1,4 +1,4 @@
-package com.kgc.config;
+package com.kgc.init;
 
 import com.kgc.util.ReplayUtil;
 import org.slf4j.Logger;

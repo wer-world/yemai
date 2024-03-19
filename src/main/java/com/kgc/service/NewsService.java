@@ -6,5 +6,9 @@ import com.kgc.entity.News;
 import java.util.List;
 
 public interface NewsService {
-    public Message getNewsList();
+    /**
+     * 获取新闻资讯列表
+     * @return 返回消息类
+     */
+    Message getNewsList();
 }

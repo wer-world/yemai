@@ -1,4 +1,4 @@
-package com.kgc.config;
+package com.kgc.util;
 
 import com.kgc.entity.Product;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
@@ -9,5 +9,5 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
  * @Author: 魏小可
  * @Date: 2024-03-19-10:01
  */
-public interface ProductESRepository extends ElasticsearchRepository<Product, String> {
+public interface ProductESRepositoryUtil extends ElasticsearchRepository<Product, String> {
 }

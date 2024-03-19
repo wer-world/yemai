@@ -14,7 +14,6 @@ public class NewsController {
 
     @RequestMapping("getNewsList")
     public Message getNewsList(){
-        Message message =newsService.getNewsList();
-        return  message;
+        return newsService.getNewsList();
     }
 }

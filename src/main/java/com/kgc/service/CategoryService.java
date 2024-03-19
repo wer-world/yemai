@@ -10,5 +10,11 @@ import java.util.List;
  * @Description:
  */
 public interface CategoryService {
+    /**
+     * 分类列表查询
+     *
+     * @param category 分类对象
+     * @return 返回分类列表
+     */
     List<Category> getCategoryList(Category category);
 }
