@@ -1,5 +1,6 @@
 package com.kgc.controller;
 
+import com.kgc.entity.Category;
 import com.kgc.entity.Message;
 import com.kgc.entity.Product;
 import com.kgc.service.ProductService;

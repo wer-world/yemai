@@ -70,24 +70,27 @@ public interface ProductService {
     Message delProduct(Product product);
 
     /**
-     * 商品id
-     * @param id
-     * @return
+     * 通过商品id查询商品
+     *
+     * @param product 商品id
+     * @return 返回对应商品
      */
-    public Product getProductById(Product product);
+    Product getProductById(Product product);
 
     /**
-     * 商品id
-     * @param product
-     * @return
+     * 根据商品id获取同类商品
+     *
+     * @param product 商品id
+     * @return 返回商品列表
      */
-    public List<Product> getSimilarProducts(Product product);
+    List<Product> getSimilarProducts(Product product);
 
     /**
-     * 前端传一级分类的id
-     * @param category
-     * @return
+     * 通过一级id获取商品
+     *
+     * @param category 前端传一级分类的id
+     * @return 返回商品列表
      */
-    public List<Product> getProductsByHigHestId(Category category);
+    List<Product> getProductsByHigHestId(Category category);
 
 }
