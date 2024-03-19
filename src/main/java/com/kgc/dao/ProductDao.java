@@ -1,5 +1,6 @@
 package com.kgc.dao;
 
+import com.kgc.entity.Category;
 import com.kgc.entity.Product;
 
 import java.util.List;
@@ -50,4 +51,10 @@ public interface ProductDao {
      * @return
      */
     Product getProduct(Product product);
+
+    Product getProductById(Product product);
+
+    List<Product> getSimilarProducts(Product product);
+
+    List<Product> getProductsByHigHestId(Category category);
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.List;
 
 /**
  * 商品管理控制类
@@ -46,4 +47,18 @@ public class ProductController {
         return productService.delProduct(product);
     }
 
+    @RequestMapping("getProductById")
+    public Product getProductById(@RequestBody Product product){
+        return productService.getProductById(product);
+    };
+
+    @RequestMapping("getSimilarProducts")
+    public List<Product> getSimilarProducts(@RequestBody Product product){
+        return productService.getSimilarProducts(product);
+    };
+
+    @RequestMapping("getProductsByHigHestId")
+    public List<Product> getProductsByHigHestId(@RequestBody Category category){
+        return productService.getProductsByHigHestId(category);
+    }
 }

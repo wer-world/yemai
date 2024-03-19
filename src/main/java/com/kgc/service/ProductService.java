@@ -1,9 +1,11 @@
 package com.kgc.service;
 
 import com.kgc.entity.Message;
+import com.kgc.entity.Category;
 import com.kgc.entity.Product;
 
 import java.util.Map;
+import java.util.List;
 
 /**
  * 商品管理业务接口类
@@ -66,4 +68,26 @@ public interface ProductService {
      * @return 返回消息类
      */
     Message delProduct(Product product);
+
+    /**
+     * 商品id
+     * @param id
+     * @return
+     */
+    public Product getProductById(Product product);
+
+    /**
+     * 商品id
+     * @param product
+     * @return
+     */
+    public List<Product> getSimilarProducts(Product product);
+
+    /**
+     * 前端传一级分类的id
+     * @param category
+     * @return
+     */
+    public List<Product> getProductsByHigHestId(Category category);
+
 }

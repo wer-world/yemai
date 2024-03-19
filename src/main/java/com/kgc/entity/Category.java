@@ -18,5 +18,6 @@ public class Category {
     private Integer parentId;
     private String iconClass;
     private Integer isDelete;
+    private Integer type;
     private List<Category> childCategoryList;
 }

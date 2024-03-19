@@ -26,4 +26,45 @@
           and p.categoryLevelId = c.id
           and p.picId = f.id
     </select>
+
+    <select id="getProductById" resultType="Product">
+        SELECT id,
+               name,
+               description,
+               price,
+               stock,
+               categoryLevelId,
+               picId,
+               isDelete
+        FROM easybuy_product
+        WHERE isDelete=0 AND id=#{id};
+    </select>
+
+    <select id="getSimilarProducts" resultType="Product">
+        SELECT id,
+               name,
+               description,
+               price,
+               stock,
+               categoryLevelId,
+               picId,
+               isDelete
+        FROM easybuy_product
+        WHERE isDelete=0 AND categoryLevelId=#{categoryLevelId};
+    </select>
+
+    <select id="getProductsByHigHestId" resultType="Product">
+        SELECT id,
+               name,
+               description,
+               price,
+               stock,
+               categoryLevelId,
+               picId,
+               isDelete
+        FROM easybuy_product WHERE isDelete=0 AND categoryLevelId IN
+          (SELECT id FROM easybuy_product_category
+             WHERE isDelete=0 AND parentId IN
+                (SELECT id FROM easybuy_product_category WHERE isDelete=0 AND parentId=#{id}));
+    </select>
 </mapper>

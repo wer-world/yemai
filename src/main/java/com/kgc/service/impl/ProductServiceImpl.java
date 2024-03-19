@@ -2,6 +2,7 @@ package com.kgc.service.impl;
 
 import com.kgc.util.ProductESRepositoryUtil;
 import com.kgc.dao.ProductDao;
+import com.kgc.entity.Category;
 import com.kgc.entity.Message;
 import com.kgc.entity.Page;
 import com.kgc.entity.Product;
@@ -180,5 +181,21 @@ public class ProductServiceImpl implements ProductService {
             return Message.success();
         }
         return Message.error();
+    }
+
+    @Override
+    public Product getProductById(Product product) {
+        return productDao.getProductById(product);
+    }
+
+    @Override
+    public List<Product> getSimilarProducts(Product product) {
+        Product product1 = getProductById(product);
+        return productDao.getSimilarProducts(product1);
+    }
+
+    @Override
+    public List<Product> getProductsByHigHestId(Category category) {
+        return productDao.getProductsByHigHestId(category);
     }
 }
