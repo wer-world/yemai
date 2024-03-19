@@ -8,6 +8,7 @@ class YimaiApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }

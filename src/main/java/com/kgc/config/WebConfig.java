@@ -21,8 +21,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         String[] excludeStr = new String[]{
-//                "/**/user/login",
-//                "/**/user/register",
+                "/user/login",
+                "/user/register",
+                "/replay/getRandom",
+                "/category/**",
+                "/error",
                 "/**/*"
         };
         // 拦截器开放登录与注册接口

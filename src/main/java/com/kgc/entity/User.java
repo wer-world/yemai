@@ -1,5 +1,6 @@
 package com.kgc.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
@@ -16,10 +17,13 @@ public class User {
     private Integer id;
     private String loginName;
     private String userName;
+    @JsonIgnore
     private String password;
     private Integer sex;
     private String identityCode;
     private String email;
     private String mobile;
     private Integer type;
+    @JsonIgnore
+    private String random;
 }

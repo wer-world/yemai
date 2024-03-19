@@ -3,7 +3,8 @@ server:
   servlet:
     context-path: /EasyBuy
 mybatis:
-  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mappers/*xml
+  type-aliases-package: com.kgc.mybatis.entity
 spring:
   redis:
     host: localhost
@@ -13,11 +14,17 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/easybuy?characterEncoding=utf-8
     username: root
-    password: 123456
+    password: 1234
     type: com.alibaba.druid.pool.DruidDataSource
-  mail:
-    host: smtp.qq.com
-    username: 1348466224@qq.com
-    password: cqvuubenttdsjecb
+logging:
+  level:
+    root: debug
+replay:
+  maxRandom: 10
+  minRandom: 20
+mail:
+  host: smtp.qq.com
+  username: 1348466224@qq.com
+  password: cqvuubenttdsjecb
 
 

@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kgc.dao.UserMapper">
-    <insert id="registUser">
+    <insert id="registerUser">
         insert into easybuy_user(loginName,userName,password,identityCode,email,mobile)
         value(#{loginName},#{userName},#{password},#{identityCode},#{email},#{mobile})
     </insert>
@@ -26,8 +26,5 @@
                 and loginName = #{loginName}
             </if>
         </where>
-
-
-
     </select>
 </mapper>
