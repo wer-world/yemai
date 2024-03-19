@@ -27,11 +27,11 @@ public class Message {
     }
 
     public static Message error() {
-        return new Message("200", "操作失败", null);
+        return new Message("201", "操作失败", null);
     }
 
     public static Message error(String message) {
-        return new Message("200", message, null);
+        return new Message("201", message, null);
     }
 
     public static Message tokenError(String message) {

@@ -4,17 +4,17 @@ server:
     context-path: /EasyBuy
 mybatis:
   mapper-locations: classpath:mappers/*xml
-  type-aliases-package: com.kgc.mybatis.entity
+  type-aliases-package: com.kgc.entity
 spring:
   redis:
     host: localhost
     port: 6379
-    password: 123456
+    password:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/easybuy?characterEncoding=utf-8
     username: root
-    password: 1234
+    password: root
     type: com.alibaba.druid.pool.DruidDataSource
 logging:
   level:

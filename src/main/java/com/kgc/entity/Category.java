@@ -13,6 +13,7 @@ public class Category {
     private Integer parentId;
     private String iconClass;
     private Integer isDelete;
+    private Integer type;
     private List<Category> childCategoryList;
 
     public Integer getId() {
@@ -61,5 +62,13 @@ public class Category {
 
     public void setChildCategoryList(List<Category> childCategoryList) {
         this.childCategoryList = childCategoryList;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

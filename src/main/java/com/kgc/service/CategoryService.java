@@ -10,5 +10,10 @@ import java.util.List;
  * @Description:
  */
 public interface CategoryService {
+    /**
+     * 需要传最高级别分类的id，本项目统一为0
+     * @param category
+     * @return
+     */
     public List<Category> getCategoryList(Category category);
 }
