@@ -12,17 +12,20 @@ import lombok.Getter;
 @Getter
 public enum ExceptionEnum {
     // 数据操作错误定义
-    BODY_NOT_MATCH(Message.tokenError("请求的数据参数不符!")),
-    SIGNATURE_NOT_MATCH(Message.tokenError("请求的数字签名失效!")),
-    NOT_TOKEN(Message.tokenError("请求没有携带令牌!")),
-    LOGIN_ERROR(Message.tokenError("登录失败!")),
-    TOKEN_OVER(Message.tokenError("token过期!")),
-    VISA_ALGORITHM(Message.tokenError("验证秘钥算法不一致!")),
-    ILLEGAL_REQUEST(Message.illegalRequest());
-    private final Message message;
+    BODY_NOT_MATCH("the requested data parameters do not match","请求的数据参数不符!"),
+    SIGNATURE_NOT_MATCH("the requested digital signature is invalid","请求的数字签名失效!"),
+    NOT_TOKEN("the request does not carry a token","请求没有携带令牌!"),
+    LOGIN_ERROR("login failed","登录失败!"),
+    TOKEN_OVER("token expired","token过期!"),
+    VISA_ALGORITHM("the verification key algorithm is inconsistent","验证秘钥算法不一致!"),
+    ILLEGAL_REQUEST("illegal request, please log in and operate","非法请求,请登录后操作!");
 
-    ExceptionEnum(Message message) {
+    private final String message;
+    private final String msg;
+
+    ExceptionEnum(String message, String msg) {
         this.message = message;
+        this.msg = msg;
     }
 
 }

@@ -10,5 +10,5 @@ import java.util.List;
  * @Description:
  */
 public interface CategoryService {
-    public List<Category> getCategoryList(Category category);
+    List<Category> getCategoryList(Category category);
 }

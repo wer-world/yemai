@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.ProductDao">
+    <select id="getProductList" resultType="Product">
+        select p.id,
+               p.brandId,
+               b.name                                                                                 brandName,
+               p.name,
+               p.description,
+               p.price,
+               p.stock,
+               p.categoryLevelId,
+               c.name                                                                                 categoryName,
+               p.picId,
+               f.picPath,
+               (select count(1) from easybuy_order_detail where productId = p.id)                     sales,
+               (select true from easybuy_product where id = p.id and YEAR(createTime) >= YEAR(NOW())) newProduct
+        from easybuy_product p,
+             easybuy_product_brand b,
+             easybuy_product_category c,
+             easybuy_file f
+        where p.isDelete = 0
+          and p.brandId = b.id
+          and p.categoryLevelId = c.id
+          and p.picId = f.id
+    </select>
+</mapper>

@@ -21,6 +21,9 @@ public class ReplayUtil {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    @Value("${easy-buy-init.init-replay}")
+    private Boolean isInitReplay;
+
     @Value("${replay.maxRandom}")
     private Integer maxRandom; // 最大储存的随机数
 
@@ -30,6 +33,15 @@ public class ReplayUtil {
     private final List<String> randomList = new ArrayList<>(); // 待使用的随机数
 
     private final Map<String, String> useRandomMap = new HashMap<>(); // 使用的随机数
+
+    /**
+     * 是否初始化随机数
+     *
+     * @return 返回true-初始化 false-不初始化
+     */
+    public Boolean isInitReplay() {
+        return isInitReplay;
+    }
 
     /**
      * 将随机数加载至maxRandom的数量

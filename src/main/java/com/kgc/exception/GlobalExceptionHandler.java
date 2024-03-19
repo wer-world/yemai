@@ -20,6 +20,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = LoginException.class)
     public Message loginExceptionHandler(LoginException e) {
         logger.error("GlobalExceptionHandler loginExceptionHandler login error message:" + e.getMsg());
-        return e.getMsg();
+        return Message.error(e.getMsg());
+    }
+
+    @ExceptionHandler(value = AlipayException.class)
+    public Message alipayExceptionHandler(AlipayException e){
+        logger.error("GlobalExceptionHandler alipayExceptionHandler login error message:" + e.getMsg());
+        return Message.error(e.getMsg());
     }
 }

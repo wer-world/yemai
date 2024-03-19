@@ -1,7 +1,5 @@
 package com.kgc.exception;
 
-import com.kgc.entity.Message;
-import com.kgc.enums.ExceptionEnum;
 import lombok.Getter;
 
 /**
@@ -12,15 +10,13 @@ import lombok.Getter;
  */
 @Getter
 public class LoginException extends RuntimeException {
-    protected Message msg;
+    private String msg;
 
     public LoginException() {
-        super();
-        msg = ExceptionEnum.LOGIN_ERROR.getMessage();
     }
 
-    public LoginException(Message message) {
-        super(message.getMessage());
-        this.msg = message;
+    public LoginException(String msg) {
+        super(msg);
+        this.msg = msg;
     }
 }
