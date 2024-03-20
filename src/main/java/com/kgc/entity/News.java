@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.ToString;
 
 /**
- *
+ *资讯类
  */
 @Data
 @ToString
