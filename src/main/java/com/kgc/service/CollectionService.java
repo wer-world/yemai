@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface CollectionService {
     /**
+     * 用来添加收藏
      * 前端需传入productId
      * @param productId
      * @return

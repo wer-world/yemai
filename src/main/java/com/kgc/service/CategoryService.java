@@ -11,6 +11,7 @@ import java.util.List;
  */
 public interface CategoryService {
     /**
+     * 查询所有最高级分类
      * 需要传最高级别分类的id，本项目统一为0
      * @param category 分类的id
      * @return 返回分类列表
