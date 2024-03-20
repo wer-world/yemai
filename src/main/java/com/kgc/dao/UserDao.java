@@ -1,8 +1,12 @@
 package com.kgc.dao;
 
 import com.kgc.entity.User;
+import org.apache.ibatis.annotations.Param;
 
-public interface UserMapper {
+import java.util.List;
+import java.util.Map;
+
+public interface UserDao {
     /**
      * 注册用户，添加到用户表
      *
@@ -43,4 +47,13 @@ public interface UserMapper {
      * @return 返回受影响的行数
      */
     public User identityCheck(String identityCode);
+
+    public List<User> getUserListPage(@Param("from") Integer from,@Param("pageSize") Integer pageSize,@Param("type") Integer type,@Param("userName") String userName);
+    public Integer getUserCount(@Param("type") Integer type,@Param("userName") String userName);
+
+    public User getUser(User user);
+
+    public Integer updateUser(User user);
+    public Integer daleteUser(User user);
+
 }

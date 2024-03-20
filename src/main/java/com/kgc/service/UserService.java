@@ -3,6 +3,8 @@ package com.kgc.service;
 import com.kgc.entity.Message;
 import com.kgc.entity.User;
 
+import java.util.Map;
+
 /**
  * 用户操作接口类
  *
@@ -43,4 +45,28 @@ public interface UserService {
     Message checkLogin(String loginName);
     Message findPsw(User user);
     Message identityCheck(String identityCode);
+
+    /**
+     * 查询所有用户
+     * 前端选择传参（用户类型type，用户名userName，当前页码currentPage,页面容量pageSize）
+     *
+     * @param paramMap
+     * @return
+     */
+    public Message getUserListPage(Map<String,Object> paramMap);
+
+    /**
+     * 查询用户信息（前端传参id）
+     * @param user
+     * @return
+     */
+    public Message getUser(User user);
+
+    public Message checkType(User user);
+
+    public Message updateUser(User user);
+    public Message deleteUser(User user);
+    public Message getCurrentUser();
+
+
 }

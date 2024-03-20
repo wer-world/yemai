@@ -126,7 +126,7 @@ public class ProductServiceImpl implements ProductService {
         builder.withHighlightBuilder(highlightBuilder);
 
         SearchHits<Product> hits = template.search(builder.build(), Product.class);
-        Page page = new Page(currentPage, pageSize, hits.getTotalHits());
+        Page page = new Page(currentPage, pageSize, hits.getTotalHits(),null);
         List<Product> productList = new ArrayList<>();
         for (SearchHit<Product> hit : hits) {
             Product product = hit.getContent();

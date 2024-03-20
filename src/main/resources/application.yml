@@ -26,7 +26,7 @@ mail:
   username: 1348466224@qq.com
   password: cqvuubenttdsjecb
 easy-buy-init:
-  init-es-data: false
+  init-es-data: true
   init-replay: true
 alipay:
   app-id: 9021000135627424
