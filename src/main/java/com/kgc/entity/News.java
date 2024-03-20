@@ -14,5 +14,4 @@ public class News {
     private String content;
     private String createTime;
     private int isDelete;
-
 }

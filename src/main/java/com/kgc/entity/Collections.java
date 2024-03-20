@@ -11,11 +11,9 @@ import lombok.ToString;
 @Data
 @ToString
 public class Collections {
-
     private Integer id;
     private Integer userId;
     private Integer productId;
     private Integer createTime;
     private Integer isDelete;
-
 }

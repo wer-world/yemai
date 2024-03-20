@@ -19,4 +19,5 @@ public class Page {
     private Integer currentPage;
     private Integer pageSize;
     private Long totalCount;
+    private Integer totalPage;
 }

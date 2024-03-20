@@ -42,9 +42,6 @@ public class AlipayServiceImpl implements AlipayService {
     @Autowired
     private OrderService orderService;
 
-    @Autowired
-    private AlipayService alipayService;
-
     @Override
     public Message createAlipay(Order order) {
         AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig.getOpenApi(), alipayConfig.getAppId(), alipayConfig.getPrivateKey(), "json", "UTF-8", alipayConfig.getAliPublicKey(), "RSA2");
@@ -100,7 +97,7 @@ public class AlipayServiceImpl implements AlipayService {
 
         String orderNumber = params.get("out_trade_no");
         // 交易成功通过,开辟子线程
-        Thread thread = new Thread(new AlipayUtil(orderService, alipayService, orderNumber));
+        Thread thread = new Thread(new AlipayUtil(orderService, this, orderNumber));
         // 执行相关业务修改操作
         thread.start();
         // 返回成功
@@ -111,7 +108,7 @@ public class AlipayServiceImpl implements AlipayService {
     public Message replayAlipay(Map<String, String> params) {
         String orderNumber = params.get("out_trade_no");
         // 交易成功通过,开辟子线程
-        Thread thread = new Thread(new AlipayUtil(orderService, alipayService, orderNumber));
+        Thread thread = new Thread(new AlipayUtil(orderService, this, orderNumber));
         // 执行相关业务修改操作
         thread.start();
         // 返回成功
