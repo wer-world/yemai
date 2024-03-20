@@ -86,7 +86,7 @@ public interface ProductService {
     List<Product> getSimilarProducts(Product product);
 
     /**
-     * 通过一级id获取商品
+     * 通过一级id获取下面所有商品
      *
      * @param category 前端传一级分类的id
      * @return 返回商品列表
