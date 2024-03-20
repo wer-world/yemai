@@ -1,6 +1,10 @@
 package com.kgc.dao;
 
+import com.kgc.entity.News;
 import com.kgc.entity.User;
+
+import java.util.List;
+import java.util.Map;
 
 public interface UserMapper {
     /**
@@ -43,4 +47,6 @@ public interface UserMapper {
      * @return 返回受影响的行数
      */
     public User identityCheck(String identityCode);
+
+
 }

@@ -4,6 +4,8 @@ import com.kgc.entity.Message;
 import com.kgc.entity.Category;
 import com.kgc.entity.Product;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.List;
 
@@ -31,8 +33,20 @@ public interface ProductService {
 
     /**
      * 分页查询商品
+     * {
+     *     "currentPage": 1, // 页码
+     *     "pageSize": 5, // 页面容量
+     *     "minPrice": 0.0, // 最小价格
+     *     "maxPrice": 300.0, // 最大价格
+     *     "name": "", // 商品名称
+     *     "brandName": "", // 商品品牌
+     *     "categoryName": "", // 分类美名称
+     *     "isSales": null, // 是否按销量排序 true-倒序 false-正序 null不排序
+     *     "isPrice": true, // 是否按价格排序 true-倒序 false-正序 null不排序
+     *     "isNewProduct": null // 是否按新品排序 true-倒序 false-正序 null不排序
+     * }
      *
-     * @param paramMap 查询条件(currentPage, pageSize, mixPrice, maxPrice, categoryName)
+     * @param paramMap 查询条件(currentPage, pageSize, mixPrice, maxPrice,name,brandName,categoryName,isSale,isPrice,isNewProducts)
      * @return 返回消息类(携带分页对象, 分页数据, 数据类型Map ( productList, page))
      */
     Message getProductListPages(Map<String, Object> paramMap);
@@ -93,4 +107,10 @@ public interface ProductService {
      */
     List<Product> getProductsByHigHestId(Category category);
 
+    /**
+     * 下载图片
+     * @param request
+     * @param response
+     */
+    void downLoad(HttpServletRequest request, HttpServletResponse response);
 }

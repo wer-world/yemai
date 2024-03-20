@@ -15,7 +15,7 @@
                c.name                                                                                 categoryName,
                p.picId,
                f.picPath,
-               (select count(1) from easybuy_order_detail where productId = p.id)                     sales,
+               (select sum(quantity) from easybuy_order_detail where productId = p.id and isDelete=0)                     sales,
                (select true from easybuy_product where id = p.id and YEAR(createTime) >= YEAR(NOW())) newProduct
         from easybuy_product p,
              easybuy_product_brand b,

@@ -40,11 +40,5 @@
     <update id="findPsw">
         update easybuy_user set password=#{password} where loginName=#{loginName}
     </update>
-    <select id="getNewsList" resultType="User">
-        select id,title,content,createTime,isDelete from easybuy_news
-        where isDelete = 0
-        order by createTime desc
-        limit #{form},#{pageSize}
 
-    </select>
 </mapper>

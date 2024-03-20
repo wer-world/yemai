@@ -8,6 +8,9 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /**
  * 商品类
  *
@@ -44,4 +47,15 @@ public class Product {
     private Integer sales;
     @Field(type = FieldType.Boolean)
     private Boolean newProduct;
+
+    public void setPicPath(String picPath) {
+        if (picPath != null && !"".equals(picPath)) {
+            try {
+                this.picPath = URLEncoder.encode(picPath,"utf-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
 }

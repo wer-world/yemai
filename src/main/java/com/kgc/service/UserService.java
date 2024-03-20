@@ -1,7 +1,10 @@
 package com.kgc.service;
 
 import com.kgc.entity.Message;
+import com.kgc.entity.News;
 import com.kgc.entity.User;
+
+import java.util.Map;
 
 /**
  * 用户操作接口类
@@ -41,6 +44,20 @@ public interface UserService {
      * @return 返回消息类
      */
     Message checkLogin(String loginName);
+
+    /**
+     * 找回密码
+     * @param user 找回密码所对应的用户
+     * @return
+     */
     Message findPsw(User user);
+
+    /**
+     * 校验身份证
+     * @param identityCode 校验所需的身份证
+     * @return
+     */
     Message identityCheck(String identityCode);
+
+
 }

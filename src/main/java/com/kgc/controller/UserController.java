@@ -2,6 +2,8 @@ package com.kgc.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.kgc.entity.Message;
+import com.kgc.entity.News;
+import com.kgc.entity.Page;
 import com.kgc.entity.User;
 import com.kgc.service.UserService;
 import com.kgc.util.EmailCodeUtil;
@@ -18,6 +20,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -124,4 +127,8 @@ public class UserController {
         Message message = userService.identityCheck(identityCode);
         return message;
     }
+
+
+
+
 }
