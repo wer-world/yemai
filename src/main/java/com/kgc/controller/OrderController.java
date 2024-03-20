@@ -1,5 +1,9 @@
 package com.kgc.controller;
 
+import com.kgc.entity.Message;
+import com.kgc.entity.Order;
+import com.kgc.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("order")
 public class OrderController {
 
+    @Autowired
+    private OrderService orderService;
 
-
+    @RequestMapping("cancelOrder")
+    public Message cancelOrder(Order order){
+        return orderService.cancelOrder(order);
+    }
 }

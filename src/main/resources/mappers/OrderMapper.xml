@@ -8,4 +8,27 @@
         set status = 1
         where serialNumber = #{orderNumber}
     </update>
+    <insert id="addOrder" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into easybuy_order(userId, loginName, userAddress, createTime, serialNumber)
+            value (#{userId}, #{loginName}, #{userAddress}, now(), #{serialNumber})
+    </insert>
+    <update id="modOrder">
+        update easybuy_order
+        <set>
+            <if test="cost != null and cost > 0">
+                cost = #{cost},
+            </if>
+            <if test="status != null">
+                status = #{status}
+            </if>
+        </set>
+        where isDelete = 0
+        and id = #{id}
+    </update>
+    <update id="cancelOrder">
+        update easybuy_order
+        set status = 2
+        where isDelete = 0
+          and id = #{id}
+    </update>
 </mapper>

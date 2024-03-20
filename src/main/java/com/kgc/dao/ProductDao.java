@@ -27,7 +27,6 @@ public interface ProductDao {
      */
     Integer addProduct(Product product);
 
-
     /**
      * 修改商品
      *
@@ -55,15 +54,15 @@ public interface ProductDao {
     /**
      * 通过商品id查询商品
      *
-     * @param product 商品id
+     * @param id 商品id
      * @return 返回对应商品
      */
-    Product getProductById(Product product);
+    Product getProductById(Integer id);
 
     /**
-     * 根据商品id获取同类商品
+     * 根据商品类型id获取同类商品
      *
-     * @param product 商品id
+     * @param product 商品类型id
      * @return 返回商品列表
      */
     List<Product> getSimilarProducts(Product product);

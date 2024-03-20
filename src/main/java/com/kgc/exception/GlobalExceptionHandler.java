@@ -17,15 +17,9 @@ public class GlobalExceptionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @ExceptionHandler(value = LoginException.class)
-    public Message loginExceptionHandler(LoginException e) {
-        logger.error("GlobalExceptionHandler loginExceptionHandler login error message:" + e.getMsg());
-        return Message.error(e.getMsg());
-    }
-
-    @ExceptionHandler(value = AlipayException.class)
-    public Message alipayExceptionHandler(AlipayException e){
-        logger.error("GlobalExceptionHandler alipayExceptionHandler login error message:" + e.getMsg());
+    @ExceptionHandler(value = ServiceException.class)
+    public Message serviceExceptionHandler(ServiceException e) {
+        logger.error("GlobalExceptionHandler serviceExceptionHandler error message:" + e.getMsg());
         return Message.error(e.getMsg());
     }
 }

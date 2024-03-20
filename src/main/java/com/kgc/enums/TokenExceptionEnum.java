@@ -1,6 +1,5 @@
 package com.kgc.enums;
 
-import com.kgc.entity.Message;
 import lombok.Getter;
 
 /**
@@ -10,7 +9,7 @@ import lombok.Getter;
  * @Date: 2024-03-17-23:03
  */
 @Getter
-public enum ExceptionEnum {
+public enum TokenExceptionEnum {
     // 数据操作错误定义
     BODY_NOT_MATCH("the requested data parameters do not match","请求的数据参数不符!"),
     SIGNATURE_NOT_MATCH("the requested digital signature is invalid","请求的数字签名失效!"),
@@ -23,7 +22,7 @@ public enum ExceptionEnum {
     private final String message;
     private final String msg;
 
-    ExceptionEnum(String message, String msg) {
+    TokenExceptionEnum(String message, String msg) {
         this.message = message;
         this.msg = msg;
     }

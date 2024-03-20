@@ -23,6 +23,7 @@ public class User {
     private String identityCode;
     private String email;
     private String mobile;
+    private String address;
     private Integer type;
     @JsonIgnore
     private String random;

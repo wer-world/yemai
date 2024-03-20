@@ -1,8 +1,9 @@
 package com.kgc.interceptors;
 
+import com.kgc.config.TokenConfig;
 import com.kgc.entity.User;
-import com.kgc.enums.ExceptionEnum;
-import com.kgc.exception.LoginException;
+import com.kgc.enums.TokenExceptionEnum;
+import com.kgc.exception.ServiceException;
 import com.kgc.util.DateCheckUtil;
 import com.kgc.util.JWTUtil;
 import com.kgc.util.ReplayUtil;
@@ -35,6 +36,9 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    @Autowired
+    private TokenConfig tokenConfig;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         logger.info("LoginInterceptor preHandle start...");
@@ -44,10 +48,10 @@ public class LoginInterceptor implements HandlerInterceptor {
         String random = request.getHeader("random"); // 随机数
         logger.debug("LoginInterceptor preHandle token:" + token);
         if (token == null || token.isEmpty()) {
-            throw new LoginException(ExceptionEnum.NOT_TOKEN.getMessage());
+            throw new ServiceException(TokenExceptionEnum.NOT_TOKEN.getMessage());
         }
         if (urlTime == null || random == null || urlTime.isEmpty() || random.isEmpty()) {
-            throw new LoginException(ExceptionEnum.ILLEGAL_REQUEST.getMessage());
+            throw new ServiceException(TokenExceptionEnum.ILLEGAL_REQUEST.getMessage());
         }
         ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
         // 重放攻击校验
@@ -56,15 +60,15 @@ public class LoginInterceptor implements HandlerInterceptor {
         // 随机数校验
         String checkRandom = replayUtil.checkRandom(random);
         if (!checkUrlTime || checkRandom == null) {
-            throw new LoginException(ExceptionEnum.ILLEGAL_REQUEST.getMessage());
+            throw new ServiceException(TokenExceptionEnum.ILLEGAL_REQUEST.getMessage());
         }
 
         // 令牌校验
         String redisToken = operations.get(token);
         if (redisToken == null) {
-            throw new LoginException(ExceptionEnum.TOKEN_OVER.getMessage());
+            throw new ServiceException(TokenExceptionEnum.TOKEN_OVER.getMessage());
         }
-        User user = JWTUtil.parseToken(redisToken);
+        User user = JWTUtil.parseToken(redisToken, tokenConfig.getTokenSign());
         user.setRandom(checkRandom);
         ThreadLocalUtil.set(user);
         logger.info("LoginInterceptor preHandle end...");

@@ -6,17 +6,17 @@
     <select id="getProductList" resultType="Product">
         select p.id,
                p.brandId,
-               b.name                                                                                 brandName,
+               b.name                                                                                   brandName,
                p.name,
                p.description,
                p.price,
                p.stock,
                p.categoryLevelId,
-               c.name                                                                                 categoryName,
+               c.name                                                                                   categoryName,
                p.picId,
                f.picPath,
-               (select count(1) from easybuy_order_detail where productId = p.id)                     sales,
-               (select true from easybuy_product where id = p.id and YEAR(createTime) >= YEAR(NOW())) newProduct
+               (select sum(quantity) from easybuy_order_detail where productId = p.id and isDelete = 0) sales,
+               (select true from easybuy_product where id = p.id and YEAR(createTime) >= YEAR(NOW()))   newProduct
         from easybuy_product p,
              easybuy_product_brand b,
              easybuy_product_category c,
@@ -34,10 +34,10 @@
                price,
                stock,
                categoryLevelId,
-               picId,
-               isDelete
+               picId
         FROM easybuy_product
-        WHERE isDelete=0 AND id=#{id};
+        WHERE isDelete = 0
+          AND id = #{id};
     </select>
 
     <select id="getSimilarProducts" resultType="Product">
@@ -47,10 +47,10 @@
                price,
                stock,
                categoryLevelId,
-               picId,
-               isDelete
+               picId
         FROM easybuy_product
-        WHERE isDelete=0 AND categoryLevelId=#{categoryLevelId};
+        WHERE isDelete = 0
+          AND categoryLevelId = #{categoryLevelId};
     </select>
 
     <select id="getProductsByHigHestId" resultType="Product">
@@ -60,11 +60,73 @@
                price,
                stock,
                categoryLevelId,
-               picId,
-               isDelete
-        FROM easybuy_product WHERE isDelete=0 AND categoryLevelId IN
-          (SELECT id FROM easybuy_product_category
-             WHERE isDelete=0 AND parentId IN
-                (SELECT id FROM easybuy_product_category WHERE isDelete=0 AND parentId=#{id}));
+               picId
+        FROM easybuy_product
+        WHERE isDelete = 0
+          AND categoryLevelId IN
+              (SELECT id
+               FROM easybuy_product_category
+               WHERE isDelete = 0
+                 AND parentId IN
+                     (SELECT id FROM easybuy_product_category WHERE isDelete = 0 AND parentId = #{id}));
+    </select>
+
+    <insert id="addProduct">
+        insert into easybuy_product(name, brandId, description, price, stock, categoryLevelId, picId, createTime)
+            value (#{name}, #{brandId}, #{description}, #{price}, #{stock}, #{categoryLevelId}, #{picId}, #{createTime})
+    </insert>
+
+    <update id="modProduct">
+        update easybuy_product
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="brandId != null and brandId > 0">
+                brandId = #{brandId},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="price != null and price > 0.0">
+                price = #{price},
+            </if>
+            <if test="stock != null and stock > 0">
+                stock = #{stock},
+            </if>
+            <if test="categoryLevelId != null and categoryLevelId > 0">
+                categoryLevelId = #{categoryLevelId},
+            </if>
+            <if test="picId != null and picId > 0">
+                picId = #{picId},
+            </if>
+        </set>
+        where isDelete = 0
+        and id = #{id}
+    </update>
+
+    <delete id="delProduct">
+        update easybuy_product
+        set isDelete = 1
+        where isDelete = 0
+          and id = #{id}
+    </delete>
+
+    <select id="getProduct" resultType="Product">
+        select id,
+        name,
+        description,
+        price,
+        stock,
+        categoryLevelId,
+        picId
+        from easybuy_product
+        where isDelete = 0
+        <if test="id != null and id > 0">
+            and id = #{id}
+        </if>
+        <if test="name != null and name != ''">
+            and name = #{name}
+        </if>
     </select>
 </mapper>

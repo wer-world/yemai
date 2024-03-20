@@ -1,7 +1,7 @@
 package com.kgc.service.impl;
 
-import com.kgc.constant.EasyBuyConstant;
-import com.kgc.dao.UserMapper;
+import com.kgc.config.TokenConfig;
+import com.kgc.dao.UserDao;
 import com.kgc.entity.Message;
 import com.kgc.entity.User;
 import com.kgc.service.UserService;
@@ -26,7 +26,10 @@ public class UserServiceImpl implements UserService {
     private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserDao userDao;
+
+    @Autowired
+    private TokenConfig tokenConfig;
 
     @Override
     public Message login(User user) {
@@ -34,13 +37,13 @@ public class UserServiceImpl implements UserService {
         if (user.getLoginName() == null || user.getLoginName().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty()) {
             return new Message("400", "fail", null);
         }
-        User loginUser = userMapper.loginCheck(user);
+        User loginUser = userDao.loginCheck(user);
         // 2、判断登录状态
         if (loginUser != null) {
             // 登录成功添加令牌
-            String token = JWTUtil.getToken(user);
+            String token = JWTUtil.getToken(user, tokenConfig.getTokenSign(), tokenConfig.getTokenTimeOut());
             ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-            operations.set(token, token, EasyBuyConstant.TOKEN_OVER_HOURS, TimeUnit.HOURS);
+            operations.set(token, token, tokenConfig.getTokenOverHours(), TimeUnit.HOURS);
             Cookie cookie = new Cookie("token", token);
             return Message.success(cookie);
         }
@@ -54,8 +57,8 @@ public class UserServiceImpl implements UserService {
             message = new Message("400", "fail", null);
             return message;
         }
-        int count = userMapper.registerUser(user);
-        if (count == 1){
+        int count = userDao.registerUser(user);
+        if (count == 1) {
             return Message.success();
         }
         return Message.error();
@@ -68,7 +71,7 @@ public class UserServiceImpl implements UserService {
             message = new Message("400", "请填写登录名", null);
             return message;
         }
-        User user = userMapper.checkLoginName(loginName);
+        User user = userDao.checkLoginName(loginName);
         if (user == null) {
             message = new Message("200", "该账号可以使用", user);
         } else {
@@ -84,7 +87,7 @@ public class UserServiceImpl implements UserService {
             message = new Message("400", "请填写登录名", null);
             return message;
         }
-        User user = userMapper.checkLoginName(loginName);
+        User user = userDao.checkLoginName(loginName);
         if (user != null) {
             message = new Message("200", "该账号可以使用", user);
         } else {
@@ -95,11 +98,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Message findPsw(User user) {
-        if (user == null){
-            return  Message.error();
+        if (user == null) {
+            return Message.error();
         }
-        int count = userMapper.findPsw(user);
-        if (count == 1){
+        int count = userDao.findPsw(user);
+        if (count == 1) {
             return Message.success();
         }
         return Message.error();
@@ -107,12 +110,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Message identityCheck(String identityCode) {
-        if (identityCode == null || "".equals(identityCode)){
+        if (identityCode == null || "".equals(identityCode)) {
             return Message.error();
         }
-        User user = userMapper.identityCheck(identityCode);
-        if (user == null){
+        User user = userDao.identityCheck(identityCode);
+        if (user == null) {
             return Message.success(user);
+        }
+        return Message.error();
+    }
+
+    @Override
+    public Message getUser(User user) {
+        User newUser = userDao.getUser(user);
+        if (newUser != null) {
+            return Message.success(newUser);
         }
         return Message.error();
     }

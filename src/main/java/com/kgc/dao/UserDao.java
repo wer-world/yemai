@@ -2,14 +2,14 @@ package com.kgc.dao;
 
 import com.kgc.entity.User;
 
-public interface UserMapper {
+public interface UserDao {
     /**
      * 注册用户，添加到用户表
      *
      * @param user 需要注册的用户
      * @return 返回用户(需优化为返回数据插入的主键)
      */
-    public int registerUser(User user);
+    int registerUser(User user);
 
     /**
      * 检查登录名
@@ -17,9 +17,9 @@ public interface UserMapper {
      * @param loginName 需要检查的登录名
      * @return 返回用户
      */
-    public User checkLoginName(String loginName);
+    User checkLoginName(String loginName);
 
-    public User checkLogin(String loginName);
+    User checkLogin(String loginName);
 
     /**
      * 登录检查
@@ -27,7 +27,7 @@ public interface UserMapper {
      * @param user 需要检查的用户
      * @return 返回用户名
      */
-    public User loginCheck(User user);
+    User loginCheck(User user);
 
     /**
      * 忘记密码修改密码
@@ -35,12 +35,21 @@ public interface UserMapper {
      * @param user 需要修改的用户
      * @return 返回受影响的行数
      */
-    public int findPsw(User user);
+    int findPsw(User user);
+
     /**
      * 校验身份证是否重复
      *
      * @param identityCode 需要修改的用户
      * @return 返回受影响的行数
      */
-    public User identityCheck(String identityCode);
+    User identityCheck(String identityCode);
+
+    /**
+     * 根据条件查询用户
+     *
+     * @param user 查询条件(id)
+     * @return 返回用户
+     */
+    User getUser(User user);
 }

@@ -4,7 +4,7 @@ import com.kgc.util.ProductESRepositoryUtil;
 import com.kgc.dao.ProductDao;
 import com.kgc.entity.Category;
 import com.kgc.entity.Message;
-import com.kgc.entity.Page;
+import com.kgc.entity.Pages;
 import com.kgc.entity.Product;
 import com.kgc.service.ProductService;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -80,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
         Boolean isNewProduct = (Boolean) paramMap.get("isNewProduct"); // 新品排序
         Boolean isPrice = (Boolean) paramMap.get("isPrice"); // 价格排序
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
-        if (name != null && !name.isEmpty()){
+        if (name != null && !name.isEmpty()) {
             queryBuilder.must(QueryBuilders.matchQuery("name", name));
         }
         if (categoryName != null && !categoryName.isEmpty()) {
@@ -126,7 +126,7 @@ public class ProductServiceImpl implements ProductService {
         builder.withHighlightBuilder(highlightBuilder);
 
         SearchHits<Product> hits = template.search(builder.build(), Product.class);
-        Page page = new Page(currentPage, pageSize, hits.getTotalHits());
+        Pages pages = new Pages(currentPage, pageSize, hits.getTotalHits(), null);
         List<Product> productList = new ArrayList<>();
         for (SearchHit<Product> hit : hits) {
             Product product = hit.getContent();
@@ -138,7 +138,7 @@ public class ProductServiceImpl implements ProductService {
         }
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("productList", productList);
-        resultMap.put("page", page);
+        resultMap.put("page", pages);
         return Message.success(resultMap);
     }
 
@@ -184,18 +184,29 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getProductById(Product product) {
-        return productDao.getProductById(product);
+    public Message getProductById(Integer id) {
+        Product product = productDao.getProductById(id);
+        if (product != null) {
+            return Message.success(product);
+        }
+        return Message.error();
     }
 
     @Override
-    public List<Product> getSimilarProducts(Product product) {
-        Product product1 = getProductById(product);
-        return productDao.getSimilarProducts(product1);
+    public Message getSimilarProducts(Product product) {
+        List<Product> productList = productDao.getSimilarProducts(product);
+        if (productList != null && !productList.isEmpty()) {
+            return Message.success(productList);
+        }
+        return Message.error();
     }
 
     @Override
-    public List<Product> getProductsByHigHestId(Category category) {
-        return productDao.getProductsByHigHestId(category);
+    public Message getProductsByHigHestId(Category category) {
+        List<Product> productList = productDao.getProductsByHigHestId(category);
+        if (productList != null && !productList.isEmpty()) {
+            return Message.success(productList);
+        }
+        return Message.error();
     }
 }

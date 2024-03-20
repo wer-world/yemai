@@ -15,7 +15,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Page {
+public class Pages {
     private Integer currentPage;
     private Integer pageSize;
     private Long totalCount;

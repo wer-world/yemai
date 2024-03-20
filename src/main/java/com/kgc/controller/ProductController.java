@@ -49,17 +49,17 @@ public class ProductController {
     }
 
     @RequestMapping("getProductById")
-    public Product getProductById(@RequestBody Product product){
-        return productService.getProductById(product);
+    public Message getProductById(@RequestBody Product product){
+        return productService.getProductById(product.getId());
     };
 
     @RequestMapping("getSimilarProducts")
-    public List<Product> getSimilarProducts(@RequestBody Product product){
+    public Message getSimilarProducts(@RequestBody Product product){
         return productService.getSimilarProducts(product);
     };
 
     @RequestMapping("getProductsByHigHestId")
-    public List<Product> getProductsByHigHestId(@RequestBody Category category){
+    public Message getProductsByHigHestId(@RequestBody Category category){
         return productService.getProductsByHigHestId(category);
     }
 }

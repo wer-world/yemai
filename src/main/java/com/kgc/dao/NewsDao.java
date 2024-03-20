@@ -4,7 +4,7 @@ import com.kgc.entity.News;
 
 import java.util.List;
 
-public interface NewsMapper {
+public interface NewsDao {
     /**
      * 获取新闻资讯列表
      *

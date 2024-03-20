@@ -31,6 +31,18 @@ public interface ProductService {
 
     /**
      * 分页查询商品
+     * {
+     *     "currentPage": 1, // 页码
+     *     "pageSize": 5, // 页面容量
+     *     "minPrice": 0.0, // 最小价格
+     *     "maxPrice": 300.0, // 最大价格
+     *     "name": "", // 商品名称
+     *     "brandName": "", // 商品品牌
+     *     "categoryName": "", // 分类美名称
+     *     "isSales": null, // 是否按销量排序 true-倒序 false-正序 null不排序
+     *     "isPrice": true, // 是否按价格排序 true-倒序 false-正序 null不排序
+     *     "isNewProduct": null // 是否按新品排序 true-倒序 false-正序 null不排序
+     * }
      *
      * @param paramMap 查询条件(currentPage, pageSize, mixPrice, maxPrice, categoryName)
      * @return 返回消息类(携带分页对象, 分页数据, 数据类型Map ( productList, page))
@@ -72,25 +84,25 @@ public interface ProductService {
     /**
      * 通过商品id查询商品
      *
-     * @param product 商品id
-     * @return 返回对应商品
+     * @param id 商品id
+     * @return 返回对应商品消息类
      */
-    Product getProductById(Product product);
+    Message getProductById(Integer id);
 
     /**
      * 根据商品id获取同类商品
      *
      * @param product 商品id
-     * @return 返回商品列表
+     * @return 返回商品列表消息类
      */
-    List<Product> getSimilarProducts(Product product);
+    Message getSimilarProducts(Product product);
 
     /**
      * 通过一级id获取下面所有商品
      *
      * @param category 前端传一级分类的id
-     * @return 返回商品列表
+     * @return 返回商品列表消息类
      */
-    List<Product> getProductsByHigHestId(Category category);
+    Message getProductsByHigHestId(Category category);
 
 }

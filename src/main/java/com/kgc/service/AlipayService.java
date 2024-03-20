@@ -1,8 +1,11 @@
 package com.kgc.service;
 
+import com.kgc.entity.Alipay;
 import com.kgc.entity.Message;
 import com.kgc.entity.Order;
+import com.kgc.entity.OrderDetail;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,14 +15,20 @@ import java.util.Map;
  * @Date: 2024-03-19-16:48
  */
 public interface AlipayService {
+    /**
+     * 查询未完成的订单状态
+     *
+     * @return 返回支付宝支付信息列表
+     */
+    List<Alipay> getAlipayList();
 
     /**
      * 统一下单接口
      *
-     * @param order 创建的订单
+     * @param orderDetailMap 创建的订单
      * @return 返回消息类, 包含支付页面
      */
-    Message createAlipay(Order order);
+    Message createAlipay(Map<Integer, OrderDetail> orderDetailMap);
 
     /**
      * 处理支付成功请求业务

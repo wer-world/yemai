@@ -13,21 +13,21 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/easybuy?characterEncoding=utf-8
     username: root
-    password: root
+    password: 1234
     type: com.alibaba.druid.pool.DruidDataSource
 logging:
   level:
     root: debug
 replay:
-  maxRandom: 10
+  maxRandom: 100
   minRandom: 20
 mail:
   host: smtp.qq.com
   username: 1348466224@qq.com
   password: cqvuubenttdsjecb
 easy-buy-init:
-  init-es-data: false
-  init-replay: true
+  init-es-data: true #开启es初始化
+  init-replay: true #开启重放攻击随机数初始化
 alipay:
   app-id: 9021000135627424
   open-api: https://openapi-sandbox.dl.alipaydev.com/gateway.do
@@ -36,3 +36,6 @@ alipay:
   ali-public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAppCOSwX3ZrDxT05BPJJ9Li2vQxQ2XIg9Gxx0c3zykA1KAVJxZLjry6eubwGkktY7DL00HfZ/eSBcvP4mKtmbwAMiL/reK9KaToZCnoW8wbizJgpRPts/ya3hWbrpEMdhIfKON4gdjjMn3ZYGV7L6/Lc++QLmqMQoOrgjbENTawzLv8xQFCfESXBU8eVxya2mMGiBgpWiOsOlHJPKgOIoVNoiAawT8KpBw56yLYA+BC4Bt+Skj/HVkY8AZZrkxyfEqfMLVJJgRLTEeGuCyZFtYp8A8YbzGPFJhyoSQqH/IiYH6ptD6brwvhr6F++EJXaMr7Sz81Y4XbEAu8EDYlDFUwIDAQAB
   notify-url: #进行内网穿透生成
   return-url: http://localhost:5173/esay_buy_pages/index.html
+token:
+  token-sign: EasyBuyNet #令牌签名
+  token-over-hours: 1 #令牌超时时间(单位小时)

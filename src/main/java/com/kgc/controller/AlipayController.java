@@ -1,10 +1,9 @@
 package com.kgc.controller;
 
-import com.alipay.api.AlipayApiErrorEnum;
 import com.kgc.entity.Message;
-import com.kgc.entity.Order;
-import com.kgc.enums.AlipayErrorMessageEnum;
-import com.kgc.exception.AlipayException;
+import com.kgc.entity.OrderDetail;
+import com.kgc.enums.AlipayExceptionEnum;
+import com.kgc.exception.ServiceException;
 import com.kgc.service.AlipayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,15 +31,15 @@ public class AlipayController {
     @Autowired
     private AlipayService alipayService;
 
-    @RequestMapping("createAlipay")
-    public void createAlipay(@RequestBody Order order, HttpServletResponse response) throws IOException {
-        Message message = alipayService.createAlipay(order);
+    @PostMapping("createAlipay")
+    public void createAlipay(@RequestBody Map<Integer, OrderDetail> orderDetailMap, HttpServletResponse response) throws IOException {
+        Message message = alipayService.createAlipay(orderDetailMap);
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter writer = response.getWriter();
         if ("200".equals(message.getCode())) {
             writer.print(message.getData());
         } else {
-            throw new AlipayException(AlipayErrorMessageEnum.ALIPAY_CREATE_ERROR.getMsg());
+            throw new ServiceException(AlipayExceptionEnum.ALIPAY_CREATE_ERROR.getMsg());
         }
     }
 
@@ -56,7 +55,7 @@ public class AlipayController {
             String[] value = entry.getValue();
             StringBuffer buffer = new StringBuffer();
             for (int i = 0; i < value.length; i++) {
-                if (i == value.length - 1){
+                if (i == value.length - 1) {
                     buffer.append(value[i]);
                 } else {
                     buffer.append(value[i]).append(",");
@@ -66,7 +65,7 @@ public class AlipayController {
         }
         Message message = alipayService.notifyUrlAlipay(params);
         PrintWriter writer = response.getWriter();
-        if ("200".equals(message.getCode())){
+        if ("200".equals(message.getCode())) {
             writer.print("success");
         } else {
             writer.print("failure");
