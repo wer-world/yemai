@@ -16,3 +16,4 @@
 
 1. 将NewsMapper修改为NewsDao接口
 2. 删除UserDao冲突命名
+3. 进行一次项目同步

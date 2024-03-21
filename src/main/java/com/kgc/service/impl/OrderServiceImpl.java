@@ -41,9 +41,6 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private UserService userService;
 
-//    @Autowired
-//    private RabbitTemplate rabbitTemplate;
-
     @Override
     public void fulfilOrderPay(String orderNumber) {
         // 完成订单状态更改
@@ -112,12 +109,6 @@ public class OrderServiceImpl implements OrderService {
             logger.error("OrderServiceImpl createOrder order cost update error");
             throw new ServiceException(OrderExceptionEnum.ORDER_COST_UPDATE_ERROR.getMsg());
         }
-
-        // 将订单ID推送到延迟队列
-//        rabbitTemplate.convertAndSend("orderDelayExchange", "orderDelayKey", order.getId(), message -> {
-//            message.getMessageProperties().setDelay(30 * 60 * 1000); // 设置延迟时间
-//            return message;
-//        });
 
         return Message.success(order);
     }
