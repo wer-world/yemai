@@ -137,17 +137,22 @@ public class UserController {
     }
 
     @RequestMapping("checkType")
-    public Message checkType(User user){
+    public Message checkType(@RequestBody User user){
         return userService.checkType(user);
     }
 
     @RequestMapping("updateUser")
-    public Message updateUser(User user){
+    public Message updateUser(@RequestBody Map map){
+        Object userObj = map.get("user");
+        User user = JSON.parseObject(JSON.toJSONString(userObj),User.class);
+        if (user == null || "".equals(user)){
+            return Message.error();
+        }
         return userService.updateUser(user);
     }
 
     @RequestMapping("deleteUser")
-    public Message deleteUser(User user){
+    public Message deleteUser(@RequestBody User user){
         return userService.deleteUser(user);
     }
 
