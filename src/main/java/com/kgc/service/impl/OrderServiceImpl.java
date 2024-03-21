@@ -11,7 +11,6 @@ import com.kgc.service.UserService;
 import com.kgc.util.ThreadLocalUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +41,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+//    @Autowired
+//    private RabbitTemplate rabbitTemplate;
 
     @Override
     public void fulfilOrderPay(String orderNumber) {
@@ -115,10 +114,10 @@ public class OrderServiceImpl implements OrderService {
         }
 
         // 将订单ID推送到延迟队列
-        rabbitTemplate.convertAndSend("orderDelayExchange", "orderDelayKey", order.getId(), message -> {
-            message.getMessageProperties().setDelay(30 * 60 * 1000); // 设置延迟时间
-            return message;
-        });
+//        rabbitTemplate.convertAndSend("orderDelayExchange", "orderDelayKey", order.getId(), message -> {
+//            message.getMessageProperties().setDelay(30 * 60 * 1000); // 设置延迟时间
+//            return message;
+//        });
 
         return Message.success(order);
     }
@@ -175,5 +174,14 @@ public class OrderServiceImpl implements OrderService {
             throw new ServiceException(OrderExceptionEnum.ORDER_TABLE_STATUS.getMsg());
         }
         return Message.success();
+    }
+
+    @Override
+    public Message getOrderList() {
+        List<Order> orderList = orderDao.getOrderList();
+        if (orderList != null && !orderList.isEmpty()){
+            return Message.success(orderList);
+        }
+        return Message.error();
     }
 }

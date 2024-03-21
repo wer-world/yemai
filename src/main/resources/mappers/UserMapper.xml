@@ -65,6 +65,7 @@
         easybuy_user_address a
         where u.isDelete = 0
         and u.id = a.userId
+        and isDefault = 1
         <if test="id != null and id > 0">
             and u.id = #{id}
         </if>

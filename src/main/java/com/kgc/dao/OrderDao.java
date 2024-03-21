@@ -2,6 +2,8 @@ package com.kgc.dao;
 
 import com.kgc.entity.Order;
 
+import java.util.List;
+
 /**
  * 订单表操作接口类
  *
@@ -40,4 +42,11 @@ public interface OrderDao {
      * @return 返回影响行数
      */
     Integer cancelOrder(Order order);
+
+    /**
+     * 获取所有订单
+     *
+     * @return 返回订单列表
+     */
+    List<Order> getOrderList();
 }

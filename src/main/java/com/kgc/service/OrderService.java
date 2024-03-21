@@ -50,4 +50,11 @@ public interface OrderService {
      * @return 返回取消的消息类
      */
     Message cancelOrder(Order order);
+
+    /**
+     * 获取所有订单
+     *
+     * @return 返回订单消息类
+     */
+    Message getOrderList();
 }

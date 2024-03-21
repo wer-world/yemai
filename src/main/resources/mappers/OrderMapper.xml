@@ -31,4 +31,16 @@
         where isDelete = 0
           and id = #{id}
     </update>
+    <select id="getOrderList" resultType="Order">
+        select id,
+               userId,
+               loginName,
+               userAddress,
+               createTime,
+               cost,
+               serialNumber,
+               status
+        from easybuy_order
+        where isDelete = 0
+    </select>
 </mapper>
