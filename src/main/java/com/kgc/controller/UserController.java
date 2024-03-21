@@ -20,7 +20,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -128,7 +128,35 @@ public class UserController {
         return message;
     }
 
+    @RequestMapping("getUserListPage")
+    public Message getUserListPage(@RequestBody Map<String,Object> paramMap){
+        return userService.getUserListPage(paramMap);
+    }
+
+    @RequestMapping("getUser")
+    public Message getUser(@RequestBody User user){
+        return userService.getUser(user);
+    }
+
+    @RequestMapping("checkType")
+    public Message checkType(User user){
+        return userService.checkType(user);
+    }
+
+    @RequestMapping("updateUser")
+    public Message updateUser(User user){
+        return userService.updateUser(user);
+    }
+
+    @RequestMapping("deleteUser")
+    public Message deleteUser(User user){
+        return userService.deleteUser(user);
+    }
 
 
+    @RequestMapping("getCurrentUser")
+    public Message getCurrentUser(){
+        return userService.getCurrentUser();
+    }
 
 }

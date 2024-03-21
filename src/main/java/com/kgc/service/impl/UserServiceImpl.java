@@ -7,6 +7,7 @@ import com.kgc.entity.News;
 import com.kgc.entity.User;
 import com.kgc.service.UserService;
 import com.kgc.util.JWTUtil;
+import com.kgc.util.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -130,5 +131,72 @@ public class UserServiceImpl implements UserService {
             return Message.success(newUser);
         }
         return Message.error();
+    }
+
+    @Override
+    public Message getUserListPage(Map<String,Object> paramMap) {
+        String userName = (String) paramMap.get("userName");
+        Integer type = (Integer) paramMap.get("type");
+        User user = new User();
+        user.setType(type);
+        user.setUserName(userName);
+        Integer currentPage = (Integer) paramMap.get("currentPage");
+        Integer pageSize = (Integer) paramMap.get("pageSize");
+        if (currentPage==null){
+            currentPage = 1;
+        }
+        if (pageSize==null){
+            pageSize=5;
+        }
+        Integer from = currentPage-1;
+        long totalCount = userDao.getUserCount(type,userName);
+        List<User> userList = userDao.getUserListPage(from,pageSize,type,userName);
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("totalCount",totalCount);
+        map.put("userList",userList);
+        return Message.success(map);
+    }
+
+    @Override
+    public Message getUser(User user) {
+        User user1 = userDao.getUser(user);
+        return Message.success(user1);
+    }
+
+    @Override
+    public Message checkType(User user) {
+        User targetUser = userDao.getUser(user);
+        User currentUser = ThreadLocalUtil.get();
+        if (currentUser.getType()<=targetUser.getType()){
+            return Message.error();
+        }
+        return Message.success();
+    }
+
+    @Override
+    public Message updateUser(User user) {
+        Integer affectRow = userDao.updateUser(user);
+        if (affectRow<1){
+            return  Message.error();
+        }
+        return Message.success();
+    }
+
+    @Override
+    public Message deleteUser(User user) {
+        Integer affectRow = userDao.updateUser(user);
+        if (affectRow<1){
+            return  Message.error();
+        }
+        return Message.success();
+    }
+
+    @Override
+    public Message getCurrentUser() {
+        User currentUser = ThreadLocalUtil.get();
+        if (currentUser==null){
+            return Message.error();
+        }
+        return Message.success(currentUser);
     }
 }

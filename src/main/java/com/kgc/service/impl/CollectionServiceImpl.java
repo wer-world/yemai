@@ -20,9 +20,9 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public Message addCollection(Integer productId) {
         User user = ThreadLocalUtil.get();
-        /*if (user==null){
+        if (user==null){
             return Message.error("请登录后进行收藏!");
-        }*/
+        }
         int affectRow = -1;
         affectRow = isCollection(productId);
         if (affectRow==1){
