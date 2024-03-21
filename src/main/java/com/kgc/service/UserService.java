@@ -80,13 +80,11 @@ public interface UserService {
      * @param user
      * @return
      */
-    public Message getUser(User user);
+    Message checkType(User user);
 
-    public Message checkType(User user);
-
-    public Message updateUser(User user);
-    public Message deleteUser(User user);
-    public Message getCurrentUser();
+    Message updateUser(User user);
+    Message deleteUser(User user);
+    Message getCurrentUser();
 
 
 }

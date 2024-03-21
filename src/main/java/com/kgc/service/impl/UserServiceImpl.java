@@ -14,6 +14,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -151,16 +152,10 @@ public class UserServiceImpl implements UserService {
         Integer from = currentPage-1;
         long totalCount = userDao.getUserCount(type,userName);
         List<User> userList = userDao.getUserListPage(from,pageSize,type,userName);
-        Map<String,Object> map = new HashMap<String, Object>();
+        Map<String,Object> map = new HashMap<>();
         map.put("totalCount",totalCount);
         map.put("userList",userList);
         return Message.success(map);
-    }
-
-    @Override
-    public Message getUser(User user) {
-        User user1 = userDao.getUser(user);
-        return Message.success(user1);
     }
 
     @Override

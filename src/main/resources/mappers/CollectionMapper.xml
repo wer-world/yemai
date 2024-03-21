@@ -2,10 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kgc.dao.CollectionDao">
     <insert id="addCollection">
-        INSERT INTO easybuy_collection(userId,productId,createTime) VALUES(#{userId},#{productId},NOW()) ;
+        INSERT INTO easybuy_collection(userId, productId, createTime)
+        VALUES (#{userId}, #{productId}, NOW());
     </insert>
-    
+
     <select id="isCollection" resultType="int">
-        SELECT COUNT(1) FROM easybuy_collection WHERE isDelete=0 AND productId = #{productId};
+        SELECT COUNT(1)
+        FROM easybuy_collection
+        WHERE isDelete = 0
+          AND productId = #{productId};
     </select>
 </mapper>

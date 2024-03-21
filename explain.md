@@ -14,3 +14,5 @@
 
 # 项目第三次整合
 
+1. 将NewsMapper修改为NewsDao接口
+2. 删除UserDao冲突命名

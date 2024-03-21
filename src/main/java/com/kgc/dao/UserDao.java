@@ -4,7 +4,6 @@ import com.kgc.entity.User;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 public interface UserDao {
     /**
@@ -23,8 +22,6 @@ public interface UserDao {
      */
     User checkLoginName(String loginName);
 
-    User checkLogin(String loginName);
-
     /**
      * 登录检查
      *
@@ -40,6 +37,7 @@ public interface UserDao {
      * @return 返回受影响的行数
      */
     int findPsw(User user);
+
     /**
      * 校验身份证是否重复
      *
@@ -55,14 +53,12 @@ public interface UserDao {
      * @return 返回用户
      */
     User getUser(User user);
-    public User identityCheck(String identityCode);
 
-    public List<User> getUserListPage(@Param("from") Integer from,@Param("pageSize") Integer pageSize,@Param("type") Integer type,@Param("userName") String userName);
-    public Integer getUserCount(@Param("type") Integer type,@Param("userName") String userName);
+    List<User> getUserListPage(@Param("from") Integer from, @Param("pageSize") Integer pageSize, @Param("type") Integer type, @Param("userName") String userName);
 
-    public User getUser(User user);
+    Integer getUserCount(@Param("type") Integer type, @Param("userName") String userName);
 
-    public Integer updateUser(User user);
-    public Integer daleteUser(User user);
+    Integer updateUser(User user);
 
+    Integer deleteUser(User user);
 }
