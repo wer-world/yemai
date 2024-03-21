@@ -3,6 +3,7 @@ package com.kgc.service.impl;
 import com.kgc.config.TokenConfig;
 import com.kgc.dao.UserDao;
 import com.kgc.entity.Message;
+import com.kgc.entity.News;
 import com.kgc.entity.User;
 import com.kgc.service.UserService;
 import com.kgc.util.JWTUtil;
@@ -12,6 +13,8 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**

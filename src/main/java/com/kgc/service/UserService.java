@@ -42,8 +42,18 @@ public interface UserService {
      */
     Message checkLogin(String loginName);
 
+    /**
+     * 找回密码
+     * @param user 找回密码所对应的用户
+     * @return
+     */
     Message findPsw(User user);
 
+    /**
+     * 校验身份证
+     * @param identityCode 校验所需的身份证
+     * @return
+     */
     Message identityCheck(String identityCode);
 
     /**

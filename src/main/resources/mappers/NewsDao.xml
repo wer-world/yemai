@@ -5,6 +5,41 @@
 <mapper namespace="com.kgc.dao.NewsDao">
     <select id="getNewsList" resultType="News">
         select id,title,content,createTime,isDelete from easybuy_news
-        where isDelete = 0 order by createTime desc
+        where isDelete = 0
+        order by createTime desc
+        limit #{form},#{page.pageSize}
+    </select>
+    <select id="getNewsTotalCount" resultType="long">
+        select count(1) from easybuy_news where isDelete = 0
+    </select>
+    <insert id="addNews">
+        insert into easybuy_news(title,content,createTime) value(#{title},#{content},'2024年3月20日')
+    </insert>
+    <update id="delNewsById">
+        update easybuy_news set isDelete=1 where id=#{id}
+    </update>
+    <update id="modifyNewsById">
+        update easybuy_news
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+        </set>
+        where isDelete = 0 and id=#{id}
+    </update>
+    <select id="getNewsById" resultType="News">
+        select id,title,content,createTime,isDelete from easybuy_news
+        where isDelete = 0
+        and id=#{id}
+    </select>
+    <select id="getNewsByTitle" resultType="News">
+        select id,title,content,createTime,isDelete from easybuy_news
+        where isDelete = 0 and
+        <if test="title!=null and title!=''">
+            title=#{title}
+        </if>
     </select>
 </mapper>

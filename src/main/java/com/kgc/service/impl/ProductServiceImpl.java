@@ -26,6 +26,11 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -208,5 +213,45 @@ public class ProductServiceImpl implements ProductService {
             return Message.success(productList);
         }
         return Message.error();
+    }
+
+    @Override
+    public void downLoad(HttpServletRequest request, HttpServletResponse response) {
+        String picPath = request.getParameter("picPath");
+        if (picPath != null && !"".equals(picPath)){
+            InputStream is  = null;
+            ServletOutputStream sos = null;
+            try {
+                picPath = URLDecoder.decode(picPath,"utf-8");
+                is = new FileInputStream(picPath);
+                sos = response.getOutputStream();
+                byte[] bytes = new byte[1024];
+                int length;
+                while ((length=is.read(bytes)) != -1){
+                    sos.write(bytes,0,length);
+                }
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }finally {
+                try {
+                    if (sos != null) {
+                        sos.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    if (is != null) {
+                        is.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

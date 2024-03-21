@@ -7,6 +7,8 @@ import com.kgc.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.List;
 
@@ -61,5 +63,10 @@ public class ProductController {
     @RequestMapping("getProductsByHigHestId")
     public Message getProductsByHigHestId(@RequestBody Category category){
         return productService.getProductsByHigHestId(category);
+    }
+
+    @RequestMapping("downLoad")
+    public void downLoad(HttpServletRequest request, HttpServletResponse response){
+        productService.downLoad(request,response);
     }
 }
