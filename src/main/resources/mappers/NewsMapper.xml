@@ -13,7 +13,7 @@
         select count(1) from easybuy_news where isDelete = 0
     </select>
     <insert id="addNews">
-        insert into easybuy_news(title,content,createTime) value(#{title},#{content},'2024年3月20日')
+        insert into easybuy_news(title,content,createTime) value(#{title},#{content},now())
     </insert>
     <update id="delNewsById">
         update easybuy_news set isDelete=1 where id=#{id}

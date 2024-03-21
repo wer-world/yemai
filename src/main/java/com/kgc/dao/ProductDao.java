@@ -74,4 +74,7 @@ public interface ProductDao {
      * @return 返回商品列表
      */
     List<Product> getProductsByHigHestId(Category category);
+
+
+
 }
