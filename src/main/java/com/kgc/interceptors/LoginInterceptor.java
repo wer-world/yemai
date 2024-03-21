@@ -44,41 +44,29 @@ public class LoginInterceptor implements HandlerInterceptor {
         logger.info("LoginInterceptor preHandle start...");
         logger.debug("LoginInterceptor preHandle url:" + request.getRequestURI());
         String token = request.getHeader("token");// 从 http 请求头中取出 token
-        String urlTime = request.getHeader("urlTime"); // 时间戳
-        String random = request.getHeader("random"); // 随机数
         logger.debug("LoginInterceptor preHandle token:" + token);
         if (token == null || token.isEmpty()) {
-            throw new ServiceException(TokenExceptionEnum.NOT_TOKEN.getMessage());
-        }
-        if (urlTime == null || random == null || urlTime.isEmpty() || random.isEmpty()) {
-            throw new ServiceException(TokenExceptionEnum.ILLEGAL_REQUEST.getMessage());
+            logger.error("LoginInterceptor preHandle token error");
+            throw new ServiceException(TokenExceptionEnum.NOT_TOKEN.getMsg());
         }
         ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-        // 重放攻击校验
-        // 时间戳校验
-        boolean checkUrlTime = DateCheckUtil.checkDateTime(urlTime);
-        // 随机数校验
-        String checkRandom = replayUtil.checkRandom(random);
-        if (!checkUrlTime || checkRandom == null) {
-            throw new ServiceException(TokenExceptionEnum.ILLEGAL_REQUEST.getMessage());
-        }
 
         // 令牌校验
         String redisToken = operations.get(token);
         if (redisToken == null) {
-            throw new ServiceException(TokenExceptionEnum.TOKEN_OVER.getMessage());
+            logger.error("LoginInterceptor preHandle token error");
+            throw new ServiceException(TokenExceptionEnum.TOKEN_OVER.getMsg());
         }
         User user = JWTUtil.parseToken(redisToken, tokenConfig.getTokenSign());
-        user.setRandom(checkRandom);
         ThreadLocalUtil.set(user);
+        response.setHeader("loginName", user.getLoginName());
+        response.setHeader("type", String.valueOf(user.getType()));
         logger.info("LoginInterceptor preHandle end...");
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        User user = ThreadLocalUtil.get();
-        replayUtil.removeRandom(user.getRandom());
         ThreadLocalUtil.remove();
     }
 }

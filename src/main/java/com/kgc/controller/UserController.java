@@ -36,7 +36,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("login")
-    public Message login(@RequestBody User user, HttpServletResponse response) {
+    public Message login(User user, HttpServletResponse response) {
         Message message = userService.login(user);
         // 3、成功
         if ("200".equals(message.getCode())) {
@@ -126,7 +126,7 @@ public class UserController {
         return message;
     }
 
-    @RequestMapping("getUserListPage")
+    @PostMapping("getUserListPage")
     public Message getUserListPage(@RequestBody Map<String,Object> paramMap){
         return userService.getUserListPage(paramMap);
     }

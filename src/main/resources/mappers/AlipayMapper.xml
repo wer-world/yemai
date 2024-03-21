@@ -6,15 +6,15 @@
     <update id="modAlipayStatus">
         update easybuy_alipay
         set status = 1
-        where order_number = #{orderNumber}
+        where orderNumber = #{orderNumber}
     </update>
     <select id="getAlipayList" resultType="Alipay">
-        select order_number, params, status
+        select orderNumber, params, status
         from easybuy_alipay
         where status = 0
     </select>
     <insert id="addAlipay">
-        insert into easybuy_alipay(order_number, params)
+        insert into easybuy_alipay(orderNumber, params)
             value (#{orderNumber}, #{params})
     </insert>
 </mapper>

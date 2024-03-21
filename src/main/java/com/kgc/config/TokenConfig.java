@@ -24,6 +24,6 @@ public class TokenConfig {
     }
 
     private void setTokenTimeOut() {
-        tokenTimeOut = (long) (tokenOverHours * 60 * 1000);
+        tokenTimeOut = (long) (tokenOverHours * 60 * 60 * 1000);
     }
 }
