@@ -137,7 +137,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public Message getUserListPage(Map<String,Object> paramMap) {
         String userName = (String) paramMap.get("userName");
-        Integer type = (Integer) paramMap.get("type");
+        String typeStr = (String) paramMap.get("type");
+        Integer type = 0;
+        if (typeStr!=null&&!"".equals(typeStr)){
+            type = Integer.valueOf(typeStr.toString());
+        }
+
         User user = new User();
         user.setType(type);
         user.setUserName(userName);
@@ -149,7 +154,7 @@ public class UserServiceImpl implements UserService {
         if (pageSize==null){
             pageSize=5;
         }
-        Integer from = currentPage-1;
+        Integer from = (currentPage-1)*pageSize;
         long totalCount = userDao.getUserCount(type,userName);
         List<User> userList = userDao.getUserListPage(from,pageSize,type,userName);
         Map<String,Object> map = new HashMap<>();
