@@ -133,5 +133,9 @@
         </if>
     </select>
 
+    <select id="getExistParentCategoryProductCount" resultType="int">
+        SELECT count(1) FROM easybuy_product WHERE isDelete=0 AND categoryLevelId=#{id};
+    </select>
+
 
 </mapper>

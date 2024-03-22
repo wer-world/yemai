@@ -1,6 +1,7 @@
 package com.kgc.service;
 
 import com.kgc.entity.Category;
+import com.kgc.entity.Message;
 
 import java.util.List;
 
@@ -17,4 +18,41 @@ public interface CategoryService {
      * @return 返回分类列表
      */
     public List<Category> getCategoryList(Category category);
+
+    /**
+     * 查询上级分类的名称
+     * 前端传入parentId
+     * @param category
+     * @return
+     */
+    Message getParentCategory(Category category);
+
+    /**
+     * 根据id查询Category
+     * @param category
+     * @return
+     */
+    Message getCategory(Category category);
+
+    /**
+     * 添加category
+     * @param category
+     * @return
+     */
+    Message addCategory(Category category);
+
+    /**
+     * 修改category
+     * @param category
+     * @return
+     */
+    Message updateCategory(Category category);
+
+    /**
+     * 删除category
+     * @param category
+     * @return
+     */
+    Message deleteCategory(Category category);
+
 }

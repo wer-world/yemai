@@ -75,6 +75,6 @@ public interface ProductDao {
      */
     List<Product> getProductsByHigHestId(Category category);
 
-
+    Integer getExistParentCategoryProductCount(Category category);
 
 }

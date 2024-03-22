@@ -1,6 +1,7 @@
 package com.kgc.controller;
 
 import com.kgc.entity.Category;
+import com.kgc.entity.Message;
 import com.kgc.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,5 +25,29 @@ public class CategoryController {
     @PostMapping("getCategoryList")
     public List<Category> getCategoryList(@RequestBody Category category){
         return categoryService.getCategoryList(category);
+    }
+
+    @RequestMapping("getParentCategory")
+    Message getParentCategory(@RequestBody Category category){
+        return categoryService.getParentCategory(category);
+    }
+
+    @RequestMapping("addCategory")
+    public Message addCategory(@RequestBody Category category){
+        return categoryService.addCategory(category);
+    }
+
+    @RequestMapping("updateCategory")
+    public Message updateCategory(@RequestBody Category category){
+        return categoryService.updateCategory(category);
+    }
+    @RequestMapping("deleteCategory")
+    public Message deleteCategory(@RequestBody Category category){
+        return categoryService.deleteCategory(category);
+    }
+
+    @RequestMapping("getCategory")
+    Message getCategory(@RequestBody Category category){
+        return categoryService.getCategory(category);
     }
 }

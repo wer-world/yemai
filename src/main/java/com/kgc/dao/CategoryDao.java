@@ -18,4 +18,15 @@ public interface CategoryDao {
      * @return 返回分类列表
      */
     List<Category> getCategoryList(Category category);
+
+    Category getParentCategory(Category category);
+
+    Integer addCategory(Category category);
+
+    List<String> getAllCategoryName();
+
+    Category getCategory(Category category);
+    Integer updateCategory(Category category);
+    Integer deleteCategory(Category category);
+    Integer getChildCategoryCount(Category category);
 }
