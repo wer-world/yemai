@@ -18,13 +18,7 @@
         select id,loginName,userName,password,sex,identityCode,email,mobile,type,isDelete
         from easybuy_user
         <where>
-            isDelete = 0
-            <if test="loginName!=null and loginName!=''">
-                and loginName = #{loginName}
-            </if>
-            <if test="password!=null and password!=''">
-                and loginName = #{loginName}
-            </if>
+            isDelete = 0 and loginName = #{loginName} and loginName = #{loginName}
         </where>
     </select>
     <select id="identityCheck" resultType="User">

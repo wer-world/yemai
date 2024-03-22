@@ -18,4 +18,10 @@ public interface CategoryDao {
      * @return 返回分类列表
      */
     List<Category> getCategoryList(Category category);
+
+    /**
+     * 获取三级分类
+     * @return
+     */
+    List<Category> getProCategoryNameByType();
 }
