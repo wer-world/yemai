@@ -28,7 +28,8 @@ public class WebConfig implements WebMvcConfigurer {
                 "/user/login",
                 "/user/register",
                 "/replay/getRandom",
-                "/error"
+                "/error",
+                "/**/*"
         };
         // 拦截器开放登录与注册接口
         registry.addInterceptor(replayInterceptors).excludePathPatterns("/replay/getRandom", "/error");

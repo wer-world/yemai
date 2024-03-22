@@ -55,7 +55,7 @@ public class DateCheckUtil {
     public static boolean checkDateTime(String time) {
         long tarTime = parseTime(time).getTime();
         long newTime = new Date().getTime();
-        long targetTime = (newTime - tarTime) / 1000;
-        return targetTime > 0 && targetTime < 1800;
+        long targetTime = newTime - tarTime;
+        return targetTime > 0 && targetTime < 1800000;
     }
 }

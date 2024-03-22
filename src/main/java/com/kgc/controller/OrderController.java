@@ -4,9 +4,9 @@ import com.kgc.entity.Message;
 import com.kgc.entity.Order;
 import com.kgc.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * 订单管理控制类
@@ -26,8 +26,13 @@ public class OrderController {
         return orderService.cancelOrder(order);
     }
 
-    @GetMapping("getOrderList")
-    public Message getOrderList() {
-        return orderService.getOrderList();
+    @PostMapping("getOrderList")
+    public Message getOrderList(@RequestBody Map<String, Object> params) {
+        return orderService.getOrderList(params);
+    }
+
+    @GetMapping("getOrder")
+    public Message getOrder(Order order){
+        return orderService.getOrder(order);
     }
 }

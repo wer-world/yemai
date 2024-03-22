@@ -32,15 +32,24 @@
           and id = #{id}
     </update>
     <select id="getOrderList" resultType="Order">
-        select id,
-               userId,
-               loginName,
-               userAddress,
-               createTime,
-               cost,
-               serialNumber,
-               status
-        from easybuy_order
-        where isDelete = 0
+        select o.id,
+        userId,
+        loginName,
+        userAddress,
+        o.createTime,
+        cost,
+        serialNumber,
+        status,
+        name statusName
+        from easybuy_order o,
+        easybuy_order_type t
+        where o.isDelete = 0
+        and o.status = t.id
+        <if test="serialNumber != null and serialNumber != ''">
+            and serialNumber like concat('%', #{serialNumber}, '%')
+        </if>
+        <if test="loginName != null and loginName != ''">
+            and loginName like concat('%', #{loginName}, '%')
+        </if>
     </select>
 </mapper>

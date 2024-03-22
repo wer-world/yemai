@@ -31,9 +31,6 @@ public class LoginInterceptor implements HandlerInterceptor {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private ReplayUtil replayUtil;
-
-    @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
     @Autowired

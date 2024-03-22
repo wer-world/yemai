@@ -120,4 +120,13 @@
         SET isDelete=1
         WHERE id = #{id};
     </delete>
+
+    <select id="getUserById">
+        select loginName,
+               email,
+               mobile
+        from easybuy_user
+        where isDelete = 0
+          and id = #{id}
+    </select>
 </mapper>

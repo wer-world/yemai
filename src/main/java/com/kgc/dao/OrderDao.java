@@ -3,6 +3,7 @@ package com.kgc.dao;
 import com.kgc.entity.Order;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单表操作接口类
@@ -48,5 +49,13 @@ public interface OrderDao {
      *
      * @return 返回订单列表
      */
-    List<Order> getOrderList();
+    List<Order> getOrderList(Map<String, Object> params);
+
+    /**
+     * 获取订单数据
+     *
+     * @param order 条件-id
+     * @return 返回订单
+     */
+    Order getOrder(Order order);
 }
