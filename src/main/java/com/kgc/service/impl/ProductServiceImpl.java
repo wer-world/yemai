@@ -1,5 +1,6 @@
 package com.kgc.service.impl;
 
+import com.kgc.util.Base64Util;
 import com.kgc.util.ProductESRepositoryUtil;
 import com.kgc.dao.ProductDao;
 import com.kgc.entity.Category;
@@ -216,18 +217,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void downLoad(HttpServletRequest request, HttpServletResponse response) {
-        String picPath = request.getParameter("picPath");
-        if (picPath != null && !"".equals(picPath)){
-            InputStream is  = null;
+    public void downLoad(String picPath, HttpServletRequest request, HttpServletResponse response) {
+        if (picPath != null && !"".equals(picPath)) {
+            InputStream is = null;
             ServletOutputStream sos = null;
             try {
-                picPath = URLDecoder.decode(picPath,"utf-8");
+                picPath = URLDecoder.decode(picPath, "utf-8");
                 is = new FileInputStream(picPath);
                 sos = response.getOutputStream();
                 byte[] bytes = new byte[1024];
                 int length;
-                while ((length=is.read(bytes)) != -1){
+                while ((length = is.read(bytes)) != -1) {
                     sos.write(bytes,0,length);
                 }
             } catch (UnsupportedEncodingException e) {
@@ -236,7 +236,7 @@ public class ProductServiceImpl implements ProductService {
                 throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
-            }finally {
+            } finally {
                 try {
                     if (sos != null) {
                         sos.close();
@@ -253,6 +253,7 @@ public class ProductServiceImpl implements ProductService {
                 }
             }
         }
+//        return null;
     }
 
 

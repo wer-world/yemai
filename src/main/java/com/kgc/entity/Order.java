@@ -23,4 +23,5 @@ public class Order {
     private String serialNumber;
     private Integer status;
     private String statusName;
+    private String mobile;
 }

@@ -4,10 +4,24 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kgc.dao.OrderDetailDao">
     <select id="getOrderDetailList" resultType="OrderDetail">
-        select id, orderId, productId, quantity, cost
-        from easybuy_order_detail
-        where isDelete = 0
+        select d.id, orderId, productId, name productName, price productPrice, quantity, cost
+        from easybuy_order_detail d,
+             easybuy_product p
+        where d.isDelete = 0
+          and d.productId = p.id
           and orderId = #{orderId}
+    </select>
+
+    <select id="getOrderDetailListPage" resultType="OrderDetail">
+        select d.id, orderId, productId, name productName, price productPrice, quantity, cost
+        from easybuy_order_detail d,
+        easybuy_product p
+        where d.isDelete = 0
+        and orderId = #{orderId}
+        and d.productId = p.id
+        <if test="productName != null and productName != ''">
+            and name like concat('%', #{productName}, '%')
+        </if>
     </select>
 
     <delete id="delOrderDetail">

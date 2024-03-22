@@ -115,7 +115,7 @@
         WHERE id = #{id};
     </delete>
 
-    <select id="getUserById">
+    <select id="getUserById" resultType="User">
         select loginName,
                email,
                mobile

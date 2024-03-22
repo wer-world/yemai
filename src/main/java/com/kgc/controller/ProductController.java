@@ -46,29 +46,32 @@ public class ProductController {
     }
 
     @GetMapping("delProduct")
-    public Message delProduct(Product product){
+    public Message delProduct(Product product) {
         return productService.delProduct(product);
     }
 
     @RequestMapping("getProductById")
-    public Message getProductById(@RequestBody Product product){
+    public Message getProductById(@RequestBody Product product) {
         return productService.getProductById(product.getId());
-    };
+    }
+
+    ;
 
     @RequestMapping("getSimilarProducts")
-    public Message getSimilarProducts(@RequestBody Product product){
+    public Message getSimilarProducts(@RequestBody Product product) {
         return productService.getSimilarProducts(product);
-    };
+    }
+
+    ;
 
     @RequestMapping("getProductsByHigHestId")
-    public Message getProductsByHigHestId(@RequestBody Category category){
+    public Message getProductsByHigHestId(@RequestBody Category category) {
         return productService.getProductsByHigHestId(category);
     }
 
     @RequestMapping("downLoad")
-    public void downLoad(HttpServletRequest request, HttpServletResponse response){
-        productService.downLoad(request,response);
+    public void downLoad(@RequestBody Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) {
+        String picPath = (String) params.get("picPath");
+        productService.downLoad(picPath, request, response);
     }
-
-
 }
