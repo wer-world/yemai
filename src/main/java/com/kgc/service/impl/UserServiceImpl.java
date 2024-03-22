@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Message getUserListPage(Map<String, Object> paramMap) {
         String userName = (String) paramMap.get("userName");
-        String typeStr = (String) paramMap.get("type");
+        String typeStr = paramMap.get("type").toString();
         Integer type = 0;
         if (typeStr != null && !"".equals(typeStr)) {
             type = Integer.valueOf(typeStr.toString());

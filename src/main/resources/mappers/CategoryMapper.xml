@@ -6,7 +6,7 @@
         name,
         parentId,
         iconClass,
-        isDelete
+        type
         from easybuy_product_category
         WHERE isDelete=0 AND parentId=#{parentId}
     </select>

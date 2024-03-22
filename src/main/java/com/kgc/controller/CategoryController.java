@@ -3,6 +3,7 @@ package com.kgc.controller;
 import com.kgc.entity.Category;
 import com.kgc.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @RequestMapping("getCategoryList")
+    @PostMapping("getCategoryList")
     public List<Category> getCategoryList(@RequestBody Category category){
         return categoryService.getCategoryList(category);
     }
