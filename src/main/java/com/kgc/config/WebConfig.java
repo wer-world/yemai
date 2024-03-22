@@ -1,6 +1,7 @@
 package com.kgc.config;
 
 import com.kgc.interceptors.LoginInterceptor;
+import com.kgc.interceptors.ReplayInterceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -18,17 +19,20 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private LoginInterceptor loginInterceptor;
 
+    @Autowired
+    private ReplayInterceptors replayInterceptors;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         String[] excludeStr = new String[]{
                 "/user/login",
                 "/user/register",
                 "/replay/getRandom",
-                "/category/**",
                 "/error",
                 "/**/*"
         };
         // 拦截器开放登录与注册接口
+        registry.addInterceptor(replayInterceptors).excludePathPatterns("/replay/getRandom", "/error");
         registry.addInterceptor(loginInterceptor).excludePathPatterns(excludeStr);
     }
 }

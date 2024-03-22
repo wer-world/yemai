@@ -28,7 +28,7 @@ public class InitReplayCommandLineRunner implements CommandLineRunner {
             return;
         }
         logger.info("InitReplayCommandLineRunner run replay defense init start...");
-        replayUtil.createUUIDToRedis();
+        replayUtil.createUUIDToRedis(0);
         logger.info("InitReplayCommandLineRunner run replay defense init success");
 
     }

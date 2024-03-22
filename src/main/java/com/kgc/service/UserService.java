@@ -46,6 +46,7 @@ public interface UserService {
 
     /**
      * 找回密码
+     *
      * @param user 找回密码所对应的用户
      * @return
      */
@@ -53,6 +54,7 @@ public interface UserService {
 
     /**
      * 校验身份证
+     *
      * @param identityCode 校验所需的身份证
      * @return
      */
@@ -76,7 +78,7 @@ public interface UserService {
     public Message getUserListPage(Map<String,Object> paramMap);
 
     /**
-     * 查询用户权限（前端传参id）
+     * 查询用户信息（前端传参id）
      * @param user
      * @return
      */
@@ -103,4 +105,11 @@ public interface UserService {
     Message getCurrentUser();
 
 
+    /**
+     * 通过用户id查询用户
+     *
+     * @param id 用户id
+     * @return 返回用户
+     */
+    User getUserById(Integer id);
 }

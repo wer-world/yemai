@@ -1,5 +1,7 @@
 package com.kgc.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.kgc.dao.OrderDao;
 import com.kgc.entity.*;
 import com.kgc.enums.OrderExceptionEnum;
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -168,11 +171,46 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Message getOrderList() {
-        List<Order> orderList = orderDao.getOrderList();
-        if (orderList != null && !orderList.isEmpty()){
-            return Message.success(orderList);
+    public Message getOrderList(Map<String, Object> params) {
+        Integer currentPage = (Integer) params.get("currentPage");
+        Integer pageSize = (Integer) params.get("pageSize");
+        String serialNumber = (String) params.get("serialNumber");
+        String loginName = (String) params.get("loginName");
+        if (currentPage == null || currentPage <= 0) {
+            currentPage = 1;
+        }
+        if (pageSize == null || pageSize <= 0) {
+            pageSize = 5;
+        }
+        Page<Object> page = PageHelper.startPage(currentPage, pageSize);
+        List<Order> orderList = orderDao.getOrderList(params);
+        if (orderList != null && !orderList.isEmpty()) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("orderList", orderList);
+            resultMap.put("totalCount", page.getTotal());
+            return Message.success(resultMap);
         }
         return Message.error();
+    }
+
+    @Override
+    public Message getOrder(Order order) {
+        Order resultOrder = orderDao.getOrder(order);
+        if (resultOrder == null) {
+            return Message.error();
+        }
+        User user = userService.getUserById(order.getUserId());
+        if (user == null) {
+            return Message.error();
+        }
+        List<OrderDetail> orderDetailList = orderDetailService.getOrderDetailListByOrderId(order.getId());
+        if (orderDetailList == null || orderDetailList.isEmpty()) {
+            return Message.error();
+        }
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("order", resultOrder);
+        resultMap.put("user", user);
+        resultMap.put("orderDetailList", orderDetailList);
+        return Message.success(resultMap);
     }
 }

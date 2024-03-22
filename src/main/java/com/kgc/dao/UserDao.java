@@ -61,4 +61,12 @@ public interface UserDao {
     Integer updateUser(User user);
 
     Integer deleteUser(User user);
+
+    /**
+     * 通过用户id查询用户
+     *
+     * @param id 用户id
+     * @return 返回用户
+     */
+    User getUserById(Integer id);
 }
