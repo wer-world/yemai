@@ -46,9 +46,9 @@ public class ReplayUtil {
     /**
      * 将随机数加载至maxRandom的数量
      */
-    public void createUUIDToRedis() {
+    public void createUUIDToRedis(Integer num) {
         ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-        for (int i = 0; i < maxRandom - randomList.size(); i++) {
+        for (int i = 0; i < maxRandom - num; i++) {
             String random = UUID.randomUUID().toString();
             randomList.add(random);
             operations.set(random, random);
@@ -74,7 +74,7 @@ public class ReplayUtil {
     public String checkRandom(String random) {
         String redisRandom = stringRedisTemplate.opsForValue().get(random);
         if (randomList.size() <= minRandom) {
-            createUUIDToRedis();
+            createUUIDToRedis(randomList.size());
         }
         return redisRandom;
     }

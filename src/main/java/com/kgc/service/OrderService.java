@@ -56,5 +56,13 @@ public interface OrderService {
      *
      * @return 返回订单消息类
      */
-    Message getOrderList();
+    Message getOrderList(Map<String, Object> params);
+
+    /**
+     * 通过订单id获取订单相关信息
+     *
+     * @param order 订单相关信息-id
+     * @return 返回消息类
+     */
+    Message getOrder(Order order);
 }

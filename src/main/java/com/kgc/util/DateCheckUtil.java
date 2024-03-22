@@ -51,12 +51,11 @@ public class DateCheckUtil {
      *
      * @param time 时间日期
      * @return 返回是否超时 true-未超时 false-超时
-     * @throws ParseException 抛出解析错误
      */
-    public static boolean checkDateTime(String time) throws ParseException {
-        long tarTime = parseString(time).getTime();
+    public static boolean checkDateTime(String time) {
+        long tarTime = parseTime(time).getTime();
         long newTime = new Date().getTime();
-        long targetTime = tarTime - newTime;
-        return targetTime / 1000 < 1800;
+        long targetTime = newTime - tarTime;
+        return targetTime > 0 && targetTime < 1800000;
     }
 }

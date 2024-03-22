@@ -22,4 +22,5 @@ public class Order {
     private Double cost;
     private String serialNumber;
     private Integer status;
+    private String statusName;
 }
