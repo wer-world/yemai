@@ -78,17 +78,31 @@ public interface UserService {
     public Message getUserListPage(Map<String, Object> paramMap);
 
     /**
-     * 查询用户信息（前端传参id）
+     * 查询用户权限（前端传参id）
      *
      * @param user
      * @return
      */
     Message checkType(User user);
 
+    /**
+     * 修改用户信息
+     * @param user
+     * @return
+     */
     Message updateUser(User user);
 
+    /**
+     * 删除用户
+     * @param user
+     * @return
+     */
     Message deleteUser(User user);
 
+    /**
+     * 获取当前管理员信息
+     * @return
+     */
     Message getCurrentUser();
 
 
