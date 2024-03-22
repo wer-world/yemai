@@ -42,10 +42,10 @@ public class UserServiceImpl implements UserService {
             return new Message("400", "fail", null);
         }
         User loginUser = userDao.checkLogin(user); // 重大业务错误需要重新编写
-        if (loginUser == null){
+        if (loginUser == null) {
             return Message.error();
         }
-        if (!loginUser.getPassword().equals(user.getPassword())){
+        if (!loginUser.getPassword().equals(user.getPassword())) {
             return Message.error("密码不正确");
         }
         // 2、判断登录状态
@@ -104,7 +104,6 @@ public class UserServiceImpl implements UserService {
         }
         return message;
     }
-
 
 
     @Override
@@ -210,9 +209,10 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Integer id) {
         return userDao.getUserById(id);
     }
+
     @Override
     public Message modifyPasswordById(User user) {
-        if (user == null){
+        if (user == null) {
             return Message.error();
         }
         if (user.getPassword() == null || "".equals(user.getPassword())) {
@@ -224,6 +224,4 @@ public class UserServiceImpl implements UserService {
         }
         return Message.success(count);
     }
-
-
 }

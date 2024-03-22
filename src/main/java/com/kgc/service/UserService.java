@@ -39,7 +39,6 @@ public interface UserService {
     Message checkLoginName(String loginName);
 
 
-
     /**
      * 找回密码
      *
@@ -83,6 +82,7 @@ public interface UserService {
 
     /**
      * 修改用户信息
+     *
      * @param user
      * @return
      */
@@ -90,6 +90,7 @@ public interface UserService {
 
     /**
      * 删除用户
+     *
      * @param user
      * @return
      */
@@ -97,9 +98,11 @@ public interface UserService {
 
     /**
      * 获取当前管理员信息
+     *
      * @return
      */
     Message getCurrentUser();
+
     /**
      * 通过用户id查询用户
      *
