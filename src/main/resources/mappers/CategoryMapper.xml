@@ -10,4 +10,8 @@
         from easybuy_product_category
         WHERE isDelete=0 AND parentId=#{parentId}
     </select>
+
+    <select id="getProCategoryNameByType" resultType="Category">
+        select name from easybuy_product_category where isDelete=0 and type=3
+    </select>
 </mapper>

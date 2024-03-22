@@ -41,7 +41,10 @@ public class UserServiceImpl implements UserService {
         if (user.getLoginName() == null || user.getLoginName().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty()) {
             return new Message("400", "fail", null);
         }
-        User loginUser = userDao.loginCheck(user); // 重大业务错误需要重新编写
+        User loginUser = userDao.loginCheck(user);
+        if (loginUser == null){
+            return Message.error();
+        }
         // 2、判断登录状态
         if (loginUser != null) {
             // 登录成功添加令牌
