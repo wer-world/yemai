@@ -24,4 +24,6 @@ public interface CategoryDao {
      * @return
      */
     List<Category> getProCategoryNameByType();
+
+
 }

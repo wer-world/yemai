@@ -1,6 +1,7 @@
 package com.kgc.service;
 
 import com.kgc.entity.Category;
+import com.kgc.entity.Message;
 
 import java.util.List;
 
@@ -17,4 +18,13 @@ public interface CategoryService {
      * @return 返回分类列表
      */
     public List<Category> getCategoryList(Category category);
+    /**
+     * 查询所有商品所对应的分类
+     *
+     * @param
+     * @return 返回分类列表
+     */
+    Message getProCategoryNameByType();
+
+
 }

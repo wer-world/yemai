@@ -2,6 +2,7 @@ package com.kgc.service.impl;
 
 import com.kgc.dao.CategoryDao;
 import com.kgc.entity.Category;
+import com.kgc.entity.Message;
 import com.kgc.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,4 +35,12 @@ public class CategoryServiceImpl implements CategoryService {
         }
         return categoryList1;
     }
+
+    @Override
+    public Message getProCategoryNameByType() {
+        List<Category> proCategoryNameByType = categoryDao.getProCategoryNameByType();
+        return Message.success(proCategoryNameByType);
+    }
+
+
 }

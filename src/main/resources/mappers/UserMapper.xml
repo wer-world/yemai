@@ -7,14 +7,14 @@
         insert into easybuy_user(loginName, userName, password, identityCode, email, mobile)
             value (#{loginName}, #{userName}, #{password}, #{identityCode}, #{email}, #{mobile})
     </insert>
-    <select id="checkLoginName" resultType="User">
+    <select id="checkName" resultType="User">
         select id,loginName,userName,password,sex,identityCode,email,mobile,type
         from easybuy_user where isDelete = 0
         <if test="loginName!=null and loginName!=''">
             and loginName = #{loginName}
         </if>
     </select>
-    <select id="loginCheck" resultType="User">
+    <select id="checkLogin" resultType="User">
         select id,loginName,userName,password,sex,identityCode,email,mobile,type
         from easybuy_user
         <where>
@@ -123,4 +123,7 @@
         where isDelete = 0
           and id = #{id}
     </select>
+    <update id="modifyPasswordById">
+        update easybuy_user set password=#{password} where id=#{id} and isDelete = 0
+    </update>
 </mapper>

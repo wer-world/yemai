@@ -36,7 +36,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("login")
-    public Message login(User user, HttpServletResponse response) {
+    public Message login(@RequestBody Map map, HttpServletResponse response) {
+        Object userObj  = map.get("user");
+        User user = JSON.parseObject(JSON.toJSONString(userObj),User.class);
         Message message = userService.login(user);
         // 3、成功
         if ("200".equals(message.getCode())) {
@@ -61,11 +63,13 @@ public class UserController {
         return userService.checkLoginName(loginName);
     }
 
-    @RequestMapping("checkLogin")
-    public Message checkLogin(@RequestBody Map<String, Object> map){
+    @RequestMapping("checkRegisterName")
+    public Message checkRegisterName(@RequestBody Map<String, Object> map){
         String loginName = (String)map.get("loginName") ;
-        return userService.checkLogin(loginName);
+        return userService.checkRegisterName(loginName);
     }
+
+
 
     @GetMapping("delUser")
     public Message delUser(User user) {
@@ -162,4 +166,10 @@ public class UserController {
         return userService.getCurrentUser();
     }
 
+    @RequestMapping("modifyPasswordById")
+    public Message modifyPasswordById(@RequestBody Map map){
+        Object userObj = map.get("user");
+        User user = JSON.parseObject(JSON.toJSONString(userObj),User.class);
+        return userService.modifyPasswordById(user);
+    }
 }

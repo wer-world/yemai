@@ -1,6 +1,7 @@
 package com.kgc.controller;
 
 import com.kgc.entity.Category;
+import com.kgc.entity.Message;
 import com.kgc.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,4 +26,10 @@ public class CategoryController {
     public List<Category> getCategoryList(@RequestBody Category category){
         return categoryService.getCategoryList(category);
     }
+
+    @RequestMapping("getProCategoryNameByType")
+    public Message getProCategoryNameByType(){
+        return categoryService.getProCategoryNameByType();
+    }
+
 }

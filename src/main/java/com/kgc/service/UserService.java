@@ -28,6 +28,8 @@ public interface UserService {
      */
     Message register(User user);
 
+    Message checkRegisterName(String loginName);
+
     /**
      * 检查用户登录名
      *
@@ -36,13 +38,7 @@ public interface UserService {
      */
     Message checkLoginName(String loginName);
 
-    /**
-     * 登录检查(可优化，一般登录不需要失焦校验，避免性能浪费)
-     *
-     * @param loginName 需要登录的用户名
-     * @return 返回消息类
-     */
-    Message checkLogin(String loginName);
+
 
     /**
      * 找回密码
@@ -104,8 +100,6 @@ public interface UserService {
      * @return
      */
     Message getCurrentUser();
-
-
     /**
      * 通过用户id查询用户
      *
@@ -113,4 +107,12 @@ public interface UserService {
      * @return 返回用户
      */
     User getUserById(Integer id);
+
+    /**
+     * 通过用户id修改用户密码
+     *
+     * @param user
+     * @return 返回受影响的行数
+     */
+    Message modifyPasswordById(User user);
 }
