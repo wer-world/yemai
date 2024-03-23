@@ -20,10 +20,10 @@ public interface BuyCarDao {
     List<BuyCar> getBuyCarListByUserId(Integer userId);
 
     /**
-     * 根据id删除购物车商品
+     * 根据条件删除购物车商品
      *
-     * @param id 购物车id
+     * @param buyCar 条件
      * @return 返回影响行数
      */
-    Integer delBuyCarProductById(Integer id);
+    Integer delBuyCarProduct(BuyCar buyCar);
 }

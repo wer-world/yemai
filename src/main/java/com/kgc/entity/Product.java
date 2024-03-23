@@ -40,7 +40,7 @@ public class Product {
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String categoryName;
     @Transient
-    private String picId;
+    private Integer picId;
     @Field(type = FieldType.Keyword)
     private String picPath;
     @Field(type = FieldType.Integer)
@@ -49,9 +49,9 @@ public class Product {
     private Boolean newProduct;
 
     public void setPicPath(String picPath) {
-        if (picPath != null && !"".equals(picPath)) {
+        if (picPath != null && !picPath.isEmpty()) {
             try {
-                this.picPath = URLEncoder.encode(picPath,"utf-8");
+                this.picPath = URLEncoder.encode(picPath, "utf-8");
             } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }

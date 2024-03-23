@@ -6,10 +6,7 @@ import com.kgc.dao.OrderDao;
 import com.kgc.entity.*;
 import com.kgc.enums.OrderExceptionEnum;
 import com.kgc.exception.ServiceException;
-import com.kgc.service.OrderDetailService;
-import com.kgc.service.OrderService;
-import com.kgc.service.ProductService;
-import com.kgc.service.UserService;
+import com.kgc.service.*;
 import com.kgc.util.ThreadLocalUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +40,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BuyCarService buyCarService;
 
     @Override
     public void fulfilOrderPay(String orderNumber) {
@@ -103,10 +103,19 @@ public class OrderServiceImpl implements OrderService {
                 logger.error("OrderServiceImpl createOrder product stock update error");
                 throw new ServiceException(OrderExceptionEnum.PRODUCT_UPDATE_ERROR.getMsg());
             }
+            Boolean isAdd = orderDetailService.addOrderDetail(orderDetail);
+            if (!isAdd) {
+                logger.error("OrderServiceImpl createOrder order detail create error");
+                throw new ServiceException(OrderExceptionEnum.ORDER_DETAIL_CREATE_ERROR.getMsg());
+            }
         }
         // 4、计算总价格加入订单属性
         order.setCost(orderSum);
         flag = orderDao.modOrder(order);
+
+        // 5、清空购物车
+        buyCarService.delBuyCarProductByUserId();
+
         if (flag == 0) {
             logger.error("OrderServiceImpl createOrder order cost update error");
             throw new ServiceException(OrderExceptionEnum.ORDER_COST_UPDATE_ERROR.getMsg());
@@ -136,6 +145,10 @@ public class OrderServiceImpl implements OrderService {
     public Message cancelOrder(Order order) {
         // 获取当前订单的所有下单商品
         List<OrderDetail> orderDetailList = orderDetailService.getOrderDetailListByOrderId(order.getId());
+        if (orderDetailList == null) {
+            logger.error("OrderServiceImpl cancelOrder orderDetailList get error");
+            throw new ServiceException();
+        }
         logger.debug("OrderServiceImpl cancelOrder find all orderDetailList:" + orderDetailList);
         for (OrderDetail orderDetail : orderDetailList) {
             Message message = productService.getProductById(orderDetail.getProductId());
@@ -196,5 +209,10 @@ public class OrderServiceImpl implements OrderService {
             return Message.error();
         }
         return Message.success(resultOrder);
+    }
+
+    @Override
+    public List<Order> getTimeOutOrderList() {
+        return orderDao.getTimeOutOrderList();
     }
 }

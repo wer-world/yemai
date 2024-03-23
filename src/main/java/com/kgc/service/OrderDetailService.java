@@ -36,4 +36,12 @@ public interface OrderDetailService {
      * @return 返回消息类
      */
     Message getOrderDetailListPage(Map<String, Object> params);
+
+    /**
+     * 添加订单详情信息
+     *
+     * @param orderDetail 订单详情信息
+     * @return 返回是否添加成功
+     */
+    Boolean addOrderDetail(OrderDetail orderDetail);
 }

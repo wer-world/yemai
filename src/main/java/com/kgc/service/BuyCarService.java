@@ -37,6 +37,11 @@ public interface BuyCarService {
     Message delBuyCarProductById(Integer id);
 
     /**
+     * 根据用户id删除购物车商品
+     */
+    void delBuyCarProductByUserId();
+
+    /**
      * 根据用户id获取购物车集合
      *
      * @param userId 用户id

@@ -51,8 +51,8 @@ public class OrderController {
         return orderService.getOrderList(params);
     }
 
-    @GetMapping("getOrder")
-    public Message getOrder(Order order) {
+    @PostMapping("getOrder")
+    public Message getOrder(@RequestBody Order order) {
         return orderService.getOrder(order);
     }
 }

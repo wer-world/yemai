@@ -26,6 +26,5 @@ public class AlipayUtil implements Runnable {
         orderService.fulfilOrderPay(orderNumber);
         // 2.修改支付宝状态接口信息
         alipayService.fulfilOrderUpdate(orderNumber);
-        // 3.编写通知
     }
 }

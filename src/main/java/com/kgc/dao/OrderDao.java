@@ -58,4 +58,11 @@ public interface OrderDao {
      * @return 返回订单
      */
     Order getOrder(Order order);
+
+    /**
+     * 获取所有超时订单
+     *
+     * @return 返回超时订单列表
+     */
+    List<Order> getTimeOutOrderList();
 }

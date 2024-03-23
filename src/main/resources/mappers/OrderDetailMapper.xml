@@ -24,6 +24,11 @@
         </if>
     </select>
 
+    <insert id="addOrderDetail">
+        insert into easybuy_order_detail(orderId, productId, quantity, cost)
+            value (#{orderId}, #{productId}, #{quantity}, #{cost})
+    </insert>
+
     <delete id="delOrderDetail">
         update easybuy_order_detail
         set isDelete = 1

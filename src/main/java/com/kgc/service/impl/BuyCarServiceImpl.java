@@ -3,7 +3,9 @@ package com.kgc.service.impl;
 import com.kgc.dao.BuyCarDao;
 import com.kgc.entity.BuyCar;
 import com.kgc.entity.Message;
+import com.kgc.entity.User;
 import com.kgc.service.BuyCarService;
+import com.kgc.util.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,10 +45,23 @@ public class BuyCarServiceImpl implements BuyCarService {
 
     @Override
     public Message delBuyCarProductById(Integer id) {
-        Integer flag = buyCarDao.delBuyCarProductById(id);
+        BuyCar buyCar = new BuyCar();
+        buyCar.setUserId(id);
+        Integer flag = buyCarDao.delBuyCarProduct(buyCar);
         if (flag > 0) {
             return Message.success();
         }
         return Message.error();
+    }
+
+    @Override
+    public void delBuyCarProductByUserId() {
+        User user = ThreadLocalUtil.get();
+        BuyCar buyCar = new BuyCar();
+        buyCar.setUserId(user.getId());
+        Integer flag = buyCarDao.delBuyCarProduct(buyCar);
+        if (flag == 0) {
+            throw new RuntimeException();
+        }
     }
 }

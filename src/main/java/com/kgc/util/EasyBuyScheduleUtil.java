@@ -3,7 +3,9 @@ package com.kgc.util;
 import com.alibaba.fastjson.JSON;
 import com.kgc.entity.Alipay;
 import com.kgc.entity.Message;
+import com.kgc.entity.Order;
 import com.kgc.service.AlipayService;
+import com.kgc.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -23,6 +25,9 @@ public class EasyBuyScheduleUtil {
     @Autowired
     private AlipayService alipayService;
 
+    @Autowired
+    private OrderService orderService;
+
     /**
      * 定时扫描支付宝支付表未完成订单
      */
@@ -35,4 +40,11 @@ public class EasyBuyScheduleUtil {
         }
     }
 
+    @Scheduled(cron = "0/30 * * * * ?")
+    public void timeOutOrderSchedule() {
+        List<Order> orderList = orderService.getTimeOutOrderList();
+        for (Order order : orderList) {
+            orderService.cancelOrder(order);
+        }
+    }
 }

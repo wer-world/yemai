@@ -76,4 +76,18 @@
             and serialNumber = #{serialNumber}
         </if>
     </select>
+    <select id="getTimeOutOrderList" resultType="Order">
+        select id,
+               userId,
+               loginName,
+               userAddress,
+               createTime,
+               cost,
+               serialNumber,
+               status
+        from easybuy_order
+        where isDelete = 0
+          and status = 0
+          and date_sub(NOW(), INTERVAL 30 MINUTE) > createTime;
+    </select>
 </mapper>

@@ -21,10 +21,15 @@
           and p.picId = f.id
           and c.userId = #{userId}
     </select>
-    <delete id="delBuyCarProductById">
+    <delete id="delBuyCarProduct">
         update easybuy_shopping_car
         set isDelete = 1
         where isDelete = 0
-          and id = #{id}
+        <if test="id != null and id > 0">
+            and id = #{id}
+        </if>
+        <if test="userId != null and userId > 0">
+            and userId = #{userId}
+        </if>
     </delete>
 </mapper>

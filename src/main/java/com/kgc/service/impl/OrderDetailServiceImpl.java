@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.kgc.dao.OrderDetailDao;
 import com.kgc.entity.Message;
 import com.kgc.entity.OrderDetail;
+import com.kgc.exception.ServiceException;
 import com.kgc.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,12 +54,21 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         Integer pageSize = (Integer) params.get("pageSize");
         Page<Object> page = PageHelper.startPage(currentPage, pageSize);
         List<OrderDetail> orderDetailList = orderDetailDao.getOrderDetailListPage(params);
-        if (orderDetailList != null && !orderDetailList.isEmpty()){
+        if (orderDetailList != null && !orderDetailList.isEmpty()) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("orderDetailList", orderDetailList);
             resultMap.put("totalCount", page.getTotal());
             return Message.success(resultMap);
         }
         return Message.error();
+    }
+
+    @Override
+    public Boolean addOrderDetail(OrderDetail orderDetail) {
+        Integer flag = orderDetailDao.addOrderDetail(orderDetail);
+        if (flag == 0) {
+            throw new ServiceException();
+        }
+        return true;
     }
 }
