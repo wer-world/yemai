@@ -1,7 +1,10 @@
 package com.kgc.service;
 
+import com.kgc.entity.Collections;
 import com.kgc.entity.Message;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @Author:25378
@@ -23,5 +26,20 @@ public interface CollectionService {
      * @return
      */
     public Integer isCollection(@Param("productId") Integer productId);
+
+    /**
+     * 查询用户的所有收藏
+     * @param userId
+     * @return
+     */
+    Message getCollections(Integer userId);
+
+    /**
+     * 删除收藏
+     * @param id
+     * @return
+     */
+    Message deleteCollection(Integer id);
+
 
 }

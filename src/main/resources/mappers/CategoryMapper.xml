@@ -51,5 +51,4 @@
         select name from easybuy_product_category where isDelete=0 and type=3
     </select>
 
-
 </mapper>

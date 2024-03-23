@@ -1,5 +1,6 @@
 package com.kgc.controller;
 
+import com.kgc.entity.Collections;
 import com.kgc.entity.Message;
 import com.kgc.service.CollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,5 +26,14 @@ public class CollectionController {
     public Message addCollection(@RequestBody Map<String, Object> map){
         Integer productId = Integer.parseInt(map.get("productId").toString());
         return collectionService.addCollection(productId);
+    }
+
+    @RequestMapping("getCollections")
+    public Message getCollections(Integer userId) {
+        return collectionService.getCollections(userId);
+    }
+    @RequestMapping("deleteCollection")
+    public Message deleteCollection(Integer id) {
+        return collectionService.deleteCollection(id);
     }
 }
