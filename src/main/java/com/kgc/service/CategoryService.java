@@ -55,4 +55,13 @@ public interface CategoryService {
      */
     Message deleteCategory(Category category);
 
+    /**
+     * 查询所有商品所对应的分类
+     *
+     * @param
+     * @return 返回分类列表
+     */
+    Message getProCategoryNameByType();
+
+
 }

@@ -52,4 +52,23 @@
             and loginName like concat('%', #{loginName}, '%')
         </if>
     </select>
+    <select id="getOrder" resultType="Order">
+        select o.id,
+               userId,
+               o.loginName,
+               userAddress,
+               o.createTime,
+               cost,
+               serialNumber,
+               status,
+               name statusName,
+               mobile
+        from easybuy_order o,
+             easybuy_order_type t,
+             easybuy_user u
+        where o.isDelete = 0
+          and o.status = t.id
+          and o.userId = u.id
+          and o.id = #{id}
+    </select>
 </mapper>

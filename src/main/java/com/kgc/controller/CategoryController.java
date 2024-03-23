@@ -50,4 +50,10 @@ public class CategoryController {
     Message getCategory(@RequestBody Category category){
         return categoryService.getCategory(category);
     }
+
+    @RequestMapping("getProCategoryNameByType")
+    public Message getProCategoryNameByType(){
+        return categoryService.getProCategoryNameByType();
+    }
+
 }

@@ -112,7 +112,7 @@ public interface ProductService {
      * @param request
      * @param response
      */
-    void downLoad(HttpServletRequest request, HttpServletResponse response);
+    void downLoad(String picPath, HttpServletRequest request, HttpServletResponse response);
 
 
 }

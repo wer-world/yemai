@@ -46,4 +46,10 @@
     <select id="getChildCategoryCount" resultType="int">
         SELECT count(1) FROM easybuy_product_category WHERE isDelete=0 AND parentId=#{id};
     </select>
+
+    <select id="getProCategoryNameByType" resultType="Category">
+        select name from easybuy_product_category where isDelete=0 and type=3
+    </select>
+
+
 </mapper>

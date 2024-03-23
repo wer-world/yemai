@@ -41,7 +41,13 @@ public class UserServiceImpl implements UserService {
         if (user.getLoginName() == null || user.getLoginName().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty()) {
             return new Message("400", "fail", null);
         }
-        User loginUser = userDao.loginCheck(user); // 重大业务错误需要重新编写
+        User loginUser = userDao.checkLogin(user); // 重大业务错误需要重新编写
+        if (loginUser == null) {
+            return Message.error();
+        }
+        if (!loginUser.getPassword().equals(user.getPassword())) {
+            return Message.error("密码不正确");
+        }
         // 2、判断登录状态
         if (loginUser != null) {
             // 登录成功添加令牌
@@ -75,23 +81,7 @@ public class UserServiceImpl implements UserService {
             message = new Message("400", "请填写登录名", null);
             return message;
         }
-        User user = userDao.checkLoginName(loginName);
-        if (user == null) {
-            message = new Message("200", "该账号可以使用", user);
-        } else {
-            message = new Message("400", "该账号已存在不能注册", user);
-        }
-        return message;
-    }
-
-    @Override
-    public Message checkLogin(String loginName) {
-        Message message = null;
-        if (loginName == null || loginName.isEmpty()) {
-            message = new Message("400", "请填写登录名", null);
-            return message;
-        }
-        User user = userDao.checkLoginName(loginName);
+        User user = userDao.checkName(loginName);
         if (user != null) {
             message = new Message("200", "该账号可以使用", user);
         } else {
@@ -99,6 +89,22 @@ public class UserServiceImpl implements UserService {
         }
         return message;
     }
+
+    public Message checkRegisterName(String loginName) {
+        Message message = null;
+        if (loginName == null || loginName.isEmpty()) {
+            message = new Message("400", "请填写登录名", null);
+            return message;
+        }
+        User user = userDao.checkName(loginName);
+        if (user == null) {
+            message = new Message("200", "该账号可以使用", user);
+        } else {
+            message = new Message("400", "该账号已存在", user);
+        }
+        return message;
+    }
+
 
     @Override
     public Message findPsw(User user) {
@@ -136,7 +142,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Message getUserListPage(Map<String, Object> paramMap) {
         String userName = (String) paramMap.get("userName");
-        String typeStr = paramMap.get("type").toString();
+        String typeStr = (String) paramMap.get("type");
         Integer type = 0;
         if (typeStr != null && !"".equals(typeStr)) {
             type = Integer.valueOf(typeStr.toString());
@@ -202,5 +208,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Integer id) {
         return userDao.getUserById(id);
+    }
+
+    @Override
+    public Message modifyPasswordById(User user) {
+        if (user == null) {
+            return Message.error();
+        }
+        if (user.getPassword() == null || "".equals(user.getPassword())) {
+            return Message.error("请输入密码");
+        }
+        int count = userDao.modifyPasswordById(user);
+        if (count == 0) {
+            return Message.error();
+        }
+        return Message.success(count);
     }
 }

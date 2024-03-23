@@ -14,13 +14,9 @@ public interface UserDao {
      */
     int registerUser(User user);
 
-    /**
-     * 检查登录名
-     *
-     * @param loginName 需要检查的登录名
-     * @return 返回用户
-     */
-    User checkLoginName(String loginName);
+
+    User checkName(String loginName);
+
 
     /**
      * 登录检查
@@ -28,7 +24,7 @@ public interface UserDao {
      * @param user 需要检查的用户
      * @return 返回用户名
      */
-    User loginCheck(User user);
+    User checkLogin(User user);
 
     /**
      * 忘记密码修改密码
@@ -69,4 +65,7 @@ public interface UserDao {
      * @return 返回用户
      */
     User getUserById(Integer id);
+
+
+    int modifyPasswordById(User user);
 }

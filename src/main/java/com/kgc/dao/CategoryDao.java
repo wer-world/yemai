@@ -29,4 +29,12 @@ public interface CategoryDao {
     Integer updateCategory(Category category);
     Integer deleteCategory(Category category);
     Integer getChildCategoryCount(Category category);
+
+    /**
+     * 获取三级分类
+     * @return
+     */
+    List<Category> getProCategoryNameByType();
+
+
 }

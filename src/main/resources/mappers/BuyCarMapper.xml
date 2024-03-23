@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.BuyCarDao">
+    <select id="getBuyCarListByUserId" resultType="BuyCar">
+        select c.id,
+               c.userId,
+               c.productId,
+               c.productNum,
+               p.name  productName,
+               p.description,
+               p.price productPrice,
+               f.picPath,
+               c.createTime
+        from easybuy_shopping_car c,
+             easybuy_product p,
+             easybuy_file f
+        where c.isDelete = 0
+          and c.productId = p.id
+          and p.picId = f.id
+          and c.userId = #{userId}
+    </select>
+    <delete id="delBuyCarProductById">
+        update easybuy_shopping_car
+        set isDelete = 1
+        where isDelete = 0
+          and id = #{id}
+    </delete>
+</mapper>

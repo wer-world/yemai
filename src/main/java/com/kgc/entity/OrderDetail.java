@@ -15,6 +15,8 @@ public class OrderDetail {
     private Integer id;
     private Integer orderId;
     private Integer productId;
+    private String productName;
+    private Double productPrice;
     private Integer quantity;
     private Double cost;
 }

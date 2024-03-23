@@ -40,6 +40,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public Message getProCategoryNameByType() {
+        List<Category> proCategoryNameByType = categoryDao.getProCategoryNameByType();
+        return Message.success(proCategoryNameByType);
+    }
+
+
+
+    @Override
     public Message getParentCategory(Category category) {
         Category category1 = categoryDao.getParentCategory(category);
         return Message.success(category1);
