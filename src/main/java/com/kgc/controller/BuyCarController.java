@@ -34,8 +34,8 @@ public class BuyCarController {
 
     @GetMapping("getBuyCarListByUserId")
     public Message getBuyCarListByUserId() {
-//        User user = ThreadLocalUtil.get();
-        return buyCarService.getBuyCarListByUserId(2);
+        User user = ThreadLocalUtil.get();
+        return buyCarService.getBuyCarListByUserId(user.getId());
     }
 
     @DeleteMapping("delBuyCarProductById")

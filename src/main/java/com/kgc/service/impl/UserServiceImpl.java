@@ -206,8 +206,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Integer id) {
-        return userDao.getUserById(id);
+    public Message getUserById(Integer id) {
+        User user = userDao.getUserById(id);
+        if (user != null) {
+            return Message.success(user);
+        }
+        return Message.error();
     }
 
     @Override

@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Configuration;
 public class TokenConfig {
     @Setter
     private String tokenSign; // 令牌签名
+    @Setter
+    private Boolean isToken; // 是否开启令牌验证
     private Integer tokenOverHours; // 令牌超时时间(单位小时)
     private Long tokenTimeOut; // 令牌超时时间(单位毫秒)
 

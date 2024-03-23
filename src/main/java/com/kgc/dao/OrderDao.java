@@ -54,7 +54,7 @@ public interface OrderDao {
     /**
      * 获取订单数据
      *
-     * @param order 条件-id
+     * @param order 条件-(id,serialNumber)
      * @return 返回订单
      */
     Order getOrder(Order order);

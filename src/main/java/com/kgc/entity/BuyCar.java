@@ -1,5 +1,6 @@
 package com.kgc.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.ToString;
 

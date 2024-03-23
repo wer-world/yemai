@@ -11,7 +11,8 @@ import lombok.Getter;
 @Getter
 public enum AlipayExceptionEnum {
     ALIPAY_TABLE_STATUS("exception in updating Alipay status table","支付宝状态表更新异常!"),
-    ALIPAY_CREATE_ERROR("order creation failed","订单创建失败!");
+    ALIPAY_CREATE_ERROR("order creation failed","订单创建失败!"),
+    ALIPAY_ORDER_NOT_EXIST("order does not exist","订单不存在!");
 
     private final String message;
     private final String msg;

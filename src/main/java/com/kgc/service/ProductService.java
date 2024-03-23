@@ -18,13 +18,6 @@ import java.util.List;
 public interface ProductService {
 
     /**
-     * 是否初始化数据到ES中
-     *
-     * @return true-初始化 false-不初始化
-     */
-    Boolean isNotInitEs();
-
-    /**
      * 初始化数据到ES中
      *
      * @return 返回初始化是否成功

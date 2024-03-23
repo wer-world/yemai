@@ -9,14 +9,11 @@ import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.kgc.config.AlipayConfig;
 import com.kgc.dao.AlipayDao;
-import com.kgc.dao.ProductDao;
-import com.kgc.dao.UserDao;
 import com.kgc.entity.*;
 import com.kgc.enums.AlipayExceptionEnum;
 import com.kgc.exception.ServiceException;
 import com.kgc.service.*;
 import com.kgc.util.AlipayUtil;
-import com.kgc.util.ThreadLocalUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * 支付宝业务实现类
@@ -50,11 +46,11 @@ public class AlipayServiceImpl implements AlipayService {
     }
 
     @Override
-    public Message createAlipay(Map<Integer, OrderDetail> orderDetailMap) {
-        Message message = orderService.createOrder(orderDetailMap);
-        if (!"200".equals(message.getCode())){
-            logger.error("AlipayServiceImpl createAlipay order creation failed");
-            throw new ServiceException(AlipayExceptionEnum.ALIPAY_CREATE_ERROR.getMsg());
+    public Message createAlipay(Order order) {
+        Message message = orderService.getOrder(order);
+        if (!"200".equals(message.getCode())) {
+            logger.error("AlipayServiceImpl createAlipay order not exist");
+            throw new ServiceException(AlipayExceptionEnum.ALIPAY_ORDER_NOT_EXIST.getMsg());
         }
         AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig.getOpenApi(), alipayConfig.getAppId(), alipayConfig.getPrivateKey(), "json", "UTF-8", alipayConfig.getAliPublicKey(), "RSA2");
         AlipayTradePagePayRequest request = getAlipayTradePagePayRequest((Order) message.getData());

@@ -26,6 +26,7 @@ logging:
 replay:
   maxRandom: 100
   minRandom: 20
+  is-replay: true # 开启重放攻击检测
 mail:
   host: smtp.qq.com
   username: 1348466224@qq.com
@@ -44,3 +45,7 @@ alipay:
 token:
   token-sign: EasyBuyNet #令牌签名
   token-over-hours: 1 #令牌超时时间(单位小时)
+  is-token: false #开启令牌验证
+web-config:
+  exclude-token: [ "/user/login", "/user/register", "/replay/getRandom", "/error" ]
+  exclude-replay: [ "/replay/getRandom", "/error" ]
