@@ -74,6 +74,12 @@ public interface ProductDao {
      * @return 返回商品列表
      */
     List<Product> getProductsByHigHestId(Category category);
+    /**
+     * 根据图片ID找到商品ID
+     * @param picId
+     * @return
+     */
+    Product selectProIdByPicId(Integer picId);
 
 
 

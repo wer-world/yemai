@@ -40,7 +40,7 @@ public class Product {
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String categoryName;
     @Transient
-    private String picId;
+    private Integer picId;
     @Field(type = FieldType.Keyword)
     private String picPath;
     @Field(type = FieldType.Integer)

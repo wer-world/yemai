@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.FileDao">
+    <insert id="addFile">
+        insert into easybuy_file(picPath,createTime) value(#{picPath},now())
+    </insert>
+    <select id="getFileIdByPicPath" resultType="File">
+        select id from easybuy_file where isDelete = 0 and picPath = #{picPath}
+    </select>
+    <update id="modifyProIdById">
+        update easybuy_file set product_id=#{product_id} where isDelete = 0 and id=#{id}
+    </update>
+</mapper>
