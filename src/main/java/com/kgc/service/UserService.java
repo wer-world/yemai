@@ -109,7 +109,7 @@ public interface UserService {
      * @param id 用户id
      * @return 返回用户
      */
-    User getUserById(Integer id);
+    Message getUserById(Integer id);
 
     /**
      * 通过用户id修改用户密码

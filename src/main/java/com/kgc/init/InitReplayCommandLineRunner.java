@@ -1,5 +1,6 @@
 package com.kgc.init;
 
+import com.kgc.config.EasyBuyInitConfig;
 import com.kgc.util.ReplayUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +20,14 @@ public class InitReplayCommandLineRunner implements CommandLineRunner {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
+    private EasyBuyInitConfig easyBuyInitConfig;
+
+    @Autowired
     private ReplayUtil replayUtil;
 
     @Override
     public void run(String... args) throws Exception {
-        if (!replayUtil.isInitReplay()) {
+        if (!easyBuyInitConfig.getInitReplay()) {
             logger.info("InitReplayCommandLineRunner run replay defense init cancel");
             return;
         }

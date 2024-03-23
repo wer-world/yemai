@@ -1,5 +1,6 @@
 package com.kgc.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.ToString;
 
@@ -17,6 +18,7 @@ public class OrderDetail {
     private Integer productId;
     private String productName;
     private Double productPrice;
+    @JSONField(name = "productNum")
     private Integer quantity;
     private Double cost;
 }

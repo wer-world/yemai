@@ -1,6 +1,5 @@
 package com.kgc.service.impl;
 
-import com.kgc.util.Base64Util;
 import com.kgc.util.ProductESRepositoryUtil;
 import com.kgc.dao.ProductDao;
 import com.kgc.entity.Category;
@@ -48,9 +47,6 @@ public class ProductServiceImpl implements ProductService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Value("${easy-buy-init.init-es-data}")
-    private Boolean isInitSave;
-
     @Autowired
     private ProductDao productDao;
 
@@ -59,11 +55,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductESRepositoryUtil productESRepository;
-
-    @Override
-    public Boolean isNotInitEs() {
-        return isInitSave;
-    }
 
     @Override
     public Boolean saveProductListToEs() {

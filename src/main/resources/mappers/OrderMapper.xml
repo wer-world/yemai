@@ -54,21 +54,26 @@
     </select>
     <select id="getOrder" resultType="Order">
         select o.id,
-               userId,
-               o.loginName,
-               userAddress,
-               o.createTime,
-               cost,
-               serialNumber,
-               status,
-               name statusName,
-               mobile
+        userId,
+        o.loginName,
+        userAddress,
+        o.createTime,
+        cost,
+        serialNumber,
+        status,
+        name statusName,
+        mobile
         from easybuy_order o,
-             easybuy_order_type t,
-             easybuy_user u
+        easybuy_order_type t,
+        easybuy_user u
         where o.isDelete = 0
-          and o.status = t.id
-          and o.userId = u.id
-          and o.id = #{id}
+        and o.status = t.id
+        and o.userId = u.id
+        <if test="id != null and id > 0">
+            and o.id = #{id}
+        </if>
+        <if test="serialNumber != null and serialNumber != ''">
+            and serialNumber = #{serialNumber}
+        </if>
     </select>
 </mapper>

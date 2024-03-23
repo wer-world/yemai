@@ -39,25 +39,36 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         logger.info("LoginInterceptor preHandle start...");
-        logger.debug("LoginInterceptor preHandle url:" + request.getRequestURI());
-        String token = request.getHeader("token");// 从 http 请求头中取出 token
-        logger.debug("LoginInterceptor preHandle token:" + token);
-        if (token == null || token.isEmpty()) {
-            logger.error("LoginInterceptor preHandle token error");
-            throw new ServiceException(TokenExceptionEnum.NOT_TOKEN.getMsg());
-        }
-        ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+        if (tokenConfig.getIsToken()) {
+            logger.debug("LoginInterceptor preHandle url:" + request.getRequestURI());
+            String token = request.getHeader("token");// 从 http 请求头中取出 token
+            logger.debug("LoginInterceptor preHandle token:" + token);
+            if (token == null || token.isEmpty()) {
+                logger.error("LoginInterceptor preHandle token error");
+                throw new ServiceException(TokenExceptionEnum.NOT_TOKEN.getMsg());
+            }
+            ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
 
-        // 令牌校验
-        String redisToken = operations.get(token);
-        if (redisToken == null) {
-            logger.error("LoginInterceptor preHandle token error");
-            throw new ServiceException(TokenExceptionEnum.TOKEN_OVER.getMsg());
+            // 令牌校验
+            String redisToken = operations.get(token);
+            if (redisToken == null) {
+                logger.error("LoginInterceptor preHandle token error");
+                throw new ServiceException(TokenExceptionEnum.TOKEN_OVER.getMsg());
+            }
+            User user = JWTUtil.parseToken(redisToken, tokenConfig.getTokenSign());
+            ThreadLocalUtil.set(user);
+            response.setHeader("loginName", user.getLoginName());
+            response.setHeader("type", String.valueOf(user.getType()));
+        } else {
+            // 配置默认属性
+            User user = new User();
+            user.setId(2);
+            user.setLoginName("admin");
+            user.setType(1);
+            ThreadLocalUtil.set(user);
+            response.setHeader("loginName", user.getLoginName());
+            response.setHeader("type", String.valueOf(user.getType()));
         }
-        User user = JWTUtil.parseToken(redisToken, tokenConfig.getTokenSign());
-        ThreadLocalUtil.set(user);
-        response.setHeader("loginName", user.getLoginName());
-        response.setHeader("type", String.valueOf(user.getType()));
         logger.info("LoginInterceptor preHandle end...");
         return true;
     }

@@ -6,6 +6,7 @@ import com.kgc.entity.User;
 import com.kgc.service.UserService;
 import com.kgc.util.EmailCodeUtil;
 import com.kgc.util.RedisUtil;
+import com.kgc.util.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -171,5 +172,11 @@ public class UserController {
         Object userObj = map.get("user");
         User user = JSON.parseObject(JSON.toJSONString(userObj),User.class);
         return userService.modifyPasswordById(user);
+    }
+
+    @GetMapping("getUserById")
+    public Message getUserById(){
+        User user = ThreadLocalUtil.get();
+        return userService.getUserById(user.getId());
     }
 }

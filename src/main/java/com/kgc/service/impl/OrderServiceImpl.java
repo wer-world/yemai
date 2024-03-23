@@ -55,7 +55,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Message createOrder(Map<Integer, OrderDetail> orderDetailMap) {
+    public Message createOrder(List<OrderDetail> orderDetailList) {
         // 1、创建订单类
         Order order = new Order();
         // 2、添加用户ThreadLocalUtil获取用户
@@ -79,14 +79,13 @@ public class OrderServiceImpl implements OrderService {
         }
         // 3、添加商品，并计算商品价格，检查商品库存是否充足，加入订单详情信息类
         double orderSum = 0; // 计算订单总价格
-        for (Integer id : orderDetailMap.keySet()) {
-            Message message = productService.getProductById(id);
+        for (OrderDetail orderDetail : orderDetailList) {
+            Message message = productService.getProductById(orderDetail.getProductId());
             if (!"200".equals(message.getCode())) {
                 logger.error("OrderServiceImpl createOrder product get error");
                 throw new ServiceException(OrderExceptionEnum.PRODUCT_GET_ERROR.getMsg());
             }
             Product product = (Product) message.getData();
-            OrderDetail orderDetail = orderDetailMap.get(id);
             // 判断库存是否充足
             if (product.getStock() <= 0 || product.getStock() < orderDetail.getQuantity()) {
                 logger.error("OrderServiceImpl createOrder product inventory shortage");
@@ -112,7 +111,6 @@ public class OrderServiceImpl implements OrderService {
             logger.error("OrderServiceImpl createOrder order cost update error");
             throw new ServiceException(OrderExceptionEnum.ORDER_COST_UPDATE_ERROR.getMsg());
         }
-
         return Message.success(order);
     }
 

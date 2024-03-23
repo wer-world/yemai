@@ -3,7 +3,6 @@ package com.kgc.service;
 import com.kgc.entity.Alipay;
 import com.kgc.entity.Message;
 import com.kgc.entity.Order;
-import com.kgc.entity.OrderDetail;
 
 import java.util.List;
 import java.util.Map;
@@ -25,10 +24,10 @@ public interface AlipayService {
     /**
      * 统一下单接口
      *
-     * @param orderDetailMap 创建的订单
+     * @param order 下单的订单
      * @return 返回消息类, 包含支付页面
      */
-    Message createAlipay(Map<Integer, OrderDetail> orderDetailMap);
+    Message createAlipay(Order order);
 
     /**
      * 处理支付成功请求业务

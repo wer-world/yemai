@@ -1,7 +1,10 @@
 package com.kgc.controller;
 
+import com.kgc.entity.Collections;
 import com.kgc.entity.Message;
+import com.kgc.entity.User;
 import com.kgc.service.CollectionService;
+import com.kgc.util.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +24,15 @@ public class CollectionController {
     private CollectionService collectionService;
 
     @RequestMapping("addCollection")
-    public Message addCollection(@RequestBody Map<String, Object> map){
-        Integer productId = Integer.parseInt(map.get("productId").toString());
-        return collectionService.addCollection(productId);
+    public Message addCollection(@RequestBody Map<String, Object> params) {
+        User user = ThreadLocalUtil.get();
+        Integer productId = Integer.valueOf(params.get("productId").toString());
+        if (productId == null) {
+            return Message.error();
+        }
+        Collections collections = new Collections();
+        collections.setUserId(user.getId());
+        collections.setProductId(productId);
+        return collectionService.addCollection(collections);
     }
 }

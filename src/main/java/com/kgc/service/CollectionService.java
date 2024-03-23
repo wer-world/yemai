@@ -1,5 +1,6 @@
 package com.kgc.service;
 
+import com.kgc.entity.Collections;
 import com.kgc.entity.Message;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,13 +16,13 @@ public interface CollectionService {
      * @param productId
      * @return
      */
-    public Message addCollection(Integer productId);
+    Message addCollection(Collections productId);
 
     /**
      * 用来查询是否已经收藏，被addCollection所调用
      * @param productId
      * @return
      */
-    public Integer isCollection(@Param("productId") Integer productId);
+    Integer isCollection(@Param("productId") Integer productId);
 
 }

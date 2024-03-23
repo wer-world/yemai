@@ -4,6 +4,7 @@ import com.kgc.entity.Message;
 import com.kgc.entity.Order;
 import com.kgc.entity.OrderDetail;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,10 +23,10 @@ public interface OrderService {
     /**
      * 创建订单
      *
-     * @param orderDetailMap 创建的订单
+     * @param orderDetailList 购买的商品集合
      * @return 返回消息类, 订单是否创建成功
      */
-    Message createOrder(Map<Integer, OrderDetail> orderDetailMap);
+    Message createOrder(List<OrderDetail> orderDetailList);
 
     /**
      * 添加订单信息
@@ -61,7 +62,7 @@ public interface OrderService {
     /**
      * 通过订单id获取订单相关信息
      *
-     * @param order 订单相关信息-id
+     * @param order 订单相关信息-(id,serialNumber)
      * @return 返回消息类
      */
     Message getOrder(Order order);

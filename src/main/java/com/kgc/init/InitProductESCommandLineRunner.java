@@ -1,5 +1,6 @@
 package com.kgc.init;
 
+import com.kgc.config.EasyBuyInitConfig;
 import com.kgc.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,17 +19,20 @@ public class InitProductESCommandLineRunner implements CommandLineRunner {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
+    private EasyBuyInitConfig easyBuyInitConfig;
+
+    @Autowired
     private ProductService productService;
 
     @Override
     public void run(String... args) throws Exception {
-        if (!productService.isNotInitEs()){
+        if (!easyBuyInitConfig.getInitEsData()) {
             logger.info("InitProductESCommandLineRunner run product to es init cancel");
             return;
         }
         logger.info("InitProductESCommandLineRunner run product to es init start...");
         Boolean isInitSuccess = productService.saveProductListToEs();
-        if (isInitSuccess){
+        if (isInitSuccess) {
             logger.info("InitProductESCommandLineRunner run product to es init success");
         } else {
             logger.error("InitProductESCommandLineRunner run product to es init error");
