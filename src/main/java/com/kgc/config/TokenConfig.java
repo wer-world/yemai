@@ -2,9 +2,7 @@ package com.kgc.config;
 
 import com.kgc.enums.InitExceptionEnum;
 import com.kgc.exception.InitException;
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.commons.lang3.math.NumberUtils;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * @Author: 魏小可
  * @Date: 2024-03-20-22:11
  */
-@Getter
+@Data
 @Configuration
 @ConfigurationProperties(prefix = "token")
 public class TokenConfig {
@@ -28,18 +26,8 @@ public class TokenConfig {
         this.tokenSign = tokenSign;
     }
 
-    public void setIsToken(String isToken) {
-        if (!"true".equals(isToken) && !"false".equals(isToken)) {
-            throw new InitException(InitExceptionEnum.INIT_IS_TOKEN_ERROR.getMessage(), "isToken", isToken);
-        }
-        this.isToken = Boolean.valueOf(isToken);
-    }
-
-    public void setTokenOverHours(String tokenOverHours) {
-        if (!NumberUtils.isCreatable(tokenOverHours)) {
-            throw new InitException(InitExceptionEnum.INIT_TOKEN_OVER_HOURS_ERROR.getMessage(), "tokenOverHours", tokenOverHours);
-        }
-        this.tokenOverHours = Integer.valueOf(tokenOverHours);
+    public void setTokenOverHours(Integer tokenOverHours) {
+        this.tokenOverHours = tokenOverHours;
         setTokenTimeOut();
     }
 

@@ -14,32 +14,11 @@ import org.springframework.context.annotation.Configuration;
  * @Author: 魏小可
  * @Date: 2024-03-23-10:20
  */
-@Getter
+@Data
 @Configuration
 @ConfigurationProperties(prefix = "replay")
 public class ReplayConfig {
     private Integer maxRandom; // 最大储存的随机数
     private Integer minRandom; // 最小储存的随机数
     private Boolean isReplay; // 是否开启重放攻击
-
-    public void setMaxRandom(String maxRandom) {
-        if (!NumberUtils.isCreatable(maxRandom)) {
-            throw new InitException(InitExceptionEnum.INIT_REPLAY_MAX_RANDOM_ERROR.getMessage(), "maxRandom", maxRandom);
-        }
-        this.maxRandom = Integer.valueOf(maxRandom);
-    }
-
-    public void setMinRandom(String minRandom) {
-        if (!NumberUtils.isCreatable(minRandom)) {
-            throw new InitException(InitExceptionEnum.INIT_REPLAY_MIN_RANDOM_ERROR.getMessage(), "minRandom", minRandom);
-        }
-        this.minRandom = Integer.valueOf(minRandom);
-    }
-
-    public void setIsReplay(String isReplay) {
-        if (!"true".equals(isReplay) && !"false".equals(isReplay)) {
-            throw new InitException(InitExceptionEnum.INIT_ES_DATA_ERROR.getMessage(), "isReplay", isReplay);
-        }
-        this.isReplay = Boolean.valueOf(isReplay);
-    }
 }
