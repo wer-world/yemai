@@ -30,5 +30,5 @@ public interface AlipayDao {
      *
      * @param alipay 支付信息
      */
-    void addAlipay(Alipay alipay);
+    Integer addAlipay(Alipay alipay);
 }

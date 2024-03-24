@@ -48,4 +48,12 @@ public interface BuyCarService {
      * @return 返回消息类
      */
     Message getBuyCarListByUserId(Integer userId);
+
+    /**
+     * 添加数据到购物车
+     *
+     * @param buyCar 需要添加的数据
+     * @return 返回消息类
+     */
+    Message addBuyCar(BuyCar buyCar);
 }

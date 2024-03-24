@@ -63,9 +63,9 @@ public interface OrderService {
      * 通过订单id或订单号获取订单相关信息
      *
      * @param order 订单相关信息-(id,serialNumber)
-     * @return 返回消息类
+     * @return 返回订单
      */
-    Message getOrder(Order order);
+    Order getOrder(Order order);
 
     /**
      * 获取所有超时订单

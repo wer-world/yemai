@@ -71,30 +71,46 @@ public class ProductServiceImpl implements ProductService {
         Double minPrice = (Double) paramMap.get("minPrice"); // 最小价格
         Double maxPrice = (Double) paramMap.get("maxPrice"); // 最大价格
         String brandName = (String) paramMap.get("brandName"); // 品牌名
-        String name = (String) paramMap.get("name"); // 商品名
+        String productName = (String) paramMap.get("productName"); // 商品名
         String categoryName = (String) paramMap.get("categoryName"); // 类型
+        String globalCondition = (String) paramMap.get("globalCondition"); // 全局条件
         Boolean isSales = (Boolean) paramMap.get("isSales"); // 销量排序
         Boolean isNewProduct = (Boolean) paramMap.get("isNewProduct"); // 新品排序
         Boolean isPrice = (Boolean) paramMap.get("isPrice"); // 价格排序
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
-        if (name != null && !name.isEmpty()) {
-            queryBuilder.must(QueryBuilders.matchQuery("name", name));
-        }
-        if (categoryName != null && !categoryName.isEmpty()) {
-            queryBuilder.must(QueryBuilders.matchQuery("categoryName", categoryName));
-        }
-        if (maxPrice != null && maxPrice > 0) {
-            queryBuilder.must(QueryBuilders.rangeQuery("price").lt(maxPrice));
-            if (minPrice != null && minPrice >= 0 && minPrice < maxPrice) {
-                queryBuilder.must(QueryBuilders.rangeQuery("price").gt(minPrice));
+        if (globalCondition != null && !globalCondition.isEmpty()) {
+            queryBuilder.should(QueryBuilders.matchQuery("name", globalCondition));
+            queryBuilder.should(QueryBuilders.matchQuery("categoryLeve1Name", globalCondition));
+            queryBuilder.should(QueryBuilders.matchQuery("categoryLeve2Name", globalCondition));
+            queryBuilder.should(QueryBuilders.matchQuery("categoryLeve3Name", globalCondition));
+            queryBuilder.should(QueryBuilders.matchQuery("description", globalCondition));
+            queryBuilder.should(QueryBuilders.termQuery("price.keyword", globalCondition));
+            queryBuilder.should(QueryBuilders.termQuery("brandName", globalCondition));
+        } else {
+            if (productName != null && !productName.isEmpty()) {
+                queryBuilder.must(QueryBuilders.matchQuery("name", productName));
             }
-        }
-        if (brandName != null && !brandName.isEmpty()) {
-            queryBuilder.must(QueryBuilders.termQuery("brandName", brandName));
+            if (categoryName != null && !categoryName.isEmpty()) {
+                queryBuilder.should(QueryBuilders.matchQuery("categoryLeve1Name", categoryName));
+                queryBuilder.should(QueryBuilders.matchQuery("categoryLeve2Name", categoryName));
+                queryBuilder.should(QueryBuilders.matchQuery("categoryLeve3Name", categoryName));
+            }
+            if (minPrice == null) {
+                queryBuilder.must(QueryBuilders.rangeQuery("price").gt(0));
+            }
+            if (maxPrice != null && maxPrice > 0) {
+                queryBuilder.must(QueryBuilders.rangeQuery("price").lt(maxPrice));
+                if (minPrice != null && minPrice >= 0 && minPrice < maxPrice) {
+                    queryBuilder.must(QueryBuilders.rangeQuery("price").gt(minPrice));
+                }
+            }
+            if (brandName != null && !brandName.isEmpty()) {
+                queryBuilder.must(QueryBuilders.termQuery("brandName", brandName));
+            }
         }
 
         HighlightBuilder highlightBuilder = new HighlightBuilder();
-        highlightBuilder.field("categoryName");
+        highlightBuilder.field("description");
         highlightBuilder.preTags("<font style='color:red'>");
         highlightBuilder.postTags("</font>");
 
@@ -127,9 +143,9 @@ public class ProductServiceImpl implements ProductService {
         List<Product> productList = new ArrayList<>();
         for (SearchHit<Product> hit : hits) {
             Product product = hit.getContent();
-            List<String> highlightField = hit.getHighlightField("categoryName");
+            List<String> highlightField = hit.getHighlightField("description");
             if (!highlightField.isEmpty()) {
-                product.setCategoryName(highlightField.get(0));
+                product.setDescription(highlightField.get(0));
             }
             productList.add(product);
         }
@@ -219,7 +235,7 @@ public class ProductServiceImpl implements ProductService {
                 byte[] bytes = new byte[1024];
                 int length;
                 while ((length = is.read(bytes)) != -1) {
-                    sos.write(bytes,0,length);
+                    sos.write(bytes, 0, length);
                 }
             } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);

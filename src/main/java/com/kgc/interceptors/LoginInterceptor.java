@@ -16,6 +16,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -57,8 +58,6 @@ public class LoginInterceptor implements HandlerInterceptor {
             }
             User user = JWTUtil.parseToken(redisToken, tokenConfig.getTokenSign());
             ThreadLocalUtil.set(user);
-            response.setHeader("loginName", user.getLoginName());
-            response.setHeader("type", String.valueOf(user.getType()));
         } else {
             // 配置默认属性
             User user = new User();
@@ -66,8 +65,6 @@ public class LoginInterceptor implements HandlerInterceptor {
             user.setLoginName("admin");
             user.setType(1);
             ThreadLocalUtil.set(user);
-            response.setHeader("loginName", user.getLoginName());
-            response.setHeader("type", String.valueOf(user.getType()));
         }
         logger.info("LoginInterceptor preHandle end...");
         return true;

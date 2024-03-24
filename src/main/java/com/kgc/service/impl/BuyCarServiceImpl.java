@@ -34,6 +34,19 @@ public class BuyCarServiceImpl implements BuyCarService {
     }
 
     @Override
+    public Message addBuyCar(BuyCar buyCar) {
+        List<BuyCar> buyCarList = buyCarDao.getBuyCar(buyCar);
+        if (buyCarList != null && !buyCarList.isEmpty()) {
+            return Message.error("购物车中该数据已添加,请勿重复添加!");
+        }
+        Integer flag = buyCarDao.addBuyCar(buyCar);
+        if (flag > 0) {
+            return Message.success();
+        }
+        return Message.error();
+    }
+
+    @Override
     public Message getBuyCarList(Map<String, Object> params) {
         return null;
     }
@@ -46,7 +59,7 @@ public class BuyCarServiceImpl implements BuyCarService {
     @Override
     public Message delBuyCarProductById(Integer id) {
         BuyCar buyCar = new BuyCar();
-        buyCar.setUserId(id);
+        buyCar.setId(id);
         Integer flag = buyCarDao.delBuyCarProduct(buyCar);
         if (flag > 0) {
             return Message.success();

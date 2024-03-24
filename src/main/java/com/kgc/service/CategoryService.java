@@ -14,10 +14,12 @@ public interface CategoryService {
     /**
      * 查询所有最高级分类
      * 需要传最高级别分类的id，本项目统一为0
+     *
      * @param category 分类的id
      * @return 返回分类列表
      */
     public List<Category> getCategoryList(Category category);
+
     /**
      * 查询所有商品所对应的分类
      *

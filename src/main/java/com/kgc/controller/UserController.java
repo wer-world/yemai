@@ -38,38 +38,39 @@ public class UserController {
 
     @PostMapping("login")
     public Message login(@RequestBody Map map, HttpServletResponse response) {
-        Object userObj  = map.get("user");
-        User user = JSON.parseObject(JSON.toJSONString(userObj),User.class);
+        Object userObj = map.get("user");
+        User user = JSON.parseObject(JSON.toJSONString(userObj), User.class);
         Message message = userService.login(user);
         // 3、成功
         if ("200".equals(message.getCode())) {
-            response.addCookie((Cookie) message.getData());
+            List<Cookie> cookieList = (List<Cookie>) message.getData();
+            for (Cookie cookie : cookieList) {
+                response.addCookie(cookie);
+            }
             return Message.success();
         }
-
         return Message.error();
     }
 
     @RequestMapping("register")
-    public Message register(@RequestBody Map<String, Object> map){
-        Object userObj  = map.get("user");
-        User user = JSON.parseObject(JSON.toJSONString(userObj),User.class);
+    public Message register(@RequestBody Map<String, Object> map) {
+        Object userObj = map.get("user");
+        User user = JSON.parseObject(JSON.toJSONString(userObj), User.class);
         return userService.register(user);
     }
 
 
     @RequestMapping("checkLoginName")
-    public Message checkLoginName(@RequestBody Map<String, Object> map){
-        String loginName = (String)map.get("loginName") ;
+    public Message checkLoginName(@RequestBody Map<String, Object> map) {
+        String loginName = (String) map.get("loginName");
         return userService.checkLoginName(loginName);
     }
 
     @RequestMapping("checkRegisterName")
-    public Message checkRegisterName(@RequestBody Map<String, Object> map){
-        String loginName = (String)map.get("loginName") ;
+    public Message checkRegisterName(@RequestBody Map<String, Object> map) {
+        String loginName = (String) map.get("loginName");
         return userService.checkRegisterName(loginName);
     }
-
 
 
     @GetMapping("delUser")
@@ -97,34 +98,37 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        redisUtil.setValueToRedis(sixNum,sixNum);
+        redisUtil.setValueToRedis(sixNum, sixNum);
         return Message.success();
     }
+
     @RequestMapping("checkEmailCode")
     public Message checkEmailCode(String code) {
-        if (code == null || "".equals(code)){
+        if (code == null || "".equals(code)) {
             return Message.error("请填写验证码");
         }
         String valueForRedis = redisUtil.getValueForRedis(code);
-        if (valueForRedis == null || "".equals(valueForRedis)){
+        if (valueForRedis == null || "".equals(valueForRedis)) {
             return Message.error("验证失败");
         }
         return Message.success("验证成功");
     }
+
     @RequestMapping("findPsw")
     public Message findPsw(@RequestBody Map map) {
         Object userObj = map.get("user");
-        User user = JSON.parseObject(JSON.toJSONString(userObj),User.class);
-        if (user == null || "".equals(user)){
+        User user = JSON.parseObject(JSON.toJSONString(userObj), User.class);
+        if (user == null || "".equals(user)) {
             return Message.error();
         }
         Message message = userService.findPsw(user);
         return message;
     }
+
     @RequestMapping("identityCheck")
     public Message identityCheck(@RequestBody Map map) {
-        String identityCode =(String)map.get("identityCode");
-        if (identityCode == null || "".equals(identityCode)){
+        String identityCode = (String) map.get("identityCode");
+        if (identityCode == null || "".equals(identityCode)) {
             return Message.error();
         }
         Message message = userService.identityCheck(identityCode);
@@ -132,50 +136,50 @@ public class UserController {
     }
 
     @PostMapping("getUserListPage")
-    public Message getUserListPage(@RequestBody Map<String,Object> paramMap){
+    public Message getUserListPage(@RequestBody Map<String, Object> paramMap) {
         return userService.getUserListPage(paramMap);
     }
 
     @RequestMapping("getUser")
-    public Message getUser(@RequestBody User user){
+    public Message getUser(@RequestBody User user) {
         return userService.getUser(user);
     }
 
     @RequestMapping("checkType")
-    public Message checkType(@RequestBody User user){
+    public Message checkType(@RequestBody User user) {
         return userService.checkType(user);
     }
 
     @RequestMapping("updateUser")
-    public Message updateUser(@RequestBody Map map){
+    public Message updateUser(@RequestBody Map map) {
         Object userObj = map.get("user");
-        User user = JSON.parseObject(JSON.toJSONString(userObj),User.class);
-        if (user == null || "".equals(user)){
+        User user = JSON.parseObject(JSON.toJSONString(userObj), User.class);
+        if (user == null || "".equals(user)) {
             return Message.error();
         }
         return userService.updateUser(user);
     }
 
     @RequestMapping("deleteUser")
-    public Message deleteUser(@RequestBody User user){
+    public Message deleteUser(@RequestBody User user) {
         return userService.deleteUser(user);
     }
 
 
     @RequestMapping("getCurrentUser")
-    public Message getCurrentUser(){
+    public Message getCurrentUser() {
         return userService.getCurrentUser();
     }
 
     @RequestMapping("modifyPasswordById")
-    public Message modifyPasswordById(@RequestBody Map map){
+    public Message modifyPasswordById(@RequestBody Map map) {
         Object userObj = map.get("user");
-        User user = JSON.parseObject(JSON.toJSONString(userObj),User.class);
+        User user = JSON.parseObject(JSON.toJSONString(userObj), User.class);
         return userService.modifyPasswordById(user);
     }
 
     @GetMapping("getUserById")
-    public Message getUserById(){
+    public Message getUserById() {
         User user = ThreadLocalUtil.get();
         return userService.getUserById(user.getId());
     }

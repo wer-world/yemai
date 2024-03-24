@@ -38,7 +38,11 @@ public class Product {
     @Transient
     private Integer categoryLevelId;
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
-    private String categoryName;
+    private String categoryLeve1Name;
+    @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    private String categoryLeve2Name;
+    @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    private String categoryLeve3Name;
     @Transient
     private Integer picId;
     @Field(type = FieldType.Keyword)

@@ -38,6 +38,16 @@ public class BuyCarController {
         return buyCarService.getBuyCarListByUserId(user.getId());
     }
 
+    @PostMapping("addBuyCar")
+    public Message addBuyCar(@RequestBody BuyCar buyCar) {
+        User user = ThreadLocalUtil.get();
+        buyCar.setUserId(user.getId());
+        if (buyCar.getProductNum() == null) {
+            buyCar.setProductNum(1);
+        }
+        return buyCarService.addBuyCar(buyCar);
+    }
+
     @DeleteMapping("delBuyCarProductById")
     public Message delBuyCarProductById(Integer id) {
         return buyCarService.delBuyCarProductById(id);

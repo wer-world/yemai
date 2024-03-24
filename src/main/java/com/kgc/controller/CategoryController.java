@@ -23,12 +23,16 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping("getCategoryList")
-    public List<Category> getCategoryList(@RequestBody Category category){
-        return categoryService.getCategoryList(category);
+    public Message getCategoryList(@RequestBody Category category) {
+        List<Category> categoryList = categoryService.getCategoryList(category);
+        if (categoryList != null) {
+            return Message.success(categoryList);
+        }
+        return Message.error();
     }
 
     @RequestMapping("getProCategoryNameByType")
-    public Message getProCategoryNameByType(){
+    public Message getProCategoryNameByType() {
         return categoryService.getProCategoryNameByType();
     }
 

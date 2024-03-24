@@ -4,6 +4,7 @@ import com.kgc.service.AlipayService;
 import com.kgc.service.OrderDetailService;
 import com.kgc.service.OrderService;
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 支付宝工具类
@@ -21,6 +22,7 @@ public class AlipayUtil implements Runnable {
     private String orderNumber;
 
     @Override
+    @Transactional
     public void run() {
         // 1.更新订单状态,修改相关信息
         orderService.fulfilOrderPay(orderNumber);

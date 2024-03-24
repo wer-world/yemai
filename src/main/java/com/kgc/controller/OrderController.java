@@ -53,6 +53,10 @@ public class OrderController {
 
     @PostMapping("getOrder")
     public Message getOrder(@RequestBody Order order) {
-        return orderService.getOrder(order);
+        Order resultOrder = orderService.getOrder(order);
+        if (resultOrder != null) {
+            return Message.success(resultOrder);
+        }
+        return Message.error();
     }
 }

@@ -21,6 +21,19 @@
           and p.picId = f.id
           and c.userId = #{userId}
     </select>
+
+    <select id="getBuyCar" resultType="BuyCar">
+        select id, userId, productId, productNum, createTime
+        from easybuy_shopping_car
+        where isDelete = 0
+        <if test="userId != null">
+            and userId = #{userId}
+        </if>
+        <if test="productId != null">
+            and productId = #{productId}
+        </if>
+    </select>
+
     <delete id="delBuyCarProduct">
         update easybuy_shopping_car
         set isDelete = 1
@@ -32,4 +45,8 @@
             and userId = #{userId}
         </if>
     </delete>
+    <insert id="addBuyCar">
+        insert into easybuy_shopping_car(userId, productId, productNum, createTime)
+            value (#{userId}, #{productId}, #{productNum}, now())
+    </insert>
 </mapper>

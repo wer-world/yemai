@@ -14,13 +14,17 @@ import com.kgc.enums.AlipayExceptionEnum;
 import com.kgc.exception.ServiceException;
 import com.kgc.service.*;
 import com.kgc.util.AlipayUtil;
+import com.kgc.util.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+
+import static io.lettuce.core.pubsub.PubSubOutput.Type.message;
 
 /**
  * 支付宝业务实现类
@@ -46,23 +50,26 @@ public class AlipayServiceImpl implements AlipayService {
     }
 
     @Override
+    @Transactional
     public Message createAlipay(Order order) {
-        Message message = orderService.getOrder(order);
-        if (!"200".equals(message.getCode())) {
-            logger.error("AlipayServiceImpl createAlipay order not exist");
+        Order resultOrder = orderService.getOrder(order);
+        if (resultOrder == null) {
+            logger.error("AlipayServiceImpl createAlipay " + AlipayExceptionEnum.ALIPAY_ORDER_NOT_EXIST.getMessage());
             throw new ServiceException(AlipayExceptionEnum.ALIPAY_ORDER_NOT_EXIST.getMsg());
         }
         AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig.getOpenApi(), alipayConfig.getAppId(), alipayConfig.getPrivateKey(), "json", "UTF-8", alipayConfig.getAliPublicKey(), "RSA2");
-        AlipayTradePagePayRequest request = getAlipayTradePagePayRequest((Order) message.getData());
+        AlipayTradePagePayRequest request = getAlipayTradePagePayRequest(resultOrder);
         try {
             AlipayTradePagePayResponse response = alipayClient.pageExecute(request, "POST");
             String pageRedirectionData = response.getBody();
-            if (response.isSuccess()) {
-                return Message.success(pageRedirectionData);
+            if (!response.isSuccess()) {
+                logger.error("AlipayServiceImpl createAlipay " + AlipayExceptionEnum.ALIPAY_CREATE_FAILURE.getMessage());
+                throw new ServiceException(AlipayExceptionEnum.ALIPAY_CREATE_FAILURE.getMsg());
             }
-            return Message.error("订单创建失败!");
+            return Message.success(pageRedirectionData);
         } catch (Exception e) {
-            return Message.error("订单创建错误!");
+            logger.error("AlipayServiceImpl createAlipay " + AlipayExceptionEnum.ALIPAY_CREATE_ERROR.getMessage());
+            throw new ServiceException(AlipayExceptionEnum.ALIPAY_CREATE_ERROR.getMsg());
         }
     }
 
@@ -72,7 +79,6 @@ public class AlipayServiceImpl implements AlipayService {
         request.setNotifyUrl(alipayConfig.getNotifyUrl());
         //同步跳转地址，仅支持http/https
         request.setReturnUrl(alipayConfig.getReturnUrl());
-
         JSONObject bizContent = new JSONObject();
         //商户订单号，商家自定义，保持唯一性
         bizContent.put("out_trade_no", order.getSerialNumber());
@@ -82,7 +88,6 @@ public class AlipayServiceImpl implements AlipayService {
         bizContent.put("subject", order.getSerialNumber());
         //电脑网站支付场景固定传值FAST_INSTANT_TRADE_PAY
         bizContent.put("product_code", "FAST_INSTANT_TRADE_PAY");
-
         request.setBizContent(bizContent.toString());
         return request;
     }
@@ -94,22 +99,29 @@ public class AlipayServiceImpl implements AlipayService {
             boolean signVerified = AlipaySignature.rsaCheckV2(params, alipayConfig.getAliPublicKey(), "UTF-8", "RSA2"); //调用SDK验证签名
             if (!signVerified) {
                 // 验签失败则记录异常日志，并在response中返回failure.
-                return Message.error("验签失败!");
+                logger.error("AlipayServiceImpl notifyUrlAlipay " + AlipayExceptionEnum.ALIPAY_CONFIRM_SIGN_FAILURE.getMessage());
+                return Message.error(AlipayExceptionEnum.ALIPAY_CONFIRM_SIGN_FAILURE.getMsg());
             }
         } catch (Exception e) {
-            return Message.error("验签错误!");
+            logger.error("AlipayServiceImpl notifyUrlAlipay " + AlipayExceptionEnum.ALIPAY_CONFIRM_SIGN_ERROR.getMessage());
+            return Message.error(AlipayExceptionEnum.ALIPAY_CONFIRM_SIGN_ERROR.getMsg());
         }
 
         // 验签通过
         if (!"TRADE_SUCCESS".equals(params.get("trade_status"))) {
-            return Message.error("交易失败!");
+            logger.error("AlipayServiceImpl notifyUrlAlipay " + AlipayExceptionEnum.ALIPAY_TRANSACTION_FAILURE.getMessage());
+            return Message.error(AlipayExceptionEnum.ALIPAY_TRANSACTION_FAILURE.getMsg());
         }
 
         String orderNumber = params.get("out_trade_no");
         Alipay alipay = new Alipay();
         alipay.setOrderNumber(orderNumber);
         alipay.setParams(JSON.toJSONString(params));
-        alipayDao.addAlipay(alipay);
+        Integer flag = alipayDao.addAlipay(alipay);
+        if (flag == 0) {
+            logger.error("AlipayServiceImpl notifyUrlAlipay " + AlipayExceptionEnum.ALIPAY_ADD_PAYMENT_FAILURE.getMessage());
+            return Message.error(AlipayExceptionEnum.ALIPAY_ADD_PAYMENT_FAILURE.getMsg());
+        }
         // 交易成功通过,开辟子线程
         Thread thread = new Thread(new AlipayUtil(orderService, this, orderNumber));
         // 执行相关业务修改操作
@@ -130,6 +142,7 @@ public class AlipayServiceImpl implements AlipayService {
     }
 
     @Override
+    @Transactional
     public void fulfilOrderUpdate(String orderNumber) {
         int flag = alipayDao.modAlipayStatus(orderNumber);
         if (flag == 0) {

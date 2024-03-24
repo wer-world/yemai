@@ -11,7 +11,7 @@ public final class EmailCodeUtil {
     public static Session createSession() {
 
         //	账号信息
-        String username = "1348466224@qq.com";//	邮箱发送账号
+        String username = "1348466224@qq.com";// 邮箱发送账号
         String password = "usrjvofaiemphcdj";//	邮箱授权码
 
         //	创建一个配置文件，并保存
@@ -20,7 +20,7 @@ public final class EmailCodeUtil {
         //	SMTP服务器连接信息
         //  126——smtp.126.com
         //  163——smtp.163.com
-        //  qqsmtp.qq.com"
+        //  qq——smtp.qq.com"
         props.put("mail.smtp.host", "smtp.qq.com");//	SMTP主机名
 
         //  126——25
@@ -32,7 +32,6 @@ public final class EmailCodeUtil {
         Session session = Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                // TODO Auto-generated method stub
                 return new PasswordAuthentication(username, password);
             }
         });

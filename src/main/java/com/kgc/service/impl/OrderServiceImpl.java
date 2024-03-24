@@ -203,12 +203,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Message getOrder(Order order) {
-        Order resultOrder = orderDao.getOrder(order);
-        if (resultOrder == null) {
-            return Message.error();
-        }
-        return Message.success(resultOrder);
+    public Order getOrder(Order order) {
+        return orderDao.getOrder(order);
     }
 
     @Override

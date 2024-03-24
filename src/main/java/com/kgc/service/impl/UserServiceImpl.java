@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,10 +55,27 @@ public class UserServiceImpl implements UserService {
             String token = JWTUtil.getToken(loginUser, tokenConfig.getTokenSign(), tokenConfig.getTokenTimeOut());
             ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
             operations.set(token, token, tokenConfig.getTokenOverHours(), TimeUnit.HOURS);
-            Cookie cookie = new Cookie("token", token);
-            return Message.success(cookie);
+            List<Cookie> cookieList = getStringCookieList(token, loginUser);
+            return Message.success(cookieList);
         }
         return Message.error();
+    }
+
+    private List<Cookie> getStringCookieList(String token, User loginUser) {
+        List<Cookie> cookieList = new ArrayList<>();
+        Cookie tokenCookie = new Cookie("token", token);
+        Cookie loginNameCookie = new Cookie("loginName", loginUser.getLoginName());
+        Cookie typeCookie = new Cookie("type", loginUser.getType().toString());
+        tokenCookie.setMaxAge(tokenConfig.getTokenOverHours() * 60 * 60);
+        loginNameCookie.setMaxAge(tokenConfig.getTokenOverHours() * 60 * 60);
+        typeCookie.setMaxAge(tokenConfig.getTokenOverHours() * 60 * 60);
+        tokenCookie.setPath("/");
+        loginNameCookie.setPath("/");
+        typeCookie.setPath("/");
+        cookieList.add(tokenCookie);
+        cookieList.add(loginNameCookie);
+        cookieList.add(typeCookie);
+        return cookieList;
     }
 
     @Override
