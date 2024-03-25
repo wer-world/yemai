@@ -1,5 +1,8 @@
 package com.kgc.service.impl;
 
+import com.kgc.entity.File;
+import com.kgc.service.FileService;
+import com.kgc.util.Base64Util;
 import com.kgc.util.ProductESRepositoryUtil;
 import com.kgc.dao.ProductDao;
 import com.kgc.entity.Category;
@@ -25,6 +28,7 @@ import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +50,8 @@ import java.util.Map;
 public class ProductServiceImpl implements ProductService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    @Autowired
+    private FileService fileService;
 
     @Autowired
     private ProductDao productDao;
@@ -165,8 +171,28 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Message addProduct(Product product) {
+    public Message addProduct(Product product, MultipartFile multipartFile) {
+        Message upload = fileService.upload(multipartFile);
+        String picPath = (String) upload.getData();
+        Message addFile = fileService.addFile(picPath);
+        if (!"200".equals(addFile.getCode())) {
+            return Message.error();
+        }
+        Message fileIdByPicPath = fileService.getFileIdByPicPath(picPath);
+        File data = (File) fileIdByPicPath.getData();
+        if (data == null) {
+            return Message.error();
+        }
+        product.setPicId(data.getId());
         Integer flag = productDao.addProduct(product);
+        Product product1 = productDao.selectProIdByPicId(product.getPicId());
+        if (product1 == null) {
+            return Message.error();
+        }
+        File file = new File();
+        file.setId(product.getPicId());
+        file.setProduct_id(product1.getId());
+        fileService.modifyProIdById(file);
         if (flag > 0) {
             template.save(product);
             return Message.success();
@@ -262,6 +288,8 @@ public class ProductServiceImpl implements ProductService {
         }
 //        return null;
     }
+
+
 
 
 }

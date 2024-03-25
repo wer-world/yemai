@@ -1,11 +1,14 @@
 package com.kgc.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.kgc.entity.Category;
 import com.kgc.entity.Message;
 import com.kgc.entity.Product;
+import com.kgc.service.BrandService;
 import com.kgc.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,8 +67,10 @@ public class ProductController {
     }
 
     @PostMapping("addProduct")
-    public Message addProduct(@RequestBody Product product) {
-        return productService.addProduct(product);
+    public Message addProduct(@RequestBody Map map,@RequestParam (value = "file",required = false) MultipartFile multipartFile) {
+        Object productObj = map.get("products");
+        Product product = JSON.parseObject(JSON.toJSONString(productObj),Product.class);
+        return productService.addProduct(product,multipartFile);
     }
 
     @PostMapping("modProduct")
@@ -102,4 +107,8 @@ public class ProductController {
         String picPath = (String) params.get("picPath");
         productService.downLoad(picPath, request, response);
     }
+
+
+
+
 }

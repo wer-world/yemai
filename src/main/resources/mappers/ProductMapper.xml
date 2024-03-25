@@ -146,6 +146,8 @@
             and name = #{name}
         </if>
     </select>
-
+    <select id="selectProIdByPicId" resultType="Product">
+        select id from easybuy_product where isDelete = 0 and picId = #{picId}
+    </select>
 
 </mapper>

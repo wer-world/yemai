@@ -3,6 +3,7 @@ package com.kgc.service;
 import com.kgc.entity.Message;
 import com.kgc.entity.Category;
 import com.kgc.entity.Product;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,7 +59,7 @@ public interface ProductService {
      * @param product 需要添加的商品信息
      * @return 返回消息类
      */
-    Message addProduct(Product product);
+    Message addProduct(Product product, MultipartFile multipartFile);
 
     /**
      * 修改商品
@@ -106,6 +107,8 @@ public interface ProductService {
      * @param response
      */
     void downLoad(String picPath, HttpServletRequest request, HttpServletResponse response);
+
+
 
 
 }
