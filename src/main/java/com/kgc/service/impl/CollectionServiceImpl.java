@@ -20,7 +20,7 @@ public class CollectionServiceImpl implements CollectionService {
     private CollectionDao collectionDao;
     @Override
     public Message addCollection(Collections collections) {
-        int affectRow = isCollection(collections.getProductId());
+        int affectRow = isCollection(collections);
         if (affectRow==1){
             return Message.error("该商品已在收藏夹，收藏失败！");
         }
@@ -39,8 +39,8 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public Integer isCollection(Integer productId) {
-        return collectionDao.isCollection(productId);
+    public Integer isCollection(Collections collections) {
+        return collectionDao.isCollection(collections);
     }
 
     @Override

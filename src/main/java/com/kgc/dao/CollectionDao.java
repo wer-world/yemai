@@ -11,9 +11,9 @@ import java.util.List;
  * @Description:
  */
 public interface CollectionDao {
-    public Integer addCollection(@Param("userId") Integer userId,@Param("productId") Integer productId);
+    Integer addCollection(@Param("userId") Integer userId,@Param("productId") Integer productId);
 
-    public Integer isCollection(@Param("productId") Integer productId);
+    Integer isCollection(Collections collections);
 
     List<Collections> getCollections(Integer userId);
 

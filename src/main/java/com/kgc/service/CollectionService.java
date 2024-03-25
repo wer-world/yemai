@@ -15,6 +15,7 @@ public interface CollectionService {
     /**
      * 用来添加收藏
      * 前端需传入productId
+     *
      * @param collections
      * @return
      */
@@ -22,13 +23,15 @@ public interface CollectionService {
 
     /**
      * 用来查询是否已经收藏，被addCollection所调用
-     * @param productId
+     *
+     * @param collections
      * @return
      */
-    Integer isCollection(@Param("productId") Integer productId);
+    Integer isCollection(Collections collections);
 
     /**
      * 查询用户的所有收藏
+     *
      * @param userId
      * @return
      */
@@ -36,6 +39,7 @@ public interface CollectionService {
 
     /**
      * 删除收藏
+     *
      * @param id
      * @return
      */

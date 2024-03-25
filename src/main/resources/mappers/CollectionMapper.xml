@@ -23,6 +23,7 @@
         SELECT COUNT(1)
         FROM easybuy_collection
         WHERE isDelete = 0
+          AND userId = #{userId}
           AND productId = #{productId};
     </select>
 
