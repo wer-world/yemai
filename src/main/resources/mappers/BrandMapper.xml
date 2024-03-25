@@ -5,6 +5,7 @@
 <mapper namespace="com.kgc.dao.BrandDao">
     <select id="getBrandAllList" resultType="Brand">
         select id, name, createTime
-        from easybuy_product_brand;
+        from easybuy_product_brand
+        where isDelete = 0
     </select>
 </mapper>
