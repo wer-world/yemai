@@ -7,6 +7,8 @@ import com.kgc.service.CollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @Author:25378
  * @DATE:2024/3/19 11:21
@@ -21,6 +23,13 @@ public class CollectionServiceImpl implements CollectionService {
         int affectRow = isCollection(collections.getProductId());
         if (affectRow==1){
             return Message.error("该商品已在收藏夹，收藏失败！");
+        }
+        //获得用户收藏的数量
+        int collectCount = collectionDao.getCollections(collections.getUserId()).size();
+        //判断收藏数量是否为6条，超过就删除用户最早收藏的商品
+        if (collectCount==6){
+            Collections firstCollections = collectionDao.getFirstCollection(collections.getUserId());
+            collectionDao.deleteCollection(firstCollections.getId());
         }
         affectRow = collectionDao.addCollection(collections.getUserId(), collections.getProductId());
         if (affectRow<1){

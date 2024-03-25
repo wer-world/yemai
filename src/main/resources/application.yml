@@ -26,14 +26,14 @@ logging:
 replay:
   maxRandom: 100
   minRandom: 20
-  is-replay: true # 开启重放攻击检测
+  is-replay: false # 开启重放攻击检测
 mail:
   host: smtp.qq.com
   username: 1348466224@qq.com
   password: cqvuubenttdsjecb
 easy-buy-init:
   init-es-data: true #开启es初始化
-  init-replay: true #开启重放攻击随机数初始化
+  init-replay: false #开启重放攻击随机数初始化
 alipay:
   app-id: 9021000135627424
   open-api: https://openapi-sandbox.dl.alipaydev.com/gateway.do

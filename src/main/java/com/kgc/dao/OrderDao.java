@@ -52,6 +52,20 @@ public interface OrderDao {
     List<Order> getOrderList(Map<String, Object> params);
 
     /**
+     * 根据用户id获取他的所有订单
+     *
+     * @return 返回订单列表
+     */
+    List<Order> getOrderListByIdCondition(Map<String, Object> params);
+
+    /**
+     * 根据用户id获取他的所有订单
+     *
+     * @return 返回订单列表
+     */
+    Integer getOrderListCount(Map<String, Object> params);
+
+    /**
      * 获取订单数据
      *
      * @param order 条件-(id,serialNumber)

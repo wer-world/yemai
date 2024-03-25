@@ -15,10 +15,10 @@ public interface CollectionService {
     /**
      * 用来添加收藏
      * 前端需传入productId
-     * @param productId
+     * @param collections
      * @return
      */
-    Message addCollection(Collections productId);
+    Message addCollection(Collections collections);
 
     /**
      * 用来查询是否已经收藏，被addCollection所调用

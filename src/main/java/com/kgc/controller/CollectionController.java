@@ -27,6 +27,9 @@ public class CollectionController {
     @RequestMapping("addCollection")
     public Message addCollection(@RequestBody Map<String, Object> params) {
         User user = ThreadLocalUtil.get();
+        if (user==null){
+            return Message.error("请登录后进行收藏!");
+        }
         Integer productId = Integer.valueOf(params.get("productId").toString());
         if (productId == null) {
             return Message.error();

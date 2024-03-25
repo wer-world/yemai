@@ -5,7 +5,9 @@ import com.alibaba.fastjson.TypeReference;
 import com.kgc.entity.Message;
 import com.kgc.entity.Order;
 import com.kgc.entity.OrderDetail;
+import com.kgc.entity.User;
 import com.kgc.service.OrderService;
+import com.kgc.util.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +51,16 @@ public class OrderController {
     @PostMapping("getOrderList")
     public Message getOrderList(@RequestBody Map<String, Object> params) {
         return orderService.getOrderList(params);
+    }
+
+    @PostMapping("getOrderListByIdCondition")
+    public Message getOrderListByIdCondition(@RequestBody Map<String, Object> params) {
+        User user = ThreadLocalUtil.get();
+        if (user==null){
+            return Message.error("请登录后再查看我的订单!");
+        }
+        params.put("userId",user.getId());
+        return orderService.getOrderListByIdCondition(params);
     }
 
     @GetMapping("getOrder")
