@@ -18,4 +18,22 @@ public class AddressServiceImpl implements AddressService {
         List<Address> addressListByUserId = addressDao.getAddressListByUserId(userId);
         return Message.success(addressListByUserId);
     }
+
+    @Override
+    public Message getAddressById(Integer id) {
+        Address addressById = addressDao.getAddressById(id);
+        return Message.success(addressById);
+    }
+
+    @Override
+    public Message addAddress(Address address) {
+        if (address == null || address.getAddress().isEmpty()) {
+            return  Message.error();
+        }
+        Integer count = addressDao.addAddress(address);
+        if (count != 1) {
+            return Message.error();
+        }
+        return Message.success();
+    }
 }

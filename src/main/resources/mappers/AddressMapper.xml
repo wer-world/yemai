@@ -7,4 +7,21 @@
         select id,userId, address, createTime, isDefault, remark, isDelete from easybuy_user_address where
         userId = #{userId} and isDelete = 0
     </select>
+    <select id="getAddressById" resultType="Address">
+        select id, userId, address, createTime, isDefault, remark from easybuy_user_address
+        where isDelete = 0 and id=#{id}
+    </select>
+    <insert id="addAddress">
+        insert into easybuy_user_address(userId,address,createTime,remark)
+        value(#{userId},#{address},#{createTime},#{remark})
+    </insert>
+    <update id="modifyNoDefault">
+        update easybuy_user_address set isDefault = 0 where isDefault = 1 and userId = #{userId}
+    </update>
+    <update id="modifyYesDefault">
+        update easybuy_user_address set isDefault = 1 where isDefault = 0 and userId = #{userId} and id=#{id}
+    </update>
+    <update id="modifyAddressById">
+        update easybuy_user_address set address = #{address},remark = #{remark} where userId = #{userId} and id=#{id}
+    </update>
 </mapper>
