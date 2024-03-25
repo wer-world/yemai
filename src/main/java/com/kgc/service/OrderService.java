@@ -60,6 +60,14 @@ public interface OrderService {
     Message getOrderList(Map<String, Object> params);
 
     /**
+     * 根据用户id获取他的所有订单
+     *
+     * @return 返回订单列表
+     */
+    Message getOrderListByIdCondition(Map<String, Object> params);
+
+
+    /**
      * 通过订单id或订单号获取订单相关信息
      *
      * @param order 订单相关信息-(id,serialNumber)

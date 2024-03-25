@@ -188,9 +188,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Message checkType(User user) {
-        User targetUser = userDao.getUser(user);
+        User targetUser = userDao.getUserById(user.getId());
         User currentUser = ThreadLocalUtil.get();
-        if (currentUser.getType() <= targetUser.getType()) {
+        if (currentUser.getType() >= targetUser.getType()) {
             return Message.error();
         }
         return Message.success();
@@ -207,7 +207,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Message deleteUser(User user) {
-        Integer affectRow = userDao.updateUser(user);
+        Integer affectRow = userDao.deleteUser(user);
         if (affectRow < 1) {
             return Message.error();
         }

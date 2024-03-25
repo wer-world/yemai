@@ -18,7 +18,44 @@ public interface CategoryService {
      * @param category 分类的id
      * @return 返回分类列表
      */
-    public List<Category> getCategoryList(Category category);
+    List<Category> getCategoryList(Category category);
+
+
+    /**
+     * 查询上级分类的名称
+     * 前端传入parentId
+     * @param category
+     * @return
+     */
+    Message getParentCategory(Category category);
+
+    /**
+     * 根据id查询Category
+     * @param category
+     * @return
+     */
+    Message getCategory(Category category);
+
+    /**
+     * 添加category
+     * @param category
+     * @return
+     */
+    Message addCategory(Category category);
+
+    /**
+     * 修改category
+     * @param category
+     * @return
+     */
+    Message updateCategory(Category category);
+
+    /**
+     * 删除category
+     * @param category
+     * @return
+     */
+    Message deleteCategory(Category category);
 
     /**
      * 查询所有商品所对应的分类

@@ -107,8 +107,4 @@ public class ProductController {
         String picPath = (String) params.get("picPath");
         productService.downLoad(picPath, request, response);
     }
-
-
-
-
 }

@@ -116,16 +116,16 @@
     </delete>
 
     <select id="getUserById" resultType="User">
-        select userName,
-               address,
-               email,
-               mobile
-        from easybuy_user u,
-             easybuy_user_address a
-        where u.isDelete = 0
-          and u.id = a.userId
-          and a.isDefault = 1
-          and u.id = #{id}
+        select id,
+            loginName,
+            userName,
+            sex,
+            email,
+            mobile,
+            type
+        from easybuy_user
+        where isDelete = 0
+          and id = #{id}
     </select>
     <update id="modifyPasswordById">
         update easybuy_user set password=#{password} where id=#{id} and isDelete = 0

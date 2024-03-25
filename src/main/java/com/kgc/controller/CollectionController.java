@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +27,9 @@ public class CollectionController {
     @RequestMapping("addCollection")
     public Message addCollection(@RequestBody Map<String, Object> params) {
         User user = ThreadLocalUtil.get();
+        if (user==null){
+            return Message.error("请登录后进行收藏!");
+        }
         Integer productId = Integer.valueOf(params.get("productId").toString());
         if (productId == null) {
             return Message.error();
@@ -34,5 +38,14 @@ public class CollectionController {
         collections.setUserId(user.getId());
         collections.setProductId(productId);
         return collectionService.addCollection(collections);
+    }
+
+    @RequestMapping("getCollections")
+    public Message getCollections(Integer userId) {
+        return collectionService.getCollections(userId);
+    }
+    @RequestMapping("deleteCollection")
+    public Message deleteCollection(Integer id) {
+        return collectionService.deleteCollection(id);
     }
 }

@@ -81,6 +81,6 @@ public interface ProductDao {
      */
     Product selectProIdByPicId(Integer picId);
 
-
+    Integer getExistParentCategoryProductCount(Category category);
 
 }

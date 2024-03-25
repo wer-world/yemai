@@ -11,9 +11,44 @@
         WHERE isDelete=0 AND parentId=#{parentId}
     </select>
 
+    <select id="getParentCategory" resultType="Category">
+        SELECT id,
+               name,
+               parentId,
+               iconClass,
+               type FROM easybuy_product_category WHERE isDelete=0 AND id = #{parentId};
+    </select>
+
+    <insert id="addCategory">
+        INSERT INTO easybuy_product_category(name,parentId,type) VALUES(#{name},#{parentId},#{type})
+    </insert>
+
+    <select id="getAllCategoryName" resultType="String">
+        SELECT name FROM easybuy_product_category WHERE isDelete=0;
+    </select>
+
+    <select id="getCategory" resultType="Category">
+        SELECT id,
+               name,
+               parentId,
+               iconClass,
+               type FROM easybuy_product_category WHERE isDelete=0 AND id = #{id};
+    </select>
+
+    <update id="updateCategory">
+        UPDATE easybuy_product_category SET name=#{name} WHERE isDelete=0 AND id=#{id};
+    </update>
+
+    <delete id="deleteCategory">
+        UPDATE easybuy_product_category SET isDelete=1 AND id=#{id};
+    </delete>
+
+    <select id="getChildCategoryCount" resultType="int">
+        SELECT count(1) FROM easybuy_product_category WHERE isDelete=0 AND parentId=#{id};
+    </select>
+
     <select id="getProCategoryNameByType" resultType="Category">
         select id,name,parentId,type from easybuy_product_category where isDelete=0 and type=3
     </select>
-
 
 </mapper>

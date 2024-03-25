@@ -42,28 +42,34 @@
     </select>
 
     <select id="getProductById" resultType="Product">
-        SELECT id,
-               name,
-               description,
-               price,
-               stock,
-               categoryLevelId,
-               picId
-        FROM easybuy_product
-        WHERE isDelete = 0
-          AND id = #{id};
+        SELECT 				p.id,
+                              p.name,
+                              p.description,
+                              p.price,
+                              p.stock,
+                              p.categoryLevelId,
+                              p.picId,
+                              f.picPath
+        FROM easybuy_product p,easybuy_file f
+        WHERE p.isDelete = 0
+          AND p.picId = f.id
+          AND f.isDelete=0
+          AND p.id = #{id};
     </select>
 
     <select id="getSimilarProducts" resultType="Product">
-        SELECT id,
-               name,
-               description,
-               price,
-               stock,
-               categoryLevelId,
-               picId
-        FROM easybuy_product
-        WHERE isDelete = 0
+        SELECT 				p.id,
+                              p.name,
+                              p.description,
+                              p.price,
+                              p.stock,
+                              p.categoryLevelId,
+                              p.picId,
+                              f.picPath
+        FROM easybuy_product p,easybuy_file f
+        WHERE p.isDelete = 0
+          AND p.picId = f.id
+          AND f.isDelete=0
           AND categoryLevelId = #{categoryLevelId};
     </select>
 
@@ -149,5 +155,10 @@
     <select id="selectProIdByPicId" resultType="Product">
         select id from easybuy_product where isDelete = 0 and picId = #{picId}
     </select>
+
+    <select id="getExistParentCategoryProductCount" resultType="int">
+        SELECT count(1) FROM easybuy_product WHERE isDelete=0 AND categoryLevelId=#{id};
+    </select>
+
 
 </mapper>

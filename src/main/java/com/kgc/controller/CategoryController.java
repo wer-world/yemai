@@ -31,6 +31,30 @@ public class CategoryController {
         return Message.error();
     }
 
+    @RequestMapping("getParentCategory")
+    Message getParentCategory(@RequestBody Category category){
+        return categoryService.getParentCategory(category);
+    }
+
+    @RequestMapping("addCategory")
+    public Message addCategory(@RequestBody Category category){
+        return categoryService.addCategory(category);
+    }
+
+    @RequestMapping("updateCategory")
+    public Message updateCategory(@RequestBody Category category){
+        return categoryService.updateCategory(category);
+    }
+    @RequestMapping("deleteCategory")
+    public Message deleteCategory(@RequestBody Category category){
+        return categoryService.deleteCategory(category);
+    }
+
+    @RequestMapping("getCategory")
+    Message getCategory(@RequestBody Category category){
+        return categoryService.getCategory(category);
+    }
+
     @RequestMapping("getProCategoryNameByType")
     public Message getProCategoryNameByType() {
         return categoryService.getProCategoryNameByType();

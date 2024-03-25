@@ -6,10 +6,40 @@
         VALUES (#{userId}, #{productId}, NOW());
     </insert>
 
+    <select id="getFirstCollection" resultType="Collections">
+        SELECT c.id,
+               c.userId,
+               c.productId,
+               c.createTime,
+               p.description,
+               p.price,
+               f.picPath
+        FROM easybuy_collection c,easybuy_product p,easybuy_file f
+        WHERE c.isDelete=0 AND c.productId=p.id AND p.picId=f.id AND userId=#{userId}
+        ORDER BY c.createTime asc limit 1;
+    </select>
+
     <select id="isCollection" resultType="int">
         SELECT COUNT(1)
         FROM easybuy_collection
         WHERE isDelete = 0
           AND productId = #{productId};
     </select>
+
+    <select id="getCollections" resultType="Collections">
+        SELECT c.id,
+               c.userId,
+               c.productId,
+               c.createTime,
+               p.description,
+               p.price,
+               f.picPath
+        FROM easybuy_collection c,easybuy_product p,easybuy_file f
+        WHERE c.isDelete=0 AND c.productId=p.id AND p.picId=f.id AND userId=#{userId}
+        ORDER BY c.createTime DESC;
+    </select>
+
+    <delete id="deleteCollection">
+        UPDATE easybuy_collection SET isDelete=1 WHERE id=#{id}
+    </delete>
 </mapper>

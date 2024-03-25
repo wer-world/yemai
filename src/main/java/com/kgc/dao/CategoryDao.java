@@ -19,6 +19,17 @@ public interface CategoryDao {
      */
     List<Category> getCategoryList(Category category);
 
+    Category getParentCategory(Category category);
+
+    Integer addCategory(Category category);
+
+    List<String> getAllCategoryName();
+
+    Category getCategory(Category category);
+    Integer updateCategory(Category category);
+    Integer deleteCategory(Category category);
+    Integer getChildCategoryCount(Category category);
+
     /**
      * 获取三级分类
      * @return
