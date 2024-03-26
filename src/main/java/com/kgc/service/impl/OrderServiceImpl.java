@@ -8,15 +8,19 @@ import com.kgc.enums.OrderExceptionEnum;
 import com.kgc.exception.ServiceException;
 import com.kgc.service.*;
 import com.kgc.util.ThreadLocalUtil;
+import io.lettuce.core.pubsub.PubSubOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static io.lettuce.core.pubsub.PubSubOutput.Type.message;
 
 /**
  * 订单业务实现类
@@ -49,22 +53,19 @@ public class OrderServiceImpl implements OrderService {
         // 完成订单状态更改
         Integer flag = orderDao.fulfilOrderPay(orderNumber);
         if (flag == 0) {
-            logger.error("OrderServiceImpl fulfilOrderPay fulfil update order status error");
-            throw new ServiceException(OrderExceptionEnum.ORDER_TABLE_STATUS.getMsg());
+            throw new ServiceException("OrderServiceImpl fulfilOrderPay " + OrderExceptionEnum.ORDER_TABLE_STATUS.getMessage(), OrderExceptionEnum.ORDER_TABLE_STATUS.getMsg());
         }
     }
 
     @Override
-    public Message createOrder(List<OrderDetail> orderDetailList) {
+    @Transactional
+    public Message createOrder(List<OrderDetail> orderDetailList, User user) {
         // 1、创建订单类
         Order order = new Order();
-        // 2、添加用户ThreadLocalUtil获取用户
-        User user = ThreadLocalUtil.get();
+        user = userService.getUser(user);
         if (user == null) {
-            logger.error("OrderServiceImpl createOrder user not exist");
-            throw new ServiceException(OrderExceptionEnum.USER_NOT_EXIST.getMsg());
+            throw new ServiceException("OrderServiceImpl createOrder " + OrderExceptionEnum.USER_NOT_EXIST.getMessage(), OrderExceptionEnum.USER_NOT_EXIST.getMsg());
         }
-        user = (User) userService.getUser(user).getData();
         order.setUserId(user.getId());
         order.setLoginName(user.getLoginName());
         order.setUserAddress(user.getAddress());
@@ -74,22 +75,18 @@ public class OrderServiceImpl implements OrderService {
         Integer flag = orderDao.addOrder(order);
         if (flag == 0) {
             // 使事务生效
-            logger.error("OrderServiceImpl createOrder order add error");
-            throw new ServiceException(OrderExceptionEnum.CREATE_ORDER_ERROR.getMsg());
+            throw new ServiceException("OrderServiceImpl createOrder " + OrderExceptionEnum.CREATE_ORDER_ERROR.getMessage(), OrderExceptionEnum.CREATE_ORDER_ERROR.getMsg());
         }
         // 3、添加商品，并计算商品价格，检查商品库存是否充足，加入订单详情信息类
         double orderSum = 0; // 计算订单总价格
         for (OrderDetail orderDetail : orderDetailList) {
-            Message message = productService.getProductById(orderDetail.getProductId());
-            if (!"200".equals(message.getCode())) {
-                logger.error("OrderServiceImpl createOrder product get error");
-                throw new ServiceException(OrderExceptionEnum.PRODUCT_GET_ERROR.getMsg());
+            Product product = productService.getProductById(orderDetail.getProductId());
+            if (product == null) {
+                throw new ServiceException("OrderServiceImpl createOrder " + OrderExceptionEnum.PRODUCT_GET_ERROR.getMessage(), OrderExceptionEnum.PRODUCT_GET_ERROR.getMsg());
             }
-            Product product = (Product) message.getData();
             // 判断库存是否充足
             if (product.getStock() <= 0 || product.getStock() < orderDetail.getQuantity()) {
-                logger.error("OrderServiceImpl createOrder product inventory shortage");
-                throw new ServiceException(OrderExceptionEnum.PRODUCT_STOCK_LACK.getMsg());
+                throw new ServiceException("OrderServiceImpl createOrder " + OrderExceptionEnum.PRODUCT_STOCK_LACK.getMessage(), OrderExceptionEnum.PRODUCT_STOCK_LACK.getMsg());
             }
             orderDetail.setOrderId(order.getId());
             // 计算价格
@@ -98,134 +95,59 @@ public class OrderServiceImpl implements OrderService {
             orderDetail.setCost(orderDetailSum); // 设置订单详情总价格
             // 更新库存
             product.setStock(product.getStock() - orderDetail.getQuantity());
-            message = productService.modProduct(product);
-            if (!"200".equals(message.getCode())) {
-                logger.error("OrderServiceImpl createOrder product stock update error");
-                throw new ServiceException(OrderExceptionEnum.PRODUCT_UPDATE_ERROR.getMsg());
-            }
-            Boolean isAdd = orderDetailService.addOrderDetail(orderDetail);
-            if (!isAdd) {
-                logger.error("OrderServiceImpl createOrder order detail create error");
-                throw new ServiceException(OrderExceptionEnum.ORDER_DETAIL_CREATE_ERROR.getMsg());
-            }
+            productService.modProduct(product);
+            orderDetailService.addOrderDetail(orderDetail);
         }
         // 4、计算总价格加入订单属性
         order.setCost(orderSum);
         flag = orderDao.modOrder(order);
+        if (flag == 0) {
+            throw new ServiceException("OrderServiceImpl createOrder " + OrderExceptionEnum.ORDER_COST_UPDATE_ERROR.getMessage(), OrderExceptionEnum.ORDER_COST_UPDATE_ERROR.getMsg());
+        }
 
         // 5、清空购物车
         buyCarService.delBuyCarProductByUserId();
-
-        if (flag == 0) {
-            logger.error("OrderServiceImpl createOrder order cost update error");
-            throw new ServiceException(OrderExceptionEnum.ORDER_COST_UPDATE_ERROR.getMsg());
-        }
         return Message.success(order);
     }
 
     @Override
-    public Message addOrder(Order order) {
-        Integer flag = orderDao.addOrder(order);
-        if (flag > 0) {
-            return Message.success();
-        }
-        return Message.error();
-    }
-
-    @Override
-    public Message modOrder(Order order) {
-        Integer flag = orderDao.modOrder(order);
-        if (flag > 0) {
-            return Message.success();
-        }
-        return Message.error();
-    }
-
-    @Override
+    @Transactional
     public Message cancelOrder(Order order) {
         // 获取当前订单的所有下单商品
         List<OrderDetail> orderDetailList = orderDetailService.getOrderDetailListByOrderId(order.getId());
         if (orderDetailList == null) {
-            logger.error("OrderServiceImpl cancelOrder orderDetailList get error");
-            throw new ServiceException();
+            throw new ServiceException("OrderServiceImpl cancelOrder " + OrderExceptionEnum.ORDER_DETAIL_LIST_GET_ERROR.getMessage(), OrderExceptionEnum.ORDER_DETAIL_LIST_GET_ERROR.getMsg());
         }
         logger.debug("OrderServiceImpl cancelOrder find all orderDetailList:" + orderDetailList);
         for (OrderDetail orderDetail : orderDetailList) {
-            Message message = productService.getProductById(orderDetail.getProductId());
-            if (!"200".equals(message.getCode())) {
-                logger.error("OrderServiceImpl cancelOrder orderDetail get error");
-                throw new ServiceException(OrderExceptionEnum.ORDER_DETAIL_GET_ERROR.getMsg());
+            Product product = productService.getProductById(orderDetail.getProductId());
+            if (product == null) {
+                throw new ServiceException("OrderServiceImpl cancelOrder " + OrderExceptionEnum.ORDER_DETAIL_GET_ERROR.getMessage(), OrderExceptionEnum.ORDER_DETAIL_GET_ERROR.getMsg());
             }
-            Product product = (Product) message.getData();
             product.setStock(product.getStock() + orderDetail.getQuantity());
             logger.debug("OrderServiceImpl cancelOrder update product:" + product);
             // 更新对应商品库存
-            message = productService.modProduct(product);
-            if (!"200".equals(message.getCode())) {
-                logger.error("OrderServiceImpl cancelOrder update product stock error");
-                throw new ServiceException(OrderExceptionEnum.PRODUCT_UPDATE_ERROR.getMsg());
-            }
+            productService.modProduct(product);
         }
         // 逻辑删除订单详情表
-        Message message = orderDetailService.delOrderDetailByOrderId(order.getId());
-        if (!"200".equals(message.getCode())) {
-            logger.error("OrderServiceImpl cancelOrder delete order detail info error");
-            throw new ServiceException(OrderExceptionEnum.ORDER_DETAIL_DELETE_ERROR.getMsg());
-        }
+        orderDetailService.delOrderDetailByOrderId(order.getId());
+
         // 更新订单状态
         Integer flag = orderDao.cancelOrder(order);
         if (flag == 0) {
-            logger.error("OrderServiceImpl cancelOrder cancel order error");
-            throw new ServiceException(OrderExceptionEnum.ORDER_TABLE_STATUS.getMsg());
+            throw new ServiceException("OrderServiceImpl cancelOrder " + OrderExceptionEnum.ORDER_TABLE_STATUS.getMessage(), OrderExceptionEnum.ORDER_TABLE_STATUS.getMsg());
         }
         return Message.success();
     }
 
     @Override
-    public Message getOrderList(Map<String, Object> params) {
-        Integer currentPage = (Integer) params.get("currentPage");
-        Integer pageSize = (Integer) params.get("pageSize");
-        if (currentPage == null || currentPage <= 0) {
-            currentPage = 1;
-        }
-        if (pageSize == null || pageSize <= 0) {
-            pageSize = 5;
-        }
-        Page<Object> page = PageHelper.startPage(currentPage, pageSize);
-        List<Order> orderList = orderDao.getOrderList(params);
+    public Message getOrderList(Pages pages, Order order) {
+        Page<Object> page = PageHelper.startPage(pages.getCurrentPage(), pages.getPageSize());
+        List<Order> orderList = orderDao.getOrderList(order);
         if (orderList != null && !orderList.isEmpty()) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("orderList", orderList);
             resultMap.put("totalCount", page.getTotal());
-            return Message.success(resultMap);
-        }
-        return Message.error();
-    }
-
-    @Override
-    public Message getOrderListByIdCondition(Map<String, Object> params) {
-        Integer currentPage = (Integer) params.get("currentPage");
-        Integer pageSize = (Integer) params.get("pageSize");
-        String serialNumber = (String) params.get("serialNumber");
-        Integer userId = (Integer) params.get("userId");
-        if (currentPage == null || currentPage <= 0) {
-            currentPage = 1;
-        }
-        if (pageSize == null || pageSize <= 0) {
-            pageSize = 5;
-        }
-        Integer from = (currentPage - 1) * pageSize;
-        Map<String, Object> paramsMap = new HashMap<>();
-        paramsMap.put("userId",userId);
-        paramsMap.put("serialNumber",serialNumber);
-        paramsMap.put("from",from);
-        paramsMap.put("pageSize",pageSize);
-        long totalCount = orderDao.getOrderListCount(paramsMap);
-        List<Order> orderList = orderDao.getOrderListByIdCondition(paramsMap);
-        if (orderList != null && !orderList.isEmpty()) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("orderList", orderList);
-            resultMap.put("totalCount", totalCount);
             return Message.success(resultMap);
         }
         return Message.error();

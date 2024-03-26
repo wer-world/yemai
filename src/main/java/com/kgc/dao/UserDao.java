@@ -12,7 +12,7 @@ public interface UserDao {
      * @param user 需要注册的用户
      * @return 返回用户(需优化为返回数据插入的主键)
      */
-    int registerUser(User user);
+    Integer registerUser(User user);
 
 
     User checkName(String loginName);
@@ -50,8 +50,6 @@ public interface UserDao {
      */
     User getUser(User user);
 
-    List<User> getUserListPage(@Param("from") Integer from, @Param("pageSize") Integer pageSize, @Param("type") Integer type, @Param("userName") String userName);
-
     Integer getUserCount(@Param("type") Integer type, @Param("userName") String userName);
 
     Integer updateUser(User user);
@@ -67,5 +65,13 @@ public interface UserDao {
     User getUserById(Integer id);
 
 
-    int modifyPasswordById(User user);
+    Integer modifyPasswordById(User user);
+
+    /**
+     * 根据条件查询用户列表
+     *
+     * @param user 条件对象
+     * @return 返回用户列表
+     */
+    List<User> getUserListPage(User user);
 }

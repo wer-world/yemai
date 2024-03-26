@@ -2,9 +2,14 @@ package com.kgc.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.kgc.entity.Message;
+import com.kgc.entity.Pages;
 import com.kgc.entity.User;
+import com.kgc.enums.EmailExceptionEnum;
+import com.kgc.enums.LoginExceptionEnum;
+import com.kgc.exception.ServiceException;
 import com.kgc.service.UserService;
 import com.kgc.util.EmailCodeUtil;
+import com.kgc.util.PagesUtil;
 import com.kgc.util.RedisUtil;
 import com.kgc.util.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +42,13 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("login")
-    public Message login(@RequestBody Map map, HttpServletResponse response) {
+    public Message login(@RequestBody Map<String, Object> map, HttpServletResponse response) {
         Object userObj = map.get("user");
         User user = JSON.parseObject(JSON.toJSONString(userObj), User.class);
+        // 1、用户登录业务
+        if (user.getLoginName() == null || user.getLoginName().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty()) {
+            return Message.loginError("登录信息未填写!");
+        }
         Message message = userService.login(user);
         // 3、成功
         if ("200".equals(message.getCode())) {
@@ -55,6 +64,9 @@ public class UserController {
     @RequestMapping("register")
     public Message register(@RequestBody Map<String, Object> map) {
         Object userObj = map.get("user");
+        if (userObj == null) {
+            return Message.loginError("注册信息未填写");
+        }
         User user = JSON.parseObject(JSON.toJSONString(userObj), User.class);
         return userService.register(user);
     }
@@ -63,12 +75,18 @@ public class UserController {
     @RequestMapping("checkLoginName")
     public Message checkLoginName(@RequestBody Map<String, Object> map) {
         String loginName = (String) map.get("loginName");
+        if (loginName == null || loginName.isEmpty()) {
+            return Message.loginError("请填写登录名");
+        }
         return userService.checkLoginName(loginName);
     }
 
     @RequestMapping("checkRegisterName")
     public Message checkRegisterName(@RequestBody Map<String, Object> map) {
         String loginName = (String) map.get("loginName");
+        if (loginName == null || loginName.isEmpty()) {
+            return Message.loginError("请填写登录名");
+        }
         return userService.checkRegisterName(loginName);
     }
 
@@ -96,7 +114,7 @@ public class UserController {
             message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(email));
             Transport.send(message);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new ServiceException("UserController sendEmailCode " + EmailExceptionEnum.MAIL_OBJECT_CREATE_FAILURE.getMessage(), EmailExceptionEnum.MAIL_OBJECT_CREATE_FAILURE.getMsg());
         }
         redisUtil.setValueToRedis(sixNum, sixNum);
         return Message.success();
@@ -115,66 +133,83 @@ public class UserController {
     }
 
     @RequestMapping("findPsw")
-    public Message findPsw(@RequestBody Map map) {
+    public Message findPsw(@RequestBody Map<String, Object> map) {
         Object userObj = map.get("user");
-        User user = JSON.parseObject(JSON.toJSONString(userObj), User.class);
-        if (user == null || "".equals(user)) {
-            return Message.error();
+        if (userObj == null) {
+            return Message.error("找回密码账号未填写");
         }
-        Message message = userService.findPsw(user);
-        return message;
+        User user = JSON.parseObject(JSON.toJSONString(userObj), User.class);
+        return userService.findPsw(user);
     }
 
     @RequestMapping("identityCheck")
-    public Message identityCheck(@RequestBody Map map) {
-        String identityCode = (String) map.get("identityCode");
-        if (identityCode == null || "".equals(identityCode)) {
+    public Message identityCheck(@RequestBody Map<String, Object> map) {
+        String identityCode = map.get("identityCode").toString();
+        if (identityCode == null || identityCode.isEmpty()) {
             return Message.error();
         }
-        Message message = userService.identityCheck(identityCode);
-        return message;
+        return userService.identityCheck(identityCode);
     }
 
     @PostMapping("getUserListPage")
     public Message getUserListPage(@RequestBody Map<String, Object> paramMap) {
-        return userService.getUserListPage(paramMap);
+        String userName = paramMap.get("userName").toString();
+        Integer type = Integer.parseInt(paramMap.get("type").toString());
+        Pages pages = PagesUtil.parseMapToPages(paramMap);
+        User user = new User();
+        user.setUserName(userName);
+        user.setType(type);
+        return userService.getUserListPage(pages, user);
     }
 
     @RequestMapping("getUser")
     public Message getUser(@RequestBody User user) {
-        return userService.getUser(user);
+        if (user.getId() == null) {
+            return Message.error();
+        }
+        User resultUser = userService.getUser(user);
+        if (resultUser != null) {
+            return Message.success(resultUser);
+        }
+        return Message.error();
     }
 
     @RequestMapping("checkType")
     public Message checkType(@RequestBody User user) {
+        if (user.getId() == null) {
+            return Message.error();
+        }
         return userService.checkType(user);
     }
 
     @RequestMapping("updateUser")
-    public Message updateUser(@RequestBody Map map) {
+    public Message updateUser(@RequestBody Map<String, Object> map) {
         Object userObj = map.get("user");
-        User user = JSON.parseObject(JSON.toJSONString(userObj), User.class);
-        if (user == null || "".equals(user)) {
+        if (userObj == null) {
             return Message.error();
         }
+        User user = JSON.parseObject(JSON.toJSONString(userObj), User.class);
         return userService.updateUser(user);
     }
 
     @RequestMapping("deleteUser")
     public Message deleteUser(@RequestBody User user) {
+        if (user.getId() == null) {
+            return Message.error();
+        }
         return userService.deleteUser(user);
     }
 
-
-    @RequestMapping("getCurrentUser")
-    public Message getCurrentUser() {
-        return userService.getCurrentUser();
-    }
-
     @RequestMapping("modifyPasswordById")
-    public Message modifyPasswordById(@RequestBody Map map) {
+    public Message modifyPasswordById(@RequestBody Map<String, Object> map) {
         Object userObj = map.get("user");
+        if (userObj == null) {
+            return Message.error();
+        }
         User user = JSON.parseObject(JSON.toJSONString(userObj), User.class);
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            return Message.error("请输入密码");
+        }
         return userService.modifyPasswordById(user);
     }
 

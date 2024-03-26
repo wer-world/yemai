@@ -82,7 +82,6 @@
         <if test="userName!=null and userName!=''">
             and userName like concat('%',#{userName},'%')
         </if>
-        limit #{from},#{pageSize}
     </select>
 
     <select id="getUserCount" resultType="int">

@@ -5,10 +5,12 @@ import com.github.pagehelper.PageHelper;
 import com.kgc.dao.OrderDetailDao;
 import com.kgc.entity.Message;
 import com.kgc.entity.OrderDetail;
+import com.kgc.enums.OrderDetailExceptionEnum;
 import com.kgc.exception.ServiceException;
 import com.kgc.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,14 +40,15 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
+    @Transactional
     public Message delOrderDetailByOrderId(Integer id) {
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.setOrderId(id);
         Integer flag = orderDetailDao.delOrderDetail(orderDetail);
-        if (flag > 0) {
-            return Message.success();
+        if (flag == 0) {
+            throw new ServiceException("OrderDetailServiceImpl delOrderDetailByOrderId " + OrderDetailExceptionEnum.ORDER_DETAIL_DELETE_FAILURE.getMessage(), OrderDetailExceptionEnum.ORDER_DETAIL_DELETE_FAILURE.getMsg());
         }
-        return Message.error();
+        return Message.success();
     }
 
     @Override
@@ -64,11 +67,12 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public Boolean addOrderDetail(OrderDetail orderDetail) {
+    @Transactional
+    public Message addOrderDetail(OrderDetail orderDetail) {
         Integer flag = orderDetailDao.addOrderDetail(orderDetail);
         if (flag == 0) {
-            throw new ServiceException();
+            throw new ServiceException("OrderDetailServiceImpl delOrderDetailByOrderId " + OrderDetailExceptionEnum.ORDER_DETAIL_ADD_FAILURE.getMessage(), OrderDetailExceptionEnum.ORDER_DETAIL_ADD_FAILURE.getMsg());
         }
-        return true;
+        return Message.success();
     }
 }

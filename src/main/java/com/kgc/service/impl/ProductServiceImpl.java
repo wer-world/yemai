@@ -1,8 +1,9 @@
 package com.kgc.service.impl;
 
 import com.kgc.entity.File;
+import com.kgc.enums.ProductExceptionEnum;
+import com.kgc.exception.ServiceException;
 import com.kgc.service.FileService;
-import com.kgc.util.Base64Util;
 import com.kgc.util.ProductESRepositoryUtil;
 import com.kgc.dao.ProductDao;
 import com.kgc.entity.Category;
@@ -18,7 +19,6 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -28,6 +28,7 @@ import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
@@ -72,6 +73,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Message getProductListPages(Map<String, Object> paramMap) {
+        // 参数获取
         Integer currentPage = (Integer) paramMap.get("currentPage"); // 当前页码
         Integer pageSize = (Integer) paramMap.get("pageSize"); // 分页容量
         Double minPrice = (Double) paramMap.get("minPrice"); // 最小价格
@@ -83,6 +85,8 @@ public class ProductServiceImpl implements ProductService {
         Boolean isSales = (Boolean) paramMap.get("isSales"); // 销量排序
         Boolean isNewProduct = (Boolean) paramMap.get("isNewProduct"); // 新品排序
         Boolean isPrice = (Boolean) paramMap.get("isPrice"); // 价格排序
+
+        // 条件拼接
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
         if (globalCondition != null && !globalCondition.isEmpty()) {
             queryBuilder.should(QueryBuilders.matchQuery("name", globalCondition));
@@ -171,14 +175,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Message addProduct(Product product, MultipartFile multipartFile) {
+        // TODO 需要更新事务操作，未完成
         Message upload = fileService.upload(multipartFile);
         String picPath = (String) upload.getData();
-        Message addFile = fileService.addFile(picPath);
-        if (!"200".equals(addFile.getCode())) {
-            return Message.error();
-        }
-        Message fileIdByPicPath = fileService.getFileIdByPicPath(picPath);
+        fileService.addFile(picPath); // 可以传入对象获取主键 picPath 可更改为文件对象
+
+        Message fileIdByPicPath = fileService.getFileIdByPicPath(picPath); // 多余操作
+
         File data = (File) fileIdByPicPath.getData();
         if (data == null) {
             return Message.error();
@@ -201,34 +206,32 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Message modProduct(Product product) {
         Integer flag = productDao.modProduct(product);
-        if (flag > 0) {
-            Document document = Document.create();
-            UpdateQuery build = UpdateQuery.builder(String.valueOf(product.getId())).withDocument(document).build();
-            template.update(build, IndexCoordinates.of("product"));
-            return Message.success();
+        if (flag == 0) {
+            throw new ServiceException("ProductServiceImpl modProduct " + ProductExceptionEnum.PRODUCT_UPDATE_FAILURE.getMessage(), ProductExceptionEnum.PRODUCT_UPDATE_FAILURE.getMsg());
         }
-        return Message.error();
+        Document document = Document.create();
+        UpdateQuery build = UpdateQuery.builder(String.valueOf(product.getId())).withDocument(document).build();
+        template.update(build, IndexCoordinates.of("product"));
+        return Message.success();
     }
 
     @Override
+    @Transactional
     public Message delProduct(Product product) {
         Integer flag = productDao.delProduct(product);
-        if (flag > 0) {
-            productESRepository.deleteById(String.valueOf(product.getId()));
-            return Message.success();
+        if (flag == 0) {
+            throw new ServiceException("ProductServiceImpl delProduct " + ProductExceptionEnum.PRODUCT_DELETE_FAILURE.getMessage(), ProductExceptionEnum.PRODUCT_DELETE_FAILURE.getMsg());
         }
-        return Message.error();
+        productESRepository.deleteById(String.valueOf(product.getId()));
+        return Message.success();
     }
 
     @Override
-    public Message getProductById(Integer id) {
-        Product product = productDao.getProductById(id);
-        if (product != null) {
-            return Message.success(product);
-        }
-        return Message.error();
+    public Product getProductById(Integer id) {
+        return productDao.getProductById(id);
     }
 
     @Override
@@ -286,10 +289,5 @@ public class ProductServiceImpl implements ProductService {
                 }
             }
         }
-//        return null;
     }
-
-
-
-
 }

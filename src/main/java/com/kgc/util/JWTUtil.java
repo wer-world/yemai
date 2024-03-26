@@ -9,6 +9,7 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.kgc.entity.User;
 import com.kgc.enums.TokenExceptionEnum;
+import com.kgc.exception.LoginException;
 import com.kgc.exception.ServiceException;
 
 import java.util.Date;
@@ -30,7 +31,7 @@ public class JWTUtil {
      */
     public static String getToken(User user, String tokenSign, Long tokenOverTime) {
         if (user == null || user.getId() == null || user.getUserName() == null || user.getType() == null) {
-            throw new ServiceException(TokenExceptionEnum.BODY_NOT_MATCH.getMessage());
+            throw new LoginException("JWTUtil getToken " + TokenExceptionEnum.BODY_NOT_MATCH.getMessage(), TokenExceptionEnum.BODY_NOT_MATCH.getMsg());
         }
         return JWT.create()
                 .withClaim("id", user.getId()) // 设置载荷
@@ -48,7 +49,7 @@ public class JWTUtil {
      */
     public static User parseToken(String token, String tokenSign) {
         if (token == null || token.isEmpty()) {
-            throw new ServiceException(TokenExceptionEnum.NOT_TOKEN.getMessage());
+            throw new LoginException("JWTUtil parseToken " + TokenExceptionEnum.NOT_TOKEN.getMessage(), TokenExceptionEnum.NOT_TOKEN.getMsg());
         }
         try {
             DecodedJWT jwt = JWT.require(Algorithm.HMAC256(tokenSign)).build().verify(token);
@@ -59,13 +60,13 @@ public class JWTUtil {
             user.setType(claims.get("type").asInt());
             return user;
         } catch (SignatureVerificationException e) {
-            throw new ServiceException(TokenExceptionEnum.SIGNATURE_NOT_MATCH.getMessage());
+            throw new LoginException("JWTUtil parseToken " + TokenExceptionEnum.SIGNATURE_NOT_MATCH.getMessage(), TokenExceptionEnum.SIGNATURE_NOT_MATCH.getMsg());
         } catch (TokenExpiredException e) {
-            throw new ServiceException(TokenExceptionEnum.TOKEN_OVER.getMessage());
+            throw new LoginException("JWTUtil parseToken " + TokenExceptionEnum.TOKEN_OVER.getMessage(), TokenExceptionEnum.TOKEN_OVER.getMsg());
         } catch (AlgorithmMismatchException e) {
-            throw new ServiceException(TokenExceptionEnum.VISA_ALGORITHM.getMessage());
+            throw new LoginException("JWTUtil parseToken " + TokenExceptionEnum.VISA_ALGORITHM.getMessage(), TokenExceptionEnum.VISA_ALGORITHM.getMsg());
         } catch (Exception e) {
-            throw new ServiceException(TokenExceptionEnum.LOGIN_ERROR.getMessage());
+            throw new LoginException("JWTUtil parseToken " + TokenExceptionEnum.LOGIN_ERROR.getMessage(), TokenExceptionEnum.LOGIN_ERROR.getMsg());
         }
     }
 }

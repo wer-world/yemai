@@ -43,5 +43,5 @@ public interface OrderDetailService {
      * @param orderDetail 订单详情信息
      * @return 返回是否添加成功
      */
-    Boolean addOrderDetail(OrderDetail orderDetail);
+    Message addOrderDetail(OrderDetail orderDetail);
 }

@@ -81,9 +81,9 @@ public interface ProductService {
      * 通过商品id查询商品
      *
      * @param id 商品id
-     * @return 返回对应商品消息类
+     * @return 返回对应商品
      */
-    Message getProductById(Integer id);
+    Product getProductById(Integer id);
 
     /**
      * 根据商品id获取同类商品

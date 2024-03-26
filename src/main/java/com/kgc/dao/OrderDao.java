@@ -1,6 +1,8 @@
 package com.kgc.dao;
 
 import com.kgc.entity.Order;
+import com.kgc.entity.Pages;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -47,23 +49,10 @@ public interface OrderDao {
     /**
      * 获取所有订单
      *
+     * @param order 条件对象
      * @return 返回订单列表
      */
-    List<Order> getOrderList(Map<String, Object> params);
-
-    /**
-     * 根据用户id获取他的所有订单
-     *
-     * @return 返回订单列表
-     */
-    List<Order> getOrderListByIdCondition(Map<String, Object> params);
-
-    /**
-     * 根据用户id获取他的所有订单
-     *
-     * @return 返回订单列表
-     */
-    Integer getOrderListCount(Map<String, Object> params);
+    List<Order> getOrderList(Order order);
 
     /**
      * 获取订单数据

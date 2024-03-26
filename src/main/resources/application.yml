@@ -27,13 +27,17 @@ replay:
   maxRandom: 100
   minRandom: 20
   is-replay: false # 开启重放攻击检测
+token:
+  token-sign: EasyBuyNet #令牌签名
+  token-over-hours: 1 #令牌超时时间(单位小时)
+  is-token: false #开启令牌验证
+easy-buy-init:
+  init-es-data: true #开启es初始化
+  init-replay: true #开启重放攻击随机数初始化
 mail:
   host: smtp.qq.com
   username: 1348466224@qq.com
   password: cqvuubenttdsjecb
-easy-buy-init:
-  init-es-data: true #开启es初始化
-  init-replay: true #开启重放攻击随机数初始化
 alipay:
   app-id: 9021000135627424
   open-api: https://openapi-sandbox.dl.alipaydev.com/gateway.do
@@ -42,10 +46,6 @@ alipay:
   ali-public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAppCOSwX3ZrDxT05BPJJ9Li2vQxQ2XIg9Gxx0c3zykA1KAVJxZLjry6eubwGkktY7DL00HfZ/eSBcvP4mKtmbwAMiL/reK9KaToZCnoW8wbizJgpRPts/ya3hWbrpEMdhIfKON4gdjjMn3ZYGV7L6/Lc++QLmqMQoOrgjbENTawzLv8xQFCfESXBU8eVxya2mMGiBgpWiOsOlHJPKgOIoVNoiAawT8KpBw56yLYA+BC4Bt+Skj/HVkY8AZZrkxyfEqfMLVJJgRLTEeGuCyZFtYp8A8YbzGPFJhyoSQqH/IiYH6ptD6brwvhr6F++EJXaMr7Sz81Y4XbEAu8EDYlDFUwIDAQAB
   notify-url: http://zt6s9s.natappfree.cc/EasyBuy/alipay/notifyUrlAlipay #进行内网穿透生成
   return-url: http://localhost:5173/esay_buy_pages/index.html
-token:
-  token-sign: EasyBuyNet #令牌签名
-  token-over-hours: 1 #令牌超时时间(单位小时)
-  is-token: true #开启令牌验证
 web-config:
-  exclude-token: [ "/user/login", "/user/register", "/replay/getRandom", "/error" ]
+  exclude-token: [ "/user/login", "/alipay/notifyUrlAlipay", "/user/checkLoginName","/user/register", "/replay/getRandom", "/error" ]
   exclude-replay: [ "/replay/getRandom", "/alipay/notifyUrlAlipay", "/error" ]

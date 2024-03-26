@@ -33,15 +33,8 @@ public class AlipayController {
     private AlipayService alipayService;
 
     @PostMapping("createAlipay")
-    public void createAlipay(@RequestBody Order order, HttpServletResponse response) throws IOException {
-        Message message = alipayService.createAlipay(order);
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter writer = response.getWriter();
-        if ("200".equals(message.getCode())) {
-            writer.print(message.getData());
-        } else {
-            throw new ServiceException(AlipayExceptionEnum.ALIPAY_CREATE_ERROR.getMsg());
-        }
+    public Message createAlipay(@RequestBody Order order) {
+        return alipayService.createAlipay(order);
     }
 
     @RequestMapping("notifyUrlAlipay")

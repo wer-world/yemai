@@ -1,15 +1,18 @@
 package com.kgc.service.impl;
 
+import com.kgc.config.FileConfig;
 import com.kgc.dao.FileDao;
 import com.kgc.entity.Message;
+import com.kgc.enums.FileExceptionEnum;
+import com.kgc.exception.ServiceException;
 import com.kgc.service.FileService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -17,7 +20,12 @@ import java.util.UUID;
 public class FileServiceImpl implements FileService {
     @Autowired
     private FileDao fileDao;
+
+    @Autowired
+    private FileConfig fileConfig;
+
     @Override
+    @Transactional
     public Message upload(MultipartFile multipartFile) {
         String oriFileName = null;
         String fileExtention = null;
@@ -33,7 +41,7 @@ public class FileServiceImpl implements FileService {
                     && !fileExtention.equalsIgnoreCase("pneg")) {
                 return Message.error("上传格式只能为jpg/png/jpeg/pneg");
             }
-            newFilePath = "D:" + File.separator + "img" + File.separator + UUID.randomUUID().toString() + fileExtention;
+            newFilePath = fileConfig.getFilePath() + UUID.randomUUID().toString() + "." + fileExtention;
             try {
                 multipartFile.transferTo(new File(newFilePath));
             } catch (IOException e) {
@@ -45,15 +53,13 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    @Transactional
     public Message addFile(String filePath) {
-        if (filePath == null || "".equals(filePath)) {
-            return Message.error();
+        Integer flag = fileDao.addFile(filePath);
+        if (flag == 0) {
+            throw new ServiceException("FileServiceImpl addFile " + FileExceptionEnum.FILE_ADD_FAILURE.getMessage(), FileExceptionEnum.FILE_ADD_FAILURE.getMsg());
         }
-        int count = fileDao.addFile(filePath);
-        if (count == 0) {
-            return Message.error();
-        }
-        return Message.success(count);
+        return Message.success();
     }
 
     @Override
@@ -69,10 +75,11 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    @Transactional
     public Message modifyProIdById(com.kgc.entity.File file) {
-        int count = fileDao.modifyProIdById(file);
-        if (count != 1) {
-            return Message.error();
+        Integer flag = fileDao.modifyProIdById(file);
+        if (flag == 0) {
+            throw new ServiceException("FileServiceImpl addFile " + FileExceptionEnum.FILE_UPDATE_FAILURE.getMessage(), FileExceptionEnum.FILE_UPDATE_FAILURE.getMsg());
         }
         return Message.success();
     }

@@ -96,7 +96,7 @@
 
     <insert id="addProduct">
         insert into easybuy_product(name, brandId, description, price, stock, categoryLevelId, picId, createTime)
-            value (#{name}, #{brandId}, #{description}, #{price}, #{stock}, #{categoryLevelId}, #{picId}, #{createTime})
+            value (#{name}, #{brandId}, #{description}, #{price}, #{stock}, #{categoryLevelId}, #{picId}, now())
     </insert>
 
     <update id="modProduct">

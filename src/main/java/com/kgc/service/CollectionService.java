@@ -22,14 +22,6 @@ public interface CollectionService {
     Message addCollection(Collections collections);
 
     /**
-     * 用来查询是否已经收藏，被addCollection所调用
-     *
-     * @param collections
-     * @return
-     */
-    Integer isCollection(Collections collections);
-
-    /**
      * 查询用户的所有收藏
      *
      * @param userId

@@ -1,7 +1,6 @@
 package com.kgc.util;
 
 import com.kgc.service.AlipayService;
-import com.kgc.service.OrderDetailService;
 import com.kgc.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;

@@ -45,16 +45,14 @@ public class LoginInterceptor implements HandlerInterceptor {
             String token = request.getHeader("token");// 从 http 请求头中取出 token
             logger.debug("LoginInterceptor preHandle token:" + token);
             if (token == null || token.isEmpty()) {
-                logger.error("LoginInterceptor preHandle token error");
-                throw new ServiceException(TokenExceptionEnum.NOT_TOKEN.getMsg());
+                throw new ServiceException("LoginInterceptor preHandle " + TokenExceptionEnum.NOT_TOKEN.getMessage(), TokenExceptionEnum.NOT_TOKEN.getMsg());
             }
             ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
 
             // 令牌校验
             String redisToken = operations.get(token);
             if (redisToken == null) {
-                logger.error("LoginInterceptor preHandle token error");
-                throw new ServiceException(TokenExceptionEnum.TOKEN_OVER.getMsg());
+                throw new ServiceException("LoginInterceptor preHandle " + TokenExceptionEnum.TOKEN_OVER.getMessage(), TokenExceptionEnum.TOKEN_OVER.getMsg());
             }
             User user = JWTUtil.parseToken(redisToken, tokenConfig.getTokenSign());
             ThreadLocalUtil.set(user);

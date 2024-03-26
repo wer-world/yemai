@@ -38,8 +38,10 @@ public interface BuyCarService {
 
     /**
      * 根据用户id删除购物车商品
+     *
+     * @return 返回消息类
      */
-    void delBuyCarProductByUserId();
+    Message delBuyCarProductByUserId();
 
     /**
      * 根据用户id获取购物车集合

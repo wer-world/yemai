@@ -4,10 +4,13 @@ import com.kgc.dao.BuyCarDao;
 import com.kgc.entity.BuyCar;
 import com.kgc.entity.Message;
 import com.kgc.entity.User;
+import com.kgc.enums.BuyCarExceptionEnum;
+import com.kgc.exception.ServiceException;
 import com.kgc.service.BuyCarService;
 import com.kgc.util.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -68,13 +71,15 @@ public class BuyCarServiceImpl implements BuyCarService {
     }
 
     @Override
-    public void delBuyCarProductByUserId() {
+    @Transactional
+    public Message delBuyCarProductByUserId() {
         User user = ThreadLocalUtil.get();
         BuyCar buyCar = new BuyCar();
         buyCar.setUserId(user.getId());
         Integer flag = buyCarDao.delBuyCarProduct(buyCar);
         if (flag == 0) {
-            throw new RuntimeException();
+            throw new ServiceException(BuyCarExceptionEnum.DELETE_PRODUCT_FAILURE.getMessage(), BuyCarExceptionEnum.DELETE_PRODUCT_FAILURE.getMsg());
         }
+        return Message.success();
     }
 }

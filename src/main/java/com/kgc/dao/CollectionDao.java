@@ -13,6 +13,12 @@ import java.util.List;
 public interface CollectionDao {
     Integer addCollection(@Param("userId") Integer userId,@Param("productId") Integer productId);
 
+    /**
+     * 用来查询是否已经收藏，被addCollection所调用
+     *
+     * @param collections
+     * @return
+     */
     Integer isCollection(Collections collections);
 
     List<Collections> getCollections(Integer userId);

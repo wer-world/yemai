@@ -1,9 +1,8 @@
 package com.kgc.service;
 
 import com.kgc.entity.Message;
+import com.kgc.entity.Pages;
 import com.kgc.entity.User;
-
-import java.util.Map;
 
 /**
  * 用户操作接口类
@@ -61,16 +60,17 @@ public interface UserService {
      * @param user 需要获取的条件(id)
      * @return 返回消息类
      */
-    Message getUser(User user);
+    User getUser(User user);
 
     /**
      * 查询所有用户
      * 前端选择传参（用户类型type，用户名userName，当前页码currentPage,页面容量pageSize）
      *
-     * @param paramMap
+     * @param pages 分页条件
+     * @param user  查询条件
      * @return
      */
-    public Message getUserListPage(Map<String, Object> paramMap);
+    Message getUserListPage(Pages pages, User user);
 
     /**
      * 查询用户权限（前端传参id）
@@ -95,13 +95,6 @@ public interface UserService {
      * @return
      */
     Message deleteUser(User user);
-
-    /**
-     * 获取当前管理员信息
-     *
-     * @return
-     */
-    Message getCurrentUser();
 
     /**
      * 通过用户id查询用户

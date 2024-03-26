@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.kgc.entity.Category;
 import com.kgc.entity.Message;
 import com.kgc.entity.Product;
+import com.kgc.enums.FileExceptionEnum;
 import com.kgc.service.BrandService;
 import com.kgc.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,10 +68,11 @@ public class ProductController {
     }
 
     @PostMapping("addProduct")
-    public Message addProduct(@RequestBody Map map,@RequestParam (value = "file",required = false) MultipartFile multipartFile) {
-        Object productObj = map.get("products");
-        Product product = JSON.parseObject(JSON.toJSONString(productObj),Product.class);
-        return productService.addProduct(product,multipartFile);
+    public Message addProduct(Product product, @RequestParam(value = "filePath", required = false) MultipartFile file) {
+        if (file.getOriginalFilename() == null || file.getOriginalFilename().isEmpty()) {
+            return Message.error("文件路径为空!");
+        }
+        return productService.addProduct(product, file);
     }
 
     @PostMapping("modProduct")
@@ -85,17 +87,17 @@ public class ProductController {
 
     @RequestMapping("getProductById")
     public Message getProductById(@RequestBody Product product) {
-        return productService.getProductById(product.getId());
+        Product resultProduct = productService.getProductById(product.getId());
+        if (resultProduct != null) {
+            return Message.success(resultProduct);
+        }
+        return Message.error();
     }
-
-    ;
 
     @RequestMapping("getSimilarProducts")
     public Message getSimilarProducts(@RequestBody Product product) {
         return productService.getSimilarProducts(product);
     }
-
-    ;
 
     @RequestMapping("getProductsByHigHestId")
     public Message getProductsByHigHestId(@RequestBody Category category) {

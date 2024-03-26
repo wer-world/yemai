@@ -17,9 +17,20 @@ public class GlobalExceptionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @ExceptionHandler(value = ServiceException.class)
+    @ExceptionHandler(LoginException.class)
+    public Message loginExceptionHandler(LoginException e) {
+        return Message.loginError(e.getMsg());
+    }
+
+    @ExceptionHandler(ServiceException.class)
     public Message serviceExceptionHandler(ServiceException e) {
-        logger.error("GlobalExceptionHandler serviceExceptionHandler error message:" + e.getMsg());
+        logger.error("GlobalExceptionHandler serviceExceptionHandler error message:" + e.getMessage());
         return Message.error(e.getMsg());
+    }
+
+    @ExceptionHandler(NumberFormatException.class)
+    public Message numberFormatExceptionHandler(NumberFormatException e) {
+        logger.error("GlobalExceptionHandler serviceExceptionHandler error message:" + e.getMessage());
+        return Message.error("数字参数传错啦!请输入正确数字!OvO");
     }
 }

@@ -4,9 +4,12 @@ import com.kgc.dao.CategoryDao;
 import com.kgc.dao.ProductDao;
 import com.kgc.entity.Category;
 import com.kgc.entity.Message;
+import com.kgc.enums.CategoryExceptionEnum;
+import com.kgc.exception.ServiceException;
 import com.kgc.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,6 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryDao categoryDao;
     @Autowired
     private ProductDao productDao;
+
     @Override
     public List<Category> getCategoryList(Category category) {
         Category tempCategory = new Category();
@@ -30,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
             tempCategory.setParentId(c1.getId());
             List<Category> categoryList2 = categoryDao.getCategoryList(tempCategory);
             c1.setChildCategoryList(categoryList2);
-            for (Category c2 : categoryList2){
+            for (Category c2 : categoryList2) {
                 tempCategory.setParentId(c2.getId());
                 List<Category> categoryList3 = categoryDao.getCategoryList(tempCategory);
                 c2.setChildCategoryList(categoryList3);
@@ -46,7 +50,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
 
-
     @Override
     public Message getParentCategory(Category category) {
         Category category1 = categoryDao.getParentCategory(category);
@@ -60,51 +63,54 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public Message addCategory(Category category) {
         List<String> categoryNameList = categoryDao.getAllCategoryName();
-        for (String name:categoryNameList){
-            if (name.equals(category.getName())){
-                return Message.error("该类别名已存在!");
+        for (String name : categoryNameList) {
+            if (name.equals(category.getName())) {
+                throw new ServiceException("CategoryServiceImpl addCategory " + CategoryExceptionEnum.CATEGORY_ALREADY_EXISTS.getMessage(), CategoryExceptionEnum.CATEGORY_ALREADY_EXISTS.getMsg());
             }
         }
         Integer affectRow = -1;
         affectRow = categoryDao.addCategory(category);
-        if (affectRow<1){
-            return Message.error("新增失败!");
+        if (affectRow < 1) {
+            throw new ServiceException("CategoryServiceImpl addCategory " + CategoryExceptionEnum.CATEGORY_ADD_FAILURE.getMessage(), CategoryExceptionEnum.CATEGORY_ADD_FAILURE.getMsg());
         }
         return Message.success("新增成功!");
     }
 
     @Override
+    @Transactional
     public Message updateCategory(Category category) {
         List<String> categoryNameList = categoryDao.getAllCategoryName();
         int count = 0;
-        for (String name:categoryNameList){
-            if (name.equals(category.getName())){
-                return Message.error("该类别名已存在!");
+        for (String name : categoryNameList) {
+            if (name.equals(category.getName())) {
+                throw new ServiceException("CategoryServiceImpl updateCategory " + CategoryExceptionEnum.CATEGORY_ALREADY_EXISTS.getMessage(), CategoryExceptionEnum.CATEGORY_ALREADY_EXISTS.getMsg());
             }
         }
         Integer affectRow = -1;
         affectRow = categoryDao.updateCategory(category);
-        if (affectRow<1){
-            return Message.error("修改失败!");
+        if (affectRow < 1) {
+            throw new ServiceException("CategoryServiceImpl updateCategory " + CategoryExceptionEnum.CATEGORY_UPDATE_FAILURE.getMessage(), CategoryExceptionEnum.CATEGORY_UPDATE_FAILURE.getMsg());
         }
         return Message.success("修改成功!");
     }
 
     @Override
+    @Transactional
     public Message deleteCategory(Category category) {
         int count = categoryDao.getChildCategoryCount(category);
-        if (count>0){
-            return Message.error("该分类下有子分类，不能删除！");
+        if (count > 0) {
+            throw new ServiceException("CategoryServiceImpl deleteCategory " + CategoryExceptionEnum.CATEGORY_SUBCLASSES_EXISTS.getMessage(), CategoryExceptionEnum.CATEGORY_SUBCLASSES_EXISTS.getMsg());
         }
         count = productDao.getExistParentCategoryProductCount(category);
-        if (count>0){
-            return Message.error("该分类下有商品，不能删除！");
+        if (count > 0) {
+            throw new ServiceException("CategoryServiceImpl deleteCategory " + CategoryExceptionEnum.CATEGORY_PRODUCT_EXISTS.getMessage(), CategoryExceptionEnum.CATEGORY_PRODUCT_EXISTS.getMsg());
         }
         count = categoryDao.deleteCategory(category);
-        if (count<1){
-            return Message.error("删除失败!");
+        if (count < 1) {
+            throw new ServiceException("CategoryServiceImpl deleteCategory " + CategoryExceptionEnum.CATEGORY_DELETE_FAILURE.getMessage(), CategoryExceptionEnum.CATEGORY_DELETE_FAILURE.getMsg());
         }
         return Message.success("删除成功!");
     }

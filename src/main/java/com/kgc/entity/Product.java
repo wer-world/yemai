@@ -10,6 +10,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 
 /**
  * 商品类
@@ -51,6 +52,7 @@ public class Product {
     private Integer sales;
     @Field(type = FieldType.Boolean)
     private Boolean newProduct;
+    private Date createTime;
 
     public void setPicPath(String picPath) {
         if (picPath != null && !picPath.isEmpty()) {

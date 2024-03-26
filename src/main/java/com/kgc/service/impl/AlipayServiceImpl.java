@@ -14,7 +14,6 @@ import com.kgc.enums.AlipayExceptionEnum;
 import com.kgc.exception.ServiceException;
 import com.kgc.service.*;
 import com.kgc.util.AlipayUtil;
-import com.kgc.util.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-
-import static io.lettuce.core.pubsub.PubSubOutput.Type.message;
 
 /**
  * 支付宝业务实现类
@@ -54,8 +51,7 @@ public class AlipayServiceImpl implements AlipayService {
     public Message createAlipay(Order order) {
         Order resultOrder = orderService.getOrder(order);
         if (resultOrder == null) {
-            logger.error("AlipayServiceImpl createAlipay " + AlipayExceptionEnum.ALIPAY_ORDER_NOT_EXIST.getMessage());
-            throw new ServiceException(AlipayExceptionEnum.ALIPAY_ORDER_NOT_EXIST.getMsg());
+            throw new ServiceException("AlipayServiceImpl createAlipay " + AlipayExceptionEnum.ALIPAY_ORDER_NOT_EXIST.getMessage(), AlipayExceptionEnum.ALIPAY_ORDER_NOT_EXIST.getMsg());
         }
         AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig.getOpenApi(), alipayConfig.getAppId(), alipayConfig.getPrivateKey(), "json", "UTF-8", alipayConfig.getAliPublicKey(), "RSA2");
         AlipayTradePagePayRequest request = getAlipayTradePagePayRequest(resultOrder);
@@ -63,13 +59,11 @@ public class AlipayServiceImpl implements AlipayService {
             AlipayTradePagePayResponse response = alipayClient.pageExecute(request, "POST");
             String pageRedirectionData = response.getBody();
             if (!response.isSuccess()) {
-                logger.error("AlipayServiceImpl createAlipay " + AlipayExceptionEnum.ALIPAY_CREATE_FAILURE.getMessage());
-                throw new ServiceException(AlipayExceptionEnum.ALIPAY_CREATE_FAILURE.getMsg());
+                throw new ServiceException("AlipayServiceImpl createAlipay " + AlipayExceptionEnum.ALIPAY_CREATE_FAILURE.getMessage(), AlipayExceptionEnum.ALIPAY_CREATE_FAILURE.getMsg());
             }
             return Message.success(pageRedirectionData);
         } catch (Exception e) {
-            logger.error("AlipayServiceImpl createAlipay " + AlipayExceptionEnum.ALIPAY_CREATE_ERROR.getMessage());
-            throw new ServiceException(AlipayExceptionEnum.ALIPAY_CREATE_ERROR.getMsg());
+            throw new ServiceException("AlipayServiceImpl createAlipay " + AlipayExceptionEnum.ALIPAY_CREATE_ERROR.getMessage(), AlipayExceptionEnum.ALIPAY_CREATE_ERROR.getMsg());
         }
     }
 
@@ -146,8 +140,7 @@ public class AlipayServiceImpl implements AlipayService {
     public void fulfilOrderUpdate(String orderNumber) {
         int flag = alipayDao.modAlipayStatus(orderNumber);
         if (flag == 0) {
-            logger.error("AlipayServiceImpl fulfilOrderUpdate update easybuy_alipay table status error");
-            throw new ServiceException(AlipayExceptionEnum.ALIPAY_TABLE_STATUS.getMsg());
+            throw new ServiceException("AlipayServiceImpl fulfilOrderUpdate " + AlipayExceptionEnum.ALIPAY_TABLE_STATUS.getMessage(), AlipayExceptionEnum.ALIPAY_TABLE_STATUS.getMsg());
         }
     }
 }

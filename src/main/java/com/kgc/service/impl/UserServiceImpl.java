@@ -1,16 +1,26 @@
 package com.kgc.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.kgc.config.TokenConfig;
 import com.kgc.dao.UserDao;
 import com.kgc.entity.Message;
+import com.kgc.entity.Pages;
 import com.kgc.entity.User;
+import com.kgc.enums.LoginExceptionEnum;
+import com.kgc.enums.UserExceptionEnum;
+import com.kgc.exception.LoginException;
+import com.kgc.exception.ServiceException;
 import com.kgc.service.UserService;
 import com.kgc.util.JWTUtil;
 import com.kgc.util.ThreadLocalUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
 import java.util.ArrayList;
@@ -27,6 +37,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class UserServiceImpl implements UserService {
+
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
@@ -38,27 +49,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Message login(User user) {
-        // 1、用户登录业务
-        if (user.getLoginName() == null || user.getLoginName().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty()) {
-            return new Message("400", "fail", null);
+        // 判断登录状态
+        User loginUser = userDao.checkLogin(user);
+        if (loginUser == null || !loginUser.getPassword().equals(user.getPassword())) {
+            return Message.loginError("用户名或密码错误");
         }
-        User loginUser = userDao.checkLogin(user); // 重大业务错误需要重新编写
-        if (loginUser == null) {
-            return Message.error();
-        }
-        if (!loginUser.getPassword().equals(user.getPassword())) {
-            return Message.error("密码不正确");
-        }
-        // 2、判断登录状态
-        if (loginUser != null) {
-            // 登录成功添加令牌
-            String token = JWTUtil.getToken(loginUser, tokenConfig.getTokenSign(), tokenConfig.getTokenTimeOut());
-            ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-            operations.set(token, token, tokenConfig.getTokenOverHours(), TimeUnit.HOURS);
-            List<Cookie> cookieList = getStringCookieList(token, loginUser);
-            return Message.success(cookieList);
-        }
-        return Message.error();
+        // 登录成功添加令牌
+        String token = JWTUtil.getToken(loginUser, tokenConfig.getTokenSign(), tokenConfig.getTokenTimeOut());
+        ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+        operations.set(token, token, tokenConfig.getTokenOverHours(), TimeUnit.HOURS);
+        List<Cookie> cookieList = getStringCookieList(token, loginUser);
+        return Message.success(cookieList);
     }
 
     private List<Cookie> getStringCookieList(String token, User loginUser) {
@@ -79,111 +80,67 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Message register(User user) {
-        Message message = null;
-        if (user == null) {
-            message = new Message("400", "fail", null);
-            return message;
+        Integer flag = userDao.registerUser(user);
+        if (flag == 0) {
+            throw new LoginException("UserServiceImpl register " + LoginExceptionEnum.REGISTER_STATUS_ERROR.getMessage(), LoginExceptionEnum.REGISTER_STATUS_ERROR.getMsg());
         }
-        int count = userDao.registerUser(user);
-        if (count == 1) {
-            return Message.success();
-        }
-        return Message.error();
+        return Message.success();
     }
 
     @Override
     public Message checkLoginName(String loginName) {
-        Message message = null;
-        if (loginName == null || loginName.isEmpty()) {
-            message = new Message("400", "请填写登录名", null);
-            return message;
-        }
         User user = userDao.checkName(loginName);
         if (user != null) {
-            message = new Message("200", "该账号可以使用", user);
-        } else {
-            message = new Message("400", "该账号不存在", user);
+            return Message.success("该账号可以使用");
         }
-        return message;
+        return Message.loginError("该账号不存在");
     }
 
     public Message checkRegisterName(String loginName) {
-        Message message = null;
-        if (loginName == null || loginName.isEmpty()) {
-            message = new Message("400", "请填写登录名", null);
-            return message;
-        }
         User user = userDao.checkName(loginName);
-        if (user == null) {
-            message = new Message("200", "该账号可以使用", user);
-        } else {
-            message = new Message("400", "该账号已存在", user);
+        if (user != null) {
+            return Message.success("该账号可以使用");
         }
-        return message;
+        return Message.loginError("该账号不存在");
     }
 
 
     @Override
     public Message findPsw(User user) {
-        if (user == null) {
+        int count = userDao.findPsw(user);
+        if (count == 0) {
             return Message.error();
         }
-        int count = userDao.findPsw(user);
-        if (count == 1) {
-            return Message.success();
-        }
-        return Message.error();
+        return Message.success();
     }
 
     @Override
     public Message identityCheck(String identityCode) {
-        if (identityCode == null || "".equals(identityCode)) {
-            return Message.error();
-        }
         User user = userDao.identityCheck(identityCode);
-        if (user == null) {
+        if (user != null) {
             return Message.success(user);
         }
         return Message.error();
     }
 
     @Override
-    public Message getUser(User user) {
-        User newUser = userDao.getUser(user);
-        if (newUser != null) {
-            return Message.success(newUser);
-        }
-        return Message.error();
+    public User getUser(User user) {
+        return userDao.getUser(user);
     }
 
     @Override
-    public Message getUserListPage(Map<String, Object> paramMap) {
-        String userName = (String) paramMap.get("userName");
-        String typeStr = (String) paramMap.get("type");
-        Integer type = 0;
-        if (typeStr != null && !"".equals(typeStr)) {
-            type = Integer.valueOf(typeStr.toString());
+    public Message getUserListPage(Pages pages, User user) {
+        Page<Object> page = PageHelper.startPage(pages.getCurrentPage(), pages.getPageSize());
+        List<User> userList = userDao.getUserListPage(user);
+        if (userList != null && !userList.isEmpty()) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("totalCount", page.getTotal());
+            map.put("userList", userList);
+            return Message.success(map);
         }
-
-        User user = new User();
-        user.setType(type);
-        user.setUserName(userName);
-        Integer currentPage = (Integer) paramMap.get("currentPage");
-        Integer pageSize = (Integer) paramMap.get("pageSize");
-        if (currentPage == null) {
-            currentPage = 1;
-        }
-        if (pageSize == null) {
-            pageSize = 5;
-        }
-        Integer from = (currentPage - 1) * pageSize;
-        long totalCount = userDao.getUserCount(type, userName);
-        List<User> userList = userDao.getUserListPage(from, pageSize, type, userName);
-        Map<String, Object> map = new HashMap<>();
-        map.put("totalCount", totalCount);
-        map.put("userList", userList);
-        return Message.success(map);
+        return Message.error();
     }
 
     @Override
@@ -197,10 +154,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Message updateUser(User user) {
         Integer affectRow = userDao.updateUser(user);
-        if (affectRow < 1) {
-            return Message.error();
+        if (affectRow == 0) {
+            throw new ServiceException("UserServiceImpl updateUser " + UserExceptionEnum.USER_UPDATE_FAILURE.getMessage(), UserExceptionEnum.USER_UPDATE_FAILURE.getMsg());
         }
         return Message.success();
     }
@@ -208,19 +166,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Message deleteUser(User user) {
         Integer affectRow = userDao.deleteUser(user);
-        if (affectRow < 1) {
-            return Message.error();
+        if (affectRow == 0) {
+            throw new ServiceException("UserServiceImpl deleteUser " + UserExceptionEnum.USER_DELETE_FAILURE.getMessage(), UserExceptionEnum.USER_DELETE_FAILURE.getMsg());
         }
         return Message.success();
-    }
-
-    @Override
-    public Message getCurrentUser() {
-        User currentUser = ThreadLocalUtil.get();
-        if (currentUser == null) {
-            return Message.error();
-        }
-        return Message.success(currentUser);
     }
 
     @Override
@@ -234,16 +183,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Message modifyPasswordById(User user) {
-        if (user == null) {
-            return Message.error();
+        Integer flag = userDao.modifyPasswordById(user);
+        if (flag == 0) {
+            throw new ServiceException("UserServiceImpl modifyPasswordById " + UserExceptionEnum.UPDATE_PASSWORD_FAILURE.getMessage(), UserExceptionEnum.UPDATE_PASSWORD_FAILURE.getMsg());
         }
-        if (user.getPassword() == null || "".equals(user.getPassword())) {
-            return Message.error("请输入密码");
-        }
-        int count = userDao.modifyPasswordById(user);
-        if (count == 0) {
-            return Message.error();
-        }
-        return Message.success(count);
+        return Message.success(flag);
     }
 }

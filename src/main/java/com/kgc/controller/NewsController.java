@@ -37,9 +37,15 @@ public class NewsController {
     }
 
     @RequestMapping("addNews")
-    public Message addNews(@RequestBody Map map) {
+    public Message addNews(@RequestBody Map<String, Object> map) {
         String title = (String) map.get("title");
         String content = (String) map.get("content");
+        if (title == null || title.isEmpty()) {
+            return Message.error("请输入标题");
+        }
+        if (content == null || content.isEmpty()) {
+            return Message.error("请输入内容");
+        }
         News news = new News();
         news.setTitle(title);
         news.setContent(content);
@@ -47,10 +53,16 @@ public class NewsController {
     }
 
     @RequestMapping("modifyNewsById")
-    public Message modifyNewsById(@RequestBody Map map) {
+    public Message modifyNewsById(@RequestBody Map<String, Object> map) {
         String id = (String) map.get("id");
         String title = (String) map.get("title");
         String content = (String) map.get("content");
+        if (title == null || title.isEmpty()) {
+            return Message.error("请输入标题");
+        }
+        if (content == null || content.isEmpty()) {
+            return Message.error("请输入内容");
+        }
         News news = new News();
         news.setTitle(title);
         news.setContent(content);
@@ -77,8 +89,11 @@ public class NewsController {
     }
 
     @RequestMapping("getNewsByTitle")
-    public Message getNewsByTitle(@RequestBody Map map) {
+    public Message getNewsByTitle(@RequestBody Map<String, Object> map) {
         String title = (String) map.get("title");
+        if (title == null){
+            return Message.error("请输入标题");
+        }
         return newsService.getNewsByTitle(title);
     }
 }

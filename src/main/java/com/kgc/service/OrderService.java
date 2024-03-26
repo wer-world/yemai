@@ -1,11 +1,8 @@
 package com.kgc.service;
 
-import com.kgc.entity.Message;
-import com.kgc.entity.Order;
-import com.kgc.entity.OrderDetail;
+import com.kgc.entity.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 订单业务接口类
@@ -24,25 +21,10 @@ public interface OrderService {
      * 创建订单
      *
      * @param orderDetailList 购买的商品集合
+     * @param user            用户
      * @return 返回消息类, 订单是否创建成功
      */
-    Message createOrder(List<OrderDetail> orderDetailList);
-
-    /**
-     * 添加订单信息
-     *
-     * @param order 需要添加的订单信息
-     * @return 更新信息
-     */
-    Message addOrder(Order order);
-
-    /**
-     * 更新订单信息
-     *
-     * @param order 需要更新的订单信息
-     * @return 返回更新消息类
-     */
-    Message modOrder(Order order);
+    Message createOrder(List<OrderDetail> orderDetailList, User user);
 
     /**
      * 取消订单
@@ -55,17 +37,11 @@ public interface OrderService {
     /**
      * 获取所有订单
      *
+     * @param pages 分页对象
+     * @param order 条件对象
      * @return 返回订单消息类
      */
-    Message getOrderList(Map<String, Object> params);
-
-    /**
-     * 根据用户id获取他的所有订单
-     *
-     * @return 返回订单列表
-     */
-    Message getOrderListByIdCondition(Map<String, Object> params);
-
+    Message getOrderList(Pages pages, Order order);
 
     /**
      * 通过订单id或订单号获取订单相关信息
