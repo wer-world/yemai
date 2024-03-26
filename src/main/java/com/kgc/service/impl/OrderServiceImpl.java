@@ -60,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         user = userService.getUser(user);
         if (user == null) {
-            throw new ServiceException("OrderServiceImpl createOrder " + OrderExceptionEnum.USER_NOT_EXIST.getMessage(), OrderExceptionEnum.USER_NOT_EXIST.getMsg());
+            throw new ServiceException("OrderServiceImpl createOrder " + OrderExceptionEnum.USER_NOT_SELECT_DEFAULT_ADDRESS.getMessage(), OrderExceptionEnum.USER_NOT_SELECT_DEFAULT_ADDRESS.getMsg());
         }
         order.setUserId(user.getId());
         order.setLoginName(user.getLoginName());
@@ -116,7 +116,7 @@ public class OrderServiceImpl implements OrderService {
             throw new ServiceException("OrderServiceImpl cancelOrder " + OrderExceptionEnum.ORDER_DETAIL_LIST_GET_ERROR.getMessage(), OrderExceptionEnum.ORDER_DETAIL_LIST_GET_ERROR.getMsg());
         }
         logger.debug("OrderServiceImpl cancelOrder find all orderDetailList:" + orderDetailList);
-        if (orderDetailList != null){
+        if (orderDetailList != null) {
             for (OrderDetail orderDetail : orderDetailList) {
                 Product product = productService.getProductById(orderDetail.getProductId());
                 if (product == null) {
@@ -168,9 +168,6 @@ public class OrderServiceImpl implements OrderService {
         // 1、创建订单类
         Order order = new Order();
         user = userService.getUser(user);
-        if (user == null) {
-            throw new ServiceException("OrderServiceImpl createOrder " + OrderExceptionEnum.USER_NOT_EXIST.getMessage(), OrderExceptionEnum.USER_NOT_EXIST.getMsg());
-        }
         order.setUserId(user.getId());
         order.setLoginName(user.getLoginName());
         order.setUserAddress(user.getAddress());

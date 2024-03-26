@@ -34,14 +34,6 @@ public class Message {
         return new Message("201", message, null);
     }
 
-    public static Message tokenError(String message) {
-        return new Message("202", message, null);
-    }
-
-    public static Message alipayError(String message) {
-        return new Message("203", message, null);
-    }
-
     public static Message loginError(String message) {
         return new Message("300", message, null);
     }
