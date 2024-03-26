@@ -42,16 +42,17 @@
     </select>
 
     <select id="getProductById" resultType="Product">
-        SELECT 				p.id,
-                            p.brandId,
-                              p.name,
-                              p.description,
-                              p.price,
-                              p.stock,
-                              p.categoryLevelId,
-                              p.picId,
-                              f.picPath
-        FROM easybuy_product p,easybuy_file f
+        SELECT p.id,
+               p.brandId,
+               p.name,
+               p.description,
+               p.price,
+               p.stock,
+               p.categoryLevelId,
+               p.picId,
+               f.picPath
+        FROM easybuy_product p,
+             easybuy_file f
         WHERE p.isDelete = 0
           AND p.picId = f.id
           AND f.isDelete = 0
@@ -196,6 +197,4 @@
         WHERE isDelete = 0
           AND categoryLevelId = #{id};
     </select>
-
-
 </mapper>
