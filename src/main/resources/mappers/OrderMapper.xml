@@ -45,44 +45,14 @@
         easybuy_order_type t
         where o.isDelete = 0
         and o.status = t.id
+        <if test="userId != null and userId != ''">
+            and userId = #{userId}
+        </if>
         <if test="serialNumber != null and serialNumber != ''">
             and serialNumber like concat('%', #{serialNumber}, '%')
         </if>
         <if test="loginName != null and loginName != ''">
             and loginName like concat('%', #{loginName}, '%')
-        </if>
-    </select>
-
-    <select id="getOrderListByIdCondition" resultType="Order">
-        select o.id,
-        userId,
-        loginName,
-        userAddress,
-        o.createTime,
-        cost,
-        serialNumber,
-        status,
-        name statusName
-        from easybuy_order o,
-        easybuy_order_type t
-        where o.isDelete = 0
-        and o.status = t.id
-        and userId = #{userId}
-        <if test="serialNumber != null and serialNumber != ''">
-            and serialNumber like concat('%', #{serialNumber}, '%')
-        </if>
-        limit #{from},#{pageSize}
-    </select>
-
-    <select id="getOrderListCount" resultType="int">
-        select count(1)
-        from easybuy_order o,
-        easybuy_order_type t
-        where o.isDelete = 0
-        and o.status = t.id
-        and userId = #{userId}
-        <if test="serialNumber != null and serialNumber != ''">
-            and serialNumber like concat('%', #{serialNumber}, '%')
         </if>
     </select>
 

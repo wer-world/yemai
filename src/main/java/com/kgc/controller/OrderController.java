@@ -2,10 +2,7 @@ package com.kgc.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.kgc.entity.Message;
-import com.kgc.entity.Order;
-import com.kgc.entity.OrderDetail;
-import com.kgc.entity.User;
+import com.kgc.entity.*;
 import com.kgc.service.OrderService;
 import com.kgc.util.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +47,25 @@ public class OrderController {
 
     @PostMapping("getOrderList")
     public Message getOrderList(@RequestBody Map<String, Object> params) {
-        return orderService.getOrderList(params);
+        User user = ThreadLocalUtil.get();
+        String currentPageStr = params.get("currentPage").toString();
+        String pageSizeStr = params.get("pageSize").toString();
+        String serialNumber = (String) params.get("serialNumber");
+        int currentPage = 1;
+        int pageSize = 5;
+        if (currentPageStr != null && !currentPageStr.isEmpty()) {
+            currentPage = Integer.parseInt(currentPageStr);
+        }
+        if (pageSizeStr != null && !pageSizeStr.isEmpty()) {
+            pageSize = Integer.parseInt(pageSizeStr);
+        }
+        Pages pages = new Pages();
+        Order order = new Order();
+        pages.setCurrentPage(currentPage);
+        pages.setPageSize(pageSize);
+        order.setUserId(user.getId());
+        order.setSerialNumber(serialNumber);
+        return orderService.getOrderList(pages,order);
     }
 
     @PostMapping("getOrder")
@@ -60,15 +75,5 @@ public class OrderController {
             return Message.success(resultOrder);
         }
         return Message.error();
-    }
-
-    @PostMapping("getOrderListByIdCondition")
-    public Message getOrderListByIdCondition(@RequestBody Map<String, Object> params) {
-        User user = ThreadLocalUtil.get();
-        if (user == null) {
-            return Message.error("请登录后再查看我的订单!");
-        }
-        params.put("userId", user.getId());
-        return orderService.getOrderListByIdCondition(params);
     }
 }

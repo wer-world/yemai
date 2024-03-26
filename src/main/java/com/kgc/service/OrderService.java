@@ -3,6 +3,7 @@ package com.kgc.service;
 import com.kgc.entity.Message;
 import com.kgc.entity.Order;
 import com.kgc.entity.OrderDetail;
+import com.kgc.entity.Pages;
 
 import java.util.List;
 import java.util.Map;
@@ -57,15 +58,7 @@ public interface OrderService {
      *
      * @return 返回订单消息类
      */
-    Message getOrderList(Map<String, Object> params);
-
-    /**
-     * 根据用户id获取他的所有订单
-     *
-     * @return 返回订单列表
-     */
-    Message getOrderListByIdCondition(Map<String, Object> params);
-
+    public Message getOrderList(Pages pages, Order order);
 
     /**
      * 通过订单id或订单号获取订单相关信息

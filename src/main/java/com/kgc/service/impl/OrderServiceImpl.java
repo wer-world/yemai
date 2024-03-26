@@ -182,50 +182,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Message getOrderList(Map<String, Object> params) {
-        Integer currentPage = (Integer) params.get("currentPage");
-        Integer pageSize = (Integer) params.get("pageSize");
-        if (currentPage == null || currentPage <= 0) {
-            currentPage = 1;
-        }
-        if (pageSize == null || pageSize <= 0) {
-            pageSize = 5;
-        }
-        Page<Object> page = PageHelper.startPage(currentPage, pageSize);
-        List<Order> orderList = orderDao.getOrderList(params);
+    public Message getOrderList(Pages pages, Order order) {
+        Page<Object> page = PageHelper.startPage(pages.getCurrentPage(), pages.getPageSize());
+        List<Order> orderList = orderDao.getOrderList(order);
         if (orderList != null && !orderList.isEmpty()) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("orderList", orderList);
             resultMap.put("totalCount", page.getTotal());
-            return Message.success(resultMap);
-        }
-        return Message.error();
-    }
-
-    @Override
-    public Message getOrderListByIdCondition(Map<String, Object> params) {
-        Integer currentPage = (Integer) params.get("currentPage");
-        Integer pageSize = (Integer) params.get("pageSize");
-        String serialNumber = (String) params.get("serialNumber");
-        Integer userId = (Integer) params.get("userId");
-        if (currentPage == null || currentPage <= 0) {
-            currentPage = 1;
-        }
-        if (pageSize == null || pageSize <= 0) {
-            pageSize = 5;
-        }
-        Integer from = (currentPage - 1) * pageSize;
-        Map<String, Object> paramsMap = new HashMap<>();
-        paramsMap.put("userId",userId);
-        paramsMap.put("serialNumber",serialNumber);
-        paramsMap.put("from",from);
-        paramsMap.put("pageSize",pageSize);
-        long totalCount = orderDao.getOrderListCount(paramsMap);
-        List<Order> orderList = orderDao.getOrderListByIdCondition(paramsMap);
-        if (orderList != null && !orderList.isEmpty()) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("orderList", orderList);
-            resultMap.put("totalCount", totalCount);
             return Message.success(resultMap);
         }
         return Message.error();
