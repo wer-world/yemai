@@ -67,9 +67,7 @@ public class ProductController {
     }
 
     @PostMapping("addProduct")
-    public Message addProduct(@RequestBody Map map,@RequestParam (value = "file",required = false) MultipartFile multipartFile) {
-        Object productObj = map.get("products");
-        Product product = JSON.parseObject(JSON.toJSONString(productObj),Product.class);
+    public Message addProduct(@RequestParam (value = "picPath") MultipartFile multipartFile, @RequestParam("products") Product product) {
         return productService.addProduct(product,multipartFile);
     }
 

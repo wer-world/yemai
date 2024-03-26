@@ -2,7 +2,6 @@ package com.kgc.service.impl;
 
 import com.kgc.entity.File;
 import com.kgc.service.FileService;
-import com.kgc.util.Base64Util;
 import com.kgc.util.ProductESRepositoryUtil;
 import com.kgc.dao.ProductDao;
 import com.kgc.entity.Category;

@@ -88,6 +88,6 @@ public class NewsServiceImpl implements NewsService {
         if (news != null){
             return Message.error("该标题已存在");
         }
-        return Message.success(news);
+        return Message.success();
     }
 }

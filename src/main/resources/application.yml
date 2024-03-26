@@ -13,7 +13,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/easybuy?characterEncoding=utf-8
     username: root
-    password: 1234
+    password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
 
   jackson:
@@ -45,7 +45,7 @@ alipay:
 token:
   token-sign: EasyBuyNet #令牌签名
   token-over-hours: 1 #令牌超时时间(单位小时)
-  is-token: true #开启令牌验证
+  is-token: false #开启令牌验证
 web-config:
-  exclude-token: [ "/user/login", "/user/register", "/replay/getRandom", "/error" ]
+  exclude-token: [ "/user/login", "/user/checkLoginName","/user/checkRegisterName","/user/register", "/replay/getRandom", "/error" ]
   exclude-replay: [ "/replay/getRandom", "/alipay/notifyUrlAlipay", "/error" ]
