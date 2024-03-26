@@ -83,4 +83,21 @@ public class FileServiceImpl implements FileService {
         }
         return Message.success();
     }
+
+    @Override
+    public Message modifyPicPathById(com.kgc.entity.File file) {
+        Integer count = fileDao.modifyPicPathById(file);
+        if (count != 1) {
+            return Message.error();
+        }
+        return Message.success();
+    }
+
+    @Override
+    public Message getPicPathByFileId(Integer id) {
+        com.kgc.entity.File picPathByFileId = fileDao.getPicPathByFileId(id);
+        return Message.success(picPathByFileId);
+    }
+
+
 }

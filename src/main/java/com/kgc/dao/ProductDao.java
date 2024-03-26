@@ -83,4 +83,13 @@ public interface ProductDao {
 
     Integer getExistParentCategoryProductCount(Category category);
 
+    /**
+     * 修改商品
+     *
+     * @param product 需要修改的商品
+     * @return 返回影响条数
+     */
+    Integer modifyProductById(Product product);
+
+
 }

@@ -27,4 +27,18 @@ public interface FileService {
     Message getFileIdByPicPath(String picPath);
 
     Message modifyProIdById(File file);
+
+    /**
+     * 修改文件路径
+     * @param file
+     * @return
+     */
+    Message modifyPicPathById(File file);
+
+    /**
+     * 根据文件id获取文件路径
+     * @param id
+     * @return
+     */
+    Message getPicPathByFileId(Integer id);
 }

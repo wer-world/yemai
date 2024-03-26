@@ -57,7 +57,9 @@ public class ReplayInterceptors implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        String random = request.getHeader("random");
-        replayUtil.removeRandom(random);
+        if (replayConfig.getIsReplay()) {
+            String random = request.getHeader("random");
+            replayUtil.removeRandom(random);
+        }
     }
 }

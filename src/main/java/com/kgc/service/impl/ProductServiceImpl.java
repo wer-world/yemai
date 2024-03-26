@@ -105,9 +105,6 @@ public class ProductServiceImpl implements ProductService {
                 queryBuilder.should(QueryBuilders.matchQuery("categoryLeve2Name", categoryName));
                 queryBuilder.should(QueryBuilders.matchQuery("categoryLeve3Name", categoryName));
             }
-            if (minPrice == null) {
-                queryBuilder.must(QueryBuilders.rangeQuery("price").gt(0));
-            }
             if (maxPrice != null && maxPrice > 0) {
                 queryBuilder.must(QueryBuilders.rangeQuery("price").lt(maxPrice));
                 if (minPrice != null && minPrice >= 0 && minPrice < maxPrice) {
@@ -204,11 +201,29 @@ public class ProductServiceImpl implements ProductService {
         }
         return Message.error();
     }
-
     @Override
     @Transactional
     public Message modProduct(Product product) {
         Integer flag = productDao.modProduct(product);
+        if (flag == 0) {
+            throw new ServiceException("ProductServiceImpl modProduct " + ProductExceptionEnum.PRODUCT_UPDATE_FAILURE.getMessage(), ProductExceptionEnum.PRODUCT_UPDATE_FAILURE.getMsg());
+        }
+        Document document = Document.create();
+        UpdateQuery build = UpdateQuery.builder(String.valueOf(product.getId())).withDocument(document).build();
+        template.update(build, IndexCoordinates.of("product"));
+        return Message.success();
+    }
+
+    @Override
+    @Transactional
+    public Message modifyProductById(Product product, MultipartFile multipartFile) {
+        Message upload = fileService.upload(multipartFile);
+        String picPath = (String) upload.getData();
+        File file = new File();
+        file.setId(product.getPicId());
+        file.setPicPath(picPath);
+        fileService.modifyPicPathById(file);
+        Integer flag = productDao.modifyProductById(product);
         if (flag == 0) {
             throw new ServiceException("ProductServiceImpl modProduct " + ProductExceptionEnum.PRODUCT_UPDATE_FAILURE.getMessage(), ProductExceptionEnum.PRODUCT_UPDATE_FAILURE.getMsg());
         }
@@ -231,7 +246,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(Integer id) {
-        return productDao.getProductById(id);
+        Product productById = productDao.getProductById(id);
+        if(productById != null){
+            Message picPathByFileId = fileService.getPicPathByFileId(productById.getPicId());
+            File file = (File) picPathByFileId.getData();
+            productById.setPicPath(file.getPicPath());
+        }
+        return productById;
     }
 
     @Override

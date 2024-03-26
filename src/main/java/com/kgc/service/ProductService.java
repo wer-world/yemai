@@ -108,7 +108,13 @@ public interface ProductService {
      */
     void downLoad(String picPath, HttpServletRequest request, HttpServletResponse response);
 
-
+    /**
+     * 修改商品
+     *
+     * @param product 需要修改的商品信息
+     * @return 返回消息类
+     */
+    Message modifyProductById(Product product,MultipartFile multipartFile);
 
 
 }

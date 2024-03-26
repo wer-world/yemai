@@ -43,6 +43,7 @@
 
     <select id="getProductById" resultType="Product">
         SELECT 				p.id,
+                            p.brandId,
                               p.name,
                               p.description,
                               p.price,
@@ -94,7 +95,7 @@
                      (SELECT id FROM easybuy_product_category WHERE isDelete = 0 AND parentId = #{id}));
     </select>
 
-    <insert id="addProduct">
+    <insert id="addProduct" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         insert into easybuy_product(name, brandId, description, price, stock, categoryLevelId, picId, createTime)
             value (#{name}, #{brandId}, #{description}, #{price}, #{stock}, #{categoryLevelId}, #{picId}, now())
     </insert>
@@ -127,6 +128,34 @@
         where isDelete = 0
         and id = #{id}
     </update>
+
+    <update id="modifyProductById">
+        update easybuy_product
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="brandId != null and brandId > 0">
+                brandId = #{brandId},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="price != null and price > 0.0">
+                price = #{price},
+            </if>
+            <if test="stock != null and stock > 0">
+                stock = #{stock},
+            </if>
+            <if test="categoryLevelId != null and categoryLevelId > 0">
+                categoryLevelId = #{categoryLevelId},
+            </if>
+
+        </set>
+        where isDelete = 0
+        and id = #{id}
+    </update>
+
 
     <delete id="delProduct">
         update easybuy_product
