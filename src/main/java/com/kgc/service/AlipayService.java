@@ -27,7 +27,7 @@ public interface AlipayService {
      * @param order 下单的订单
      * @return 返回消息类, 包含支付页面
      */
-    Message createAlipay(Order order);
+    String createAlipay(Order order);
 
     /**
      * 处理支付成功请求业务

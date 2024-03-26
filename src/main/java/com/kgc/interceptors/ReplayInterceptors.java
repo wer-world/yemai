@@ -39,7 +39,7 @@ public class ReplayInterceptors implements HandlerInterceptor {
             String random = request.getHeader("random"); // 随机数
             if (urlTime == null || random == null || urlTime.isEmpty() || random.isEmpty()) {
                 logger.error("ReplayInterceptors preHandle replay error");
-                throw new ServiceException("ReplayInterceptors preHandle " + TokenExceptionEnum.ILLEGAL_REQUEST.getMessage(),TokenExceptionEnum.ILLEGAL_REQUEST.getMsg());
+                throw new ServiceException("ReplayInterceptors preHandle " + TokenExceptionEnum.ILLEGAL_REQUEST.getMessage(), TokenExceptionEnum.ILLEGAL_REQUEST.getMsg());
             }
             // 重放攻击校验
             // 时间戳校验
@@ -48,7 +48,7 @@ public class ReplayInterceptors implements HandlerInterceptor {
             String checkRandom = replayUtil.checkRandom(random);
             if (!checkUrlTime || checkRandom == null) {
                 logger.error("ReplayInterceptors preHandle replay error");
-                throw new ServiceException("ReplayInterceptors preHandle " + TokenExceptionEnum.ILLEGAL_REQUEST.getMessage(),TokenExceptionEnum.ILLEGAL_REQUEST.getMsg());
+                throw new ServiceException("ReplayInterceptors preHandle " + TokenExceptionEnum.ILLEGAL_REQUEST.getMessage(), TokenExceptionEnum.ILLEGAL_REQUEST.getMsg());
             }
         }
         logger.info("LoginInterceptor preHandle end...");

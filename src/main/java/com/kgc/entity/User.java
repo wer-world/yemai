@@ -27,4 +27,5 @@ public class User {
     private Integer type;
     @JsonIgnore
     private String random;
+    private String token;
 }

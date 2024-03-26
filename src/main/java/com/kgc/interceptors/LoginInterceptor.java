@@ -55,6 +55,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                 throw new ServiceException("LoginInterceptor preHandle " + TokenExceptionEnum.TOKEN_OVER.getMessage(), TokenExceptionEnum.TOKEN_OVER.getMsg());
             }
             User user = JWTUtil.parseToken(redisToken, tokenConfig.getTokenSign());
+            user.setToken(token);
             ThreadLocalUtil.set(user);
         } else {
             // 配置默认属性

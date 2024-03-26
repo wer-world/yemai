@@ -9,8 +9,8 @@
         where serialNumber = #{orderNumber}
     </update>
     <insert id="addOrder" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        insert into easybuy_order(userId, loginName, userAddress, createTime, serialNumber)
-            value (#{userId}, #{loginName}, #{userAddress}, now(), #{serialNumber})
+        insert into easybuy_order(userId, loginName, userAddress, cost, createTime, serialNumber)
+            value (#{userId}, #{loginName}, #{userAddress}, #{cost}, now(), #{serialNumber})
     </insert>
     <update id="modOrder">
         update easybuy_order

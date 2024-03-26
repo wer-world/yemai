@@ -111,4 +111,12 @@ public interface UserService {
      * @return 返回受影响的行数
      */
     Message modifyPasswordById(User user);
+
+    /**
+     * 退出登录
+     *
+     * @param user 用户令牌
+     * @return 返回消息类
+     */
+    Message loginOut(User user);
 }
