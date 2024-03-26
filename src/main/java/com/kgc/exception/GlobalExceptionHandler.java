@@ -24,13 +24,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ServiceException.class)
     public Message serviceExceptionHandler(ServiceException e) {
+        e.printStackTrace();
         logger.error("GlobalExceptionHandler serviceExceptionHandler error message:" + e.getMessage());
         return Message.error(e.getMsg());
     }
 
     @ExceptionHandler(NumberFormatException.class)
     public Message numberFormatExceptionHandler(NumberFormatException e) {
-        logger.error("GlobalExceptionHandler serviceExceptionHandler error message:" + e.getMessage());
+        e.printStackTrace();
+        logger.error("GlobalExceptionHandler numberFormatExceptionHandler error message:" + e.getMessage());
         return Message.error("数字参数传错啦!请输入正确数字!OvO");
     }
 }

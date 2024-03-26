@@ -12,4 +12,10 @@
     <update id="modifyProIdById">
         update easybuy_file set product_id=#{product_id} where isDelete = 0 and id=#{id}
     </update>
+    <update id="modifyPicPathById">
+        update easybuy_file set picPath = #{picPath} where isDelete = 0 and id=#{id}
+    </update>
+    <select id="getPicPathByFileId" resultType="File">
+        select picPath from easybuy_file where isDelete = 0 and id=#{id}
+    </select>
 </mapper>

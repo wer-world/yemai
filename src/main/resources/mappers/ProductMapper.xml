@@ -43,6 +43,7 @@
 
     <select id="getProductById" resultType="Product">
         SELECT p.id,
+               p.brandId,
                p.name,
                p.description,
                p.price,
@@ -131,6 +132,34 @@
         and id = #{id}
     </update>
 
+    <update id="modifyProductById">
+        update easybuy_product
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="brandId != null and brandId > 0">
+                brandId = #{brandId},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="price != null and price > 0.0">
+                price = #{price},
+            </if>
+            <if test="stock != null and stock > 0">
+                stock = #{stock},
+            </if>
+            <if test="categoryLevelId != null and categoryLevelId > 0">
+                categoryLevelId = #{categoryLevelId},
+            </if>
+
+        </set>
+        where isDelete = 0
+        and id = #{id}
+    </update>
+
+
     <delete id="delProduct">
         update easybuy_product
         set isDelete = 1
@@ -168,6 +197,4 @@
         WHERE isDelete = 0
           AND categoryLevelId = #{id};
     </select>
-
-
 </mapper>
