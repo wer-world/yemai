@@ -77,16 +77,25 @@ public class ProductController {
 
     @PostMapping("modProduct")
     public Message modProduct(@RequestBody Product product) {
+        if (product.getId() == null) {
+            return Message.error("商品id不能为空!");
+        }
         return productService.modProduct(product);
     }
 
     @GetMapping("delProduct")
     public Message delProduct(Product product) {
+        if (product.getId() == null) {
+            return Message.error("商品id不能为空!");
+        }
         return productService.delProduct(product);
     }
 
     @RequestMapping("getProductById")
     public Message getProductById(@RequestBody Product product) {
+        if (product.getId() == null) {
+            return Message.error("商品id不能为空!");
+        }
         Product resultProduct = productService.getProductById(product.getId());
         if (resultProduct != null) {
             return Message.success(resultProduct);
@@ -96,6 +105,9 @@ public class ProductController {
 
     @RequestMapping("getSimilarProducts")
     public Message getSimilarProducts(@RequestBody Product product) {
+        if (product.getId() == null) {
+            return Message.error("商品id不能为空!");
+        }
         return productService.getSimilarProducts(product);
     }
 

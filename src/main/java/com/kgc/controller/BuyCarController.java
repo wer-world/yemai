@@ -22,16 +22,6 @@ public class BuyCarController {
     @Autowired
     private BuyCarService buyCarService;
 
-    @PostMapping("getBuyCarListPage")
-    public Message getBuyCarListPage(@RequestBody Map<String, Object> params) {
-        return buyCarService.getBuyCarList(params);
-    }
-
-    @PostMapping("delBuyCarProduct")
-    public Message delBuyCarProduct(@RequestBody BuyCar buyCar) {
-        return buyCarService.delBuyCarProduct(buyCar);
-    }
-
     @GetMapping("getBuyCarListByUserId")
     public Message getBuyCarListByUserId() {
         User user = ThreadLocalUtil.get();
@@ -40,6 +30,9 @@ public class BuyCarController {
 
     @PostMapping("addBuyCar")
     public Message addBuyCar(@RequestBody BuyCar buyCar) {
+        if (buyCar.getProductId() == null) {
+            return Message.error("添加至购物车商品,商品id不能为空!");
+        }
         User user = ThreadLocalUtil.get();
         buyCar.setUserId(user.getId());
         if (buyCar.getProductNum() == null) {
@@ -50,6 +43,9 @@ public class BuyCarController {
 
     @DeleteMapping("delBuyCarProductById")
     public Message delBuyCarProductById(Integer id) {
+        if (id == null) {
+            return Message.error("删除购物车商品,商品id不能为空!");
+        }
         return buyCarService.delBuyCarProductById(id);
     }
 }

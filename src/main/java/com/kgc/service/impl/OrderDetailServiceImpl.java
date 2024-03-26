@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.kgc.dao.OrderDetailDao;
 import com.kgc.entity.Message;
 import com.kgc.entity.OrderDetail;
+import com.kgc.entity.Pages;
 import com.kgc.enums.OrderDetailExceptionEnum;
 import com.kgc.exception.ServiceException;
 import com.kgc.service.OrderDetailService;
@@ -52,11 +53,9 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public Message getOrderDetailListPage(Map<String, Object> params) {
-        Integer currentPage = (Integer) params.get("currentPage");
-        Integer pageSize = (Integer) params.get("pageSize");
-        Page<Object> page = PageHelper.startPage(currentPage, pageSize);
-        List<OrderDetail> orderDetailList = orderDetailDao.getOrderDetailListPage(params);
+    public Message getOrderDetailListPage(Pages pages, OrderDetail orderDetail) {
+        Page<Object> page = PageHelper.startPage(pages.getCurrentPage(), pages.getPageSize());
+        List<OrderDetail> orderDetailList = orderDetailDao.getOrderDetailListPage(orderDetail);
         if (orderDetailList != null && !orderDetailList.isEmpty()) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("orderDetailList", orderDetailList);

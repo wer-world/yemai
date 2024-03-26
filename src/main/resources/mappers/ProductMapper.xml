@@ -42,50 +42,53 @@
     </select>
 
     <select id="getProductById" resultType="Product">
-        SELECT 				p.id,
-                              p.name,
-                              p.description,
-                              p.price,
-                              p.stock,
-                              p.categoryLevelId,
-                              p.picId,
-                              f.picPath
-        FROM easybuy_product p,easybuy_file f
+        SELECT p.id,
+               p.name,
+               p.description,
+               p.price,
+               p.stock,
+               p.categoryLevelId,
+               p.picId,
+               f.picPath
+        FROM easybuy_product p,
+             easybuy_file f
         WHERE p.isDelete = 0
           AND p.picId = f.id
-          AND f.isDelete=0
+          AND f.isDelete = 0
           AND p.id = #{id};
     </select>
 
     <select id="getSimilarProducts" resultType="Product">
-        SELECT 				p.id,
-                              p.name,
-                              p.description,
-                              p.price,
-                              p.stock,
-                              p.categoryLevelId,
-                              p.picId,
-                              f.picPath
-        FROM easybuy_product p,easybuy_file f
+        SELECT p.id,
+               p.name,
+               p.description,
+               p.price,
+               p.stock,
+               p.categoryLevelId,
+               p.picId,
+               f.picPath
+        FROM easybuy_product p,
+             easybuy_file f
         WHERE p.isDelete = 0
           AND p.picId = f.id
-          AND f.isDelete=0
+          AND f.isDelete = 0
           AND categoryLevelId = #{categoryLevelId};
     </select>
 
     <select id="getProductsByHigHestId" resultType="Product">
-        SELECT 				p.id,
-                              p.name,
-                              p.description,
-                              p.price,
-                              p.stock,
-                              p.categoryLevelId,
-                              p.picId,
-                              f.picPath
-        FROM easybuy_product p,easybuy_file f
+        SELECT p.id,
+               p.name,
+               p.description,
+               p.price,
+               p.stock,
+               p.categoryLevelId,
+               p.picId,
+               f.picPath
+        FROM easybuy_product p,
+             easybuy_file f
         WHERE p.isDelete = 0
           AND p.picId = f.id
-          AND f.isDelete=0
+          AND f.isDelete = 0
           AND categoryLevelId IN
               (SELECT id
                FROM easybuy_product_category
@@ -94,7 +97,7 @@
                      (SELECT id FROM easybuy_product_category WHERE isDelete = 0 AND parentId = #{id}));
     </select>
 
-    <insert id="addProduct">
+    <insert id="addProduct" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         insert into easybuy_product(name, brandId, description, price, stock, categoryLevelId, picId, createTime)
             value (#{name}, #{brandId}, #{description}, #{price}, #{stock}, #{categoryLevelId}, #{picId}, now())
     </insert>
@@ -153,11 +156,17 @@
         </if>
     </select>
     <select id="selectProIdByPicId" resultType="Product">
-        select id from easybuy_product where isDelete = 0 and picId = #{picId}
+        select id
+        from easybuy_product
+        where isDelete = 0
+          and picId = #{picId}
     </select>
 
     <select id="getExistParentCategoryProductCount" resultType="int">
-        SELECT count(1) FROM easybuy_product WHERE isDelete=0 AND categoryLevelId=#{id};
+        SELECT count(1)
+        FROM easybuy_product
+        WHERE isDelete = 0
+          AND categoryLevelId = #{id};
     </select>
 
 

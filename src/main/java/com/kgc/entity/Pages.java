@@ -13,8 +13,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Pages {
-    private Integer currentPage;
-    private Integer pageSize;
+    private Integer currentPage = 1;
+    private Integer pageSize = 5;
     private Long totalCount;
     private Integer totalPage;
 }

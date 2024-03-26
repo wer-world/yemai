@@ -105,9 +105,6 @@ public class ProductServiceImpl implements ProductService {
                 queryBuilder.should(QueryBuilders.matchQuery("categoryLeve2Name", categoryName));
                 queryBuilder.should(QueryBuilders.matchQuery("categoryLeve3Name", categoryName));
             }
-            if (minPrice == null) {
-                queryBuilder.must(QueryBuilders.rangeQuery("price").gt(0));
-            }
             if (maxPrice != null && maxPrice > 0) {
                 queryBuilder.must(QueryBuilders.rangeQuery("price").lt(maxPrice));
                 if (minPrice != null && minPrice >= 0 && minPrice < maxPrice) {

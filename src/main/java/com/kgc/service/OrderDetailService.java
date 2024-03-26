@@ -2,6 +2,7 @@ package com.kgc.service;
 
 import com.kgc.entity.Message;
 import com.kgc.entity.OrderDetail;
+import com.kgc.entity.Pages;
 
 import java.util.List;
 import java.util.Map;
@@ -32,10 +33,11 @@ public interface OrderDetailService {
     /**
      * 获取订单详情列表信息
      *
-     * @param params 参数
+     * @param pages       分页对象
+     * @param orderDetail 条件对象
      * @return 返回消息类
      */
-    Message getOrderDetailListPage(Map<String, Object> params);
+    Message getOrderDetailListPage(Pages pages, OrderDetail orderDetail);
 
     /**
      * 添加订单详情信息

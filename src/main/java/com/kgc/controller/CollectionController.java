@@ -27,13 +27,11 @@ public class CollectionController {
     @RequestMapping("addCollection")
     public Message addCollection(@RequestBody Map<String, Object> params) {
         User user = ThreadLocalUtil.get();
-        if (user==null){
-            return Message.error("请登录后进行收藏!");
+        String productIdStr = (String) params.get("productId");
+        if (productIdStr == null || productIdStr.isEmpty()) {
+            return Message.error("收藏商品，商品id不能为空!");
         }
-        Integer productId = Integer.valueOf(params.get("productId").toString());
-        if (productId == null) {
-            return Message.error();
-        }
+        Integer productId = Integer.valueOf(productIdStr);
         Collections collections = new Collections();
         collections.setUserId(user.getId());
         collections.setProductId(productId);
@@ -41,11 +39,16 @@ public class CollectionController {
     }
 
     @RequestMapping("getCollections")
-    public Message getCollections(Integer userId) {
-        return collectionService.getCollections(userId);
+    public Message getCollections() {
+        User user = ThreadLocalUtil.get();
+        return collectionService.getCollections(user.getId());
     }
+
     @RequestMapping("deleteCollection")
-    public Message deleteCollection(Integer id) {
-        return collectionService.deleteCollection(id);
+    public Message deleteCollection(Integer productId) {
+        if (productId == null) {
+            return Message.error("移除收藏夹商品,商品id不能为空!");
+        }
+        return collectionService.deleteCollection(productId);
     }
 }
