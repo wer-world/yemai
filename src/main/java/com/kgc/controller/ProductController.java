@@ -28,7 +28,7 @@ public class ProductController {
     @PostMapping("getProductListPages")
     public Message getProductListPages(@RequestBody Map<String, Object> paramMap) {
         paramMap.putIfAbsent("currentPage", 1); // 当前页码
-        paramMap.putIfAbsent("pageSize", 20); // 分页容量
+        paramMap.putIfAbsent("pageSize", 5); // 分页容量
         if (paramMap.get("minPrice") != null) {
             Double minPrice = Double.parseDouble(paramMap.get("minPrice").toString()); // 最小价格
             paramMap.put("minPrice", minPrice); // 最小价格
@@ -77,6 +77,14 @@ public class ProductController {
             return Message.error("商品id不能为空!");
         }
         return productService.modProduct(product);
+    }
+
+    @PostMapping("modifyProductById")
+    public Message modifyProductById(Product product, @RequestParam(value = "filePath", required = false) MultipartFile file) {
+        if (file.getOriginalFilename() == null || file.getOriginalFilename().isEmpty()) {
+            return Message.error("文件路径为空!");
+        }
+        return productService.modifyProductById(product,file);
     }
 
     @GetMapping("delProduct")

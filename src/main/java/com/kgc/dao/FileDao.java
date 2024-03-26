@@ -7,4 +7,8 @@ public interface FileDao {
     File getFileIdByPicPath(String picPath);
 
     Integer modifyProIdById(File file);
+
+    Integer modifyPicPathById(File file);
+
+    File getPicPathByFileId(Integer id);
 }
