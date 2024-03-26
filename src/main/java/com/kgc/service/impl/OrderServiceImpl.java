@@ -7,8 +7,6 @@ import com.kgc.entity.*;
 import com.kgc.enums.OrderExceptionEnum;
 import com.kgc.exception.ServiceException;
 import com.kgc.service.*;
-import com.kgc.util.ThreadLocalUtil;
-import io.lettuce.core.pubsub.PubSubOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static io.lettuce.core.pubsub.PubSubOutput.Type.message;
 
 /**
  * 订单业务实现类
@@ -161,5 +157,30 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getTimeOutOrderList() {
         return orderDao.getTimeOutOrderList();
+    }
+
+    @Override
+    public Message createMobilePaymentOrder(OrderDetail orderDetail, User user) {
+        // 1、创建订单类
+        Order order = new Order();
+        user = userService.getUser(user);
+        if (user == null) {
+            throw new ServiceException("OrderServiceImpl createOrder " + OrderExceptionEnum.USER_NOT_EXIST.getMessage(), OrderExceptionEnum.USER_NOT_EXIST.getMsg());
+        }
+        order.setUserId(user.getId());
+        order.setLoginName(user.getLoginName());
+        order.setUserAddress(user.getAddress());
+        order.setCost(orderDetail.getCost());
+        // 2.1 生成订单号
+        String orderNum = UUID.randomUUID().toString();
+        order.setSerialNumber(orderNum);
+        Integer flag = orderDao.addOrder(order);
+        if (flag == 0) {
+            // 使事务生效
+            throw new ServiceException("OrderServiceImpl createOrder " + OrderExceptionEnum.CREATE_ORDER_ERROR.getMessage(), OrderExceptionEnum.CREATE_ORDER_ERROR.getMsg());
+        }
+        orderDetail.setOrderId(order.getId());
+        orderDetailService.addOrderDetail(orderDetail);
+        return Message.success(order);
     }
 }

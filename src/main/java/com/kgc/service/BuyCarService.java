@@ -13,22 +13,6 @@ import java.util.Map;
  */
 public interface BuyCarService {
     /**
-     * 根据条件获取购物车集合
-     *
-     * @param params 条件
-     * @return 返回消息类
-     */
-    Message getBuyCarList(Map<String, Object> params);
-
-    /**
-     * 根据条件删除购物车商品
-     *
-     * @param buyCar buyCar中的条件
-     * @return 返回消息类
-     */
-    Message delBuyCarProduct(BuyCar buyCar);
-
-    /**
      * 根据id删除购物车商品
      *
      * @param id 购物车id

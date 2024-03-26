@@ -20,14 +20,14 @@ public class NewsController {
 
     @RequestMapping("getNewsList")
     public Message getNewsList(Pages page) {
-        if (page == null) {
-            return Message.error();
+        if (page == null || page.getCurrentPage() == null || page.getPageSize() == null) {
+            return Message.error("分页对象不存在,当前页码与当前页面容量未输入!");
         }
         int form = (page.getCurrentPage() - 1) * page.getPageSize();
         Message getNewsTotalCount = newsService.getNewsTotalCount();
         long count = (Long) getNewsTotalCount.getData();
         page.setTotalCount(count);
-        Map map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("form", form);
         map.put("page", page);
         Message message = newsService.getNewsList(map);
@@ -91,7 +91,7 @@ public class NewsController {
     @RequestMapping("getNewsByTitle")
     public Message getNewsByTitle(@RequestBody Map<String, Object> map) {
         String title = (String) map.get("title");
-        if (title == null){
+        if (title == null) {
             return Message.error("请输入标题");
         }
         return newsService.getNewsByTitle(title);

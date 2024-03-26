@@ -29,7 +29,7 @@ public class OrderController {
     @PostMapping("createOrder")
     public Message createOrder(@RequestBody Map<String, Object> buyCar) {
         if (buyCar.isEmpty()) {
-            return Message.error();
+            return Message.error("购物车没有商品数据!");
         }
         List<OrderDetail> orderDetailList = new ArrayList<>();
         List<Object> buyCarList = (List<Object>) buyCar.get("buyCar");
@@ -42,8 +42,32 @@ public class OrderController {
         return orderService.createOrder(orderDetailList, user);
     }
 
+    @PostMapping("createMobilePaymentOrder")
+    public Message createMobilePaymentOrder(@RequestBody Map<String, Object> params) {
+        if (params.isEmpty()) {
+            return Message.error("未输入充值手机号或充值金额!");
+        }
+        String mobile = (String) params.get("mobile");
+        String costStr = (String) params.get("cost");
+        if (mobile == null) {
+            return Message.error("未输入充值手机号");
+        }
+        if (costStr == null) {
+            return Message.error("未输入充值金额");
+        }
+        User user = ThreadLocalUtil.get();
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setOrderId(user.getId());
+        orderDetail.setMobile(mobile);
+        orderDetail.setCost(Double.parseDouble(costStr));
+        return orderService.createMobilePaymentOrder(orderDetail, user);
+    }
+
     @RequestMapping("cancelOrder")
     public Message cancelOrder(Order order) {
+        if (order.getId() == null) {
+            return Message.error("取消订单,需传入订单id!");
+        }
         return orderService.cancelOrder(order);
     }
 
@@ -62,11 +86,20 @@ public class OrderController {
 
     @GetMapping("getOrderList")
     public Message getUserOrderList(Pages pages) {
+        if (pages.getCurrentPage() == null) {
+            pages.setCurrentPage(1);
+        }
+        if (pages.getPageSize() == null) {
+            pages.setPageSize(5);
+        }
         return orderService.getOrderList(pages, new Order());
     }
 
     @PostMapping("getOrder")
     public Message getOrder(@RequestBody Order order) {
+        if (order.getId() == null || order.getSerialNumber() == null) {
+            return Message.error("获取订单数据,需传入订单id或订单号!");
+        }
         Order resultOrder = orderService.getOrder(order);
         if (resultOrder != null) {
             return Message.success(resultOrder);

@@ -48,7 +48,7 @@ public class AlipayServiceImpl implements AlipayService {
 
     @Override
     @Transactional
-    public Message createAlipay(Order order) {
+    public String createAlipay(Order order) {
         Order resultOrder = orderService.getOrder(order);
         if (resultOrder == null) {
             throw new ServiceException("AlipayServiceImpl createAlipay " + AlipayExceptionEnum.ALIPAY_ORDER_NOT_EXIST.getMessage(), AlipayExceptionEnum.ALIPAY_ORDER_NOT_EXIST.getMsg());
@@ -61,7 +61,7 @@ public class AlipayServiceImpl implements AlipayService {
             if (!response.isSuccess()) {
                 throw new ServiceException("AlipayServiceImpl createAlipay " + AlipayExceptionEnum.ALIPAY_CREATE_FAILURE.getMessage(), AlipayExceptionEnum.ALIPAY_CREATE_FAILURE.getMsg());
             }
-            return Message.success(pageRedirectionData);
+            return pageRedirectionData;
         } catch (Exception e) {
             throw new ServiceException("AlipayServiceImpl createAlipay " + AlipayExceptionEnum.ALIPAY_CREATE_ERROR.getMessage(), AlipayExceptionEnum.ALIPAY_CREATE_ERROR.getMsg());
         }

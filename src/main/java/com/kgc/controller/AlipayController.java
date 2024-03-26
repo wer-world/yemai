@@ -19,6 +19,8 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.lettuce.core.pubsub.PubSubOutput.Type.message;
+
 /**
  * 支付宝管理控制类
  *
@@ -33,8 +35,15 @@ public class AlipayController {
     private AlipayService alipayService;
 
     @PostMapping("createAlipay")
-    public Message createAlipay(@RequestBody Order order) {
-        return alipayService.createAlipay(order);
+    public void createAlipay(@RequestBody Order order, HttpServletResponse response) throws IOException {
+        String alipay = alipayService.createAlipay(order);
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter writer = response.getWriter();
+        if (!alipay.isEmpty()) {
+            writer.print(alipay);
+        } else {
+            writer.print("error");
+        }
     }
 
     @RequestMapping("notifyUrlAlipay")

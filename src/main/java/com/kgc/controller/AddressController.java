@@ -17,9 +17,10 @@ import java.util.Map;
 public class AddressController {
     @Autowired
     private AddressService addressService;
+
     @GetMapping("getAddressListByUserId")
-    public Message getAddressListByUserId(String currentPage,String pageSize){
-        Map<String,Object> map = new HashMap<>();
+    public Message getAddressListByUserId(String currentPage, String pageSize) {
+        Map<String, Object> map = new HashMap<>();
         if (currentPage == null || currentPage.isEmpty()) {
             return Message.error();
         }
@@ -28,32 +29,34 @@ public class AddressController {
             return Message.error();
         }
         int pageSizeInt = Integer.parseInt(pageSize);
-        int form = (currentPageInt-1)*pageSizeInt;
+        int form = (currentPageInt - 1) * pageSizeInt;
         User user = ThreadLocalUtil.get();
         if (user == null) {
             return Message.error();
         }
-        map.put("userId",user.getId());
-        map.put("form",form);
-        map.put("pageSize",pageSizeInt);
+        map.put("userId", user.getId());
+        map.put("form", form);
+        map.put("pageSize", pageSizeInt);
         return addressService.getAddressListByUserId(map);
     }
+
     @GetMapping("getAddressById")
-    public Message getAddressById(String id){
+    public Message getAddressById(String id) {
         if (id == null || "".equals(id)) {
             return Message.error();
         }
         int idInt = Integer.parseInt(id);
         return addressService.getAddressById(idInt);
     }
+
     @PostMapping("addAddress")
-    public Message addAddress(@RequestBody Map map){
+    public Message addAddress(@RequestBody Map map) {
         User user = ThreadLocalUtil.get();
         if (user == null) {
             return Message.error();
         }
         Object addressObj = map.get("address");
-        Address address = JSON.parseObject(JSON.toJSONString(addressObj),Address.class);
+        Address address = JSON.parseObject(JSON.toJSONString(addressObj), Address.class);
         if (address == null) {
             return Message.error();
         }
@@ -62,7 +65,7 @@ public class AddressController {
     }
 
     @GetMapping("deleteAddressById")
-    public Message deleteAddressById(String id){
+    public Message deleteAddressById(String id) {
         if (id == null || "".equals(id)) {
             return Message.error();
         }
@@ -71,17 +74,17 @@ public class AddressController {
     }
 
     @PostMapping("modifyAddressById")
-    public Message modifyAddressById(@RequestBody Map map){
+    public Message modifyAddressById(@RequestBody Map<String, Object> map) {
         Object addressObj = map.get("address");
-        Address address = JSON.parseObject(JSON.toJSONString(addressObj),Address.class);
-        if (address == null){
-            return  Message.error();
+        Address address = JSON.parseObject(JSON.toJSONString(addressObj), Address.class);
+        if (address == null) {
+            return Message.error();
         }
         return addressService.modifyAddressById(address);
     }
 
     @GetMapping("getAddressCountByUserId")
-    public Message getAddressCountByUserId(){
+    public Message getAddressCountByUserId() {
         User user = ThreadLocalUtil.get();
         if (user == null) {
             return Message.error();

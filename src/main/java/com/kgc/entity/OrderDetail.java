@@ -16,6 +16,7 @@ public class OrderDetail {
     private Integer id;
     private Integer orderId;
     private Integer productId;
+    private String mobile;
     private String productName;
     private Double productPrice;
     @JSONField(name = "productNum")

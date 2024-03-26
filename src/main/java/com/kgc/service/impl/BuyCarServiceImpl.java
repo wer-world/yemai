@@ -50,16 +50,6 @@ public class BuyCarServiceImpl implements BuyCarService {
     }
 
     @Override
-    public Message getBuyCarList(Map<String, Object> params) {
-        return null;
-    }
-
-    @Override
-    public Message delBuyCarProduct(BuyCar buyCar) {
-        return null;
-    }
-
-    @Override
     public Message delBuyCarProductById(Integer id) {
         BuyCar buyCar = new BuyCar();
         buyCar.setId(id);

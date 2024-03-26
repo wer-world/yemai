@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -52,6 +53,7 @@ public class Product {
     private Integer sales;
     @Field(type = FieldType.Boolean)
     private Boolean newProduct;
+    @Field(type = FieldType.Date, format = DateFormat.date)
     private Date createTime;
 
     public void setPicPath(String picPath) {

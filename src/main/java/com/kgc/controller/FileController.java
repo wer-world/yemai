@@ -15,8 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileController {
     @Autowired
     private FileService fileService;
+
     @RequestMapping("addFile")
-    public Message addFile( @RequestParam (value = "file",required = false)MultipartFile multipartFile){
+    public Message addFile(@RequestParam(value = "file", required = false) MultipartFile multipartFile) {
         Message upload = fileService.upload(multipartFile);
         if ("200".equals(upload.getCode())) {
             return fileService.addFile((String) upload.getData());

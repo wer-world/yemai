@@ -88,7 +88,9 @@ public class ProductServiceImpl implements ProductService {
 
         // 条件拼接
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        boolean isSearch = false;
         if (globalCondition != null && !globalCondition.isEmpty()) {
+            isSearch = true;
             queryBuilder.should(QueryBuilders.matchQuery("name", globalCondition));
             queryBuilder.should(QueryBuilders.matchQuery("categoryLeve1Name", globalCondition));
             queryBuilder.should(QueryBuilders.matchQuery("categoryLeve2Name", globalCondition));
@@ -98,23 +100,24 @@ public class ProductServiceImpl implements ProductService {
             queryBuilder.should(QueryBuilders.termQuery("brandName", globalCondition));
         } else {
             if (productName != null && !productName.isEmpty()) {
+                isSearch = true;
                 queryBuilder.must(QueryBuilders.matchQuery("name", productName));
             }
             if (categoryName != null && !categoryName.isEmpty()) {
+                isSearch = true;
                 queryBuilder.should(QueryBuilders.matchQuery("categoryLeve1Name", categoryName));
                 queryBuilder.should(QueryBuilders.matchQuery("categoryLeve2Name", categoryName));
                 queryBuilder.should(QueryBuilders.matchQuery("categoryLeve3Name", categoryName));
             }
-            if (minPrice == null) {
-                queryBuilder.must(QueryBuilders.rangeQuery("price").gt(0));
-            }
             if (maxPrice != null && maxPrice > 0) {
+                isSearch = true;
                 queryBuilder.must(QueryBuilders.rangeQuery("price").lt(maxPrice));
                 if (minPrice != null && minPrice >= 0 && minPrice < maxPrice) {
                     queryBuilder.must(QueryBuilders.rangeQuery("price").gt(minPrice));
                 }
             }
             if (brandName != null && !brandName.isEmpty()) {
+                isSearch = true;
                 queryBuilder.must(QueryBuilders.termQuery("brandName", brandName));
             }
         }
@@ -125,7 +128,10 @@ public class ProductServiceImpl implements ProductService {
         highlightBuilder.postTags("</font>");
 
         NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
-        builder.withQuery(queryBuilder);
+        if (isSearch) {
+            builder.withQuery(queryBuilder);
+        }
+
         if (isSales != null) {
             if (isSales) {
                 builder.withSorts(SortBuilders.fieldSort("sales").order(SortOrder.DESC));

@@ -1,11 +1,8 @@
 package com.kgc.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.kgc.entity.Category;
 import com.kgc.entity.Message;
 import com.kgc.entity.Product;
-import com.kgc.enums.FileExceptionEnum;
-import com.kgc.service.BrandService;
 import com.kgc.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
-import java.util.List;
 
 /**
  * 商品管理控制类
@@ -77,16 +73,25 @@ public class ProductController {
 
     @PostMapping("modProduct")
     public Message modProduct(@RequestBody Product product) {
+        if (product.getId() == null) {
+            return Message.error("商品id不能为空!");
+        }
         return productService.modProduct(product);
     }
 
     @GetMapping("delProduct")
     public Message delProduct(Product product) {
+        if (product.getId() == null) {
+            return Message.error("商品id不能为空!");
+        }
         return productService.delProduct(product);
     }
 
     @RequestMapping("getProductById")
     public Message getProductById(@RequestBody Product product) {
+        if (product.getId() == null) {
+            return Message.error("商品id不能为空!");
+        }
         Product resultProduct = productService.getProductById(product.getId());
         if (resultProduct != null) {
             return Message.success(resultProduct);
@@ -96,6 +101,9 @@ public class ProductController {
 
     @RequestMapping("getSimilarProducts")
     public Message getSimilarProducts(@RequestBody Product product) {
+        if (product.getId() == null) {
+            return Message.error("商品id不能为空!");
+        }
         return productService.getSimilarProducts(product);
     }
 
