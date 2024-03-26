@@ -153,8 +153,12 @@ public class UserController {
 
     @PostMapping("getUserListPage")
     public Message getUserListPage(@RequestBody Map<String, Object> paramMap) {
-        String userName = paramMap.get("userName").toString();
-        Integer type = Integer.parseInt(paramMap.get("type").toString());
+        String userName = (String) paramMap.get("userName");
+        String typeStr = (String) paramMap.get("type");
+        if (typeStr==null || typeStr.isEmpty()){
+            typeStr = "0";
+        }
+        Integer type = Integer.parseInt(typeStr);
         Pages pages = PagesUtil.parseMapToPages(paramMap);
         User user = new User();
         user.setUserName(userName);
@@ -214,8 +218,17 @@ public class UserController {
     }
 
     @GetMapping("getUserById")
-    public Message getUserById() {
-        User user = ThreadLocalUtil.get();
+    public Message getUserById(User user) {
         return userService.getUserById(user.getId());
+    }
+
+    @GetMapping("getCurrentUser")
+    public Message getCurrentUser() {
+        User user = ThreadLocalUtil.get();
+        if (user==null){
+            return Message.error();
+        }
+        Message message = userService.getUserById(user.getId());
+        return message;
     }
 }

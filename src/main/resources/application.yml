@@ -13,7 +13,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/easybuy?characterEncoding=utf-8
     username: root
-    password: 1234
+    password: root
     type: com.alibaba.druid.pool.DruidDataSource
 
   jackson:
@@ -30,7 +30,7 @@ replay:
 token:
   token-sign: EasyBuyNet #令牌签名
   token-over-hours: 1 #令牌超时时间(单位小时)
-  is-token: false #开启令牌验证
+  is-token: true #开启令牌验证
 easy-buy-init:
   init-es-data: true #开启es初始化
   init-replay: true #开启重放攻击随机数初始化
