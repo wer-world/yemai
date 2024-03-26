@@ -189,4 +189,31 @@ public class UserServiceImpl implements UserService {
         }
         return Message.success(flag);
     }
+
+    @Override
+    public Message loginOut(User user) {
+        Boolean isLoginOut = stringRedisTemplate.delete(user.getToken());
+        if (Boolean.TRUE.equals(isLoginOut)) {
+            List<Cookie> cookieList = getStringCookieList();
+            return Message.success(cookieList);
+        }
+        return Message.error();
+    }
+
+    private List<Cookie> getStringCookieList() {
+        List<Cookie> cookieList = new ArrayList<>();
+        Cookie tokenCookie = new Cookie("token", null);
+        Cookie loginNameCookie = new Cookie("loginName", null);
+        Cookie typeCookie = new Cookie("type", null);
+        tokenCookie.setMaxAge(0);
+        loginNameCookie.setMaxAge(0);
+        typeCookie.setMaxAge(0);
+        tokenCookie.setPath("/");
+        loginNameCookie.setPath("/");
+        typeCookie.setPath("/");
+        cookieList.add(tokenCookie);
+        cookieList.add(loginNameCookie);
+        cookieList.add(typeCookie);
+        return cookieList;
+    }
 }

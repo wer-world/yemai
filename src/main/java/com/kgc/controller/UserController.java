@@ -61,6 +61,21 @@ public class UserController {
         return Message.error();
     }
 
+    @GetMapping("loginOut")
+    public Message loginOut(HttpServletResponse response) {
+        User user = ThreadLocalUtil.get();
+        Message message = userService.loginOut(user);
+        // 3、成功
+        if ("200".equals(message.getCode())) {
+            List<Cookie> cookieList = (List<Cookie>) message.getData();
+            for (Cookie cookie : cookieList) {
+                response.addCookie(cookie);
+            }
+            return Message.success();
+        }
+        return Message.error();
+    }
+
     @RequestMapping("register")
     public Message register(@RequestBody Map<String, Object> map) {
         Object userObj = map.get("user");
