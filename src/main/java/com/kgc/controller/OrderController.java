@@ -84,7 +84,7 @@ public class OrderController {
         return orderService.getOrderList(pages, order);
     }
 
-    @GetMapping("getOrderList")
+    @GetMapping("getUserOrderList")
     public Message getUserOrderList(Pages pages) {
         if (pages.getCurrentPage() == null) {
             pages.setCurrentPage(1);
@@ -92,7 +92,10 @@ public class OrderController {
         if (pages.getPageSize() == null) {
             pages.setPageSize(5);
         }
-        return orderService.getOrderList(pages, new Order());
+        User user = ThreadLocalUtil.get();
+        Order order = new Order();
+        order.setUserId(user.getId());
+        return orderService.getOrderList(pages, order);
     }
 
     @PostMapping("getOrder")

@@ -42,4 +42,12 @@ public interface BuyCarDao {
      * @return 返回消息类
      */
     Integer addBuyCar(BuyCar buyCar);
+
+    /**
+     * 修改购物车
+     *
+     * @param buyCar 修改提交
+     * @return 返回影响行数
+     */
+    Integer modBuyCar(BuyCar buyCar);
 }

@@ -49,4 +49,15 @@
         insert into easybuy_shopping_car(userId, productId, productNum, createTime)
             value (#{userId}, #{productId}, #{productNum}, now())
     </insert>
+
+    <update id="modBuyCar">
+        update easybuy_shopping_car
+        <set>
+            <if test="productNum != null and productNum > 0">
+                productNum = #{productNum}
+            </if>
+        </set>
+        where isDelete = 0
+        and id = #{id}
+    </update>
 </mapper>

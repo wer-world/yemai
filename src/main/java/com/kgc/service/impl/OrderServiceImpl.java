@@ -111,20 +111,24 @@ public class OrderServiceImpl implements OrderService {
     public Message cancelOrder(Order order) {
         // 获取当前订单的所有下单商品
         List<OrderDetail> orderDetailList = orderDetailService.getOrderDetailListByOrderId(order.getId());
-        if (orderDetailList == null) {
+        List<OrderDetail> orderDetailMobileList = orderDetailService.getOrderDetailMobileListByOrderId(order.getId());
+        if (orderDetailList == null && orderDetailMobileList == null) {
             throw new ServiceException("OrderServiceImpl cancelOrder " + OrderExceptionEnum.ORDER_DETAIL_LIST_GET_ERROR.getMessage(), OrderExceptionEnum.ORDER_DETAIL_LIST_GET_ERROR.getMsg());
         }
         logger.debug("OrderServiceImpl cancelOrder find all orderDetailList:" + orderDetailList);
-        for (OrderDetail orderDetail : orderDetailList) {
-            Product product = productService.getProductById(orderDetail.getProductId());
-            if (product == null) {
-                throw new ServiceException("OrderServiceImpl cancelOrder " + OrderExceptionEnum.ORDER_DETAIL_GET_ERROR.getMessage(), OrderExceptionEnum.ORDER_DETAIL_GET_ERROR.getMsg());
+        if (orderDetailList != null){
+            for (OrderDetail orderDetail : orderDetailList) {
+                Product product = productService.getProductById(orderDetail.getProductId());
+                if (product == null) {
+                    throw new ServiceException("OrderServiceImpl cancelOrder " + OrderExceptionEnum.ORDER_DETAIL_GET_ERROR.getMessage(), OrderExceptionEnum.ORDER_DETAIL_GET_ERROR.getMsg());
+                }
+                product.setStock(product.getStock() + orderDetail.getQuantity());
+                logger.debug("OrderServiceImpl cancelOrder update product:" + product);
+                // 更新对应商品库存
+                productService.modProduct(product);
             }
-            product.setStock(product.getStock() + orderDetail.getQuantity());
-            logger.debug("OrderServiceImpl cancelOrder update product:" + product);
-            // 更新对应商品库存
-            productService.modProduct(product);
         }
+
         // 逻辑删除订单详情表
         orderDetailService.delOrderDetailByOrderId(order.getId());
 

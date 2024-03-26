@@ -41,6 +41,18 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
+    public List<OrderDetail> getOrderDetailMobileListByOrderId(Integer id) {
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setOrderId(id);
+        List<OrderDetail> orderDetailList = orderDetailDao.getOrderDetailMobileList(orderDetail);
+        if (orderDetailList != null && !orderDetailList.isEmpty()) {
+            return orderDetailList;
+        }
+        return null;
+    }
+
+
+    @Override
     @Transactional
     public Message delOrderDetailByOrderId(Integer id) {
         OrderDetail orderDetail = new OrderDetail();
