@@ -45,10 +45,10 @@ public class CollectionController {
     }
 
     @RequestMapping("deleteCollection")
-    public Message deleteCollection(Integer productId) {
-        if (productId == null) {
+    public Message deleteCollection(Integer id) {
+        if (id == null) {
             return Message.error("移除收藏夹商品,商品id不能为空!");
         }
-        return collectionService.deleteCollection(productId);
+        return collectionService.deleteCollection(id);
     }
 }

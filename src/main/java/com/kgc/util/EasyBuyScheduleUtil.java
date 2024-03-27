@@ -44,6 +44,7 @@ public class EasyBuyScheduleUtil {
     public void timeOutOrderSchedule() {
         List<Order> orderList = orderService.getTimeOutOrderList();
         for (Order order : orderList) {
+            order.setStatus(3);
             orderService.cancelOrder(order);
         }
     }

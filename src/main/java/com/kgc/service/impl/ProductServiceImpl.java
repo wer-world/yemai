@@ -228,8 +228,9 @@ public class ProductServiceImpl implements ProductService {
     public Message modifyProductById(Product product, MultipartFile multipartFile) {
         Message upload = fileService.upload(multipartFile);
         String picPath = (String) upload.getData();
+        Product findProduct = productDao.getProduct(product);
         File file = new File();
-        file.setId(product.getPicId());
+        file.setId(findProduct.getPicId());
         file.setPicPath(picPath);
         fileService.modifyPicPathById(file);
         Integer flag = productDao.modifyProductById(product);

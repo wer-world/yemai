@@ -39,7 +39,7 @@ public class UserPermissionInterceptor implements HandlerInterceptor {
         String uri = request.getRequestURI();
         logger.debug("UserPermissionInterceptor preHandle uri:" + uri);
         User user = ThreadLocalUtil.get();
-        if (user.getType().equals(permissionConfig.getOrPermission())) {
+        if (user.getType() >= permissionConfig.getOrPermission()) {
             // 做页面过滤
             for (String closePath : permissionConfig.getOrPermissionClose()) {
                 if (uri.contains(closePath)) {

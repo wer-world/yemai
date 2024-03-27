@@ -4,9 +4,24 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kgc.dao.AddressDao">
     <select id="getAddressListByUserId" resultType="Address">
-        select id,userId, address, createTime, isDefault, remark, isDelete,province,city,county,consignee,tel,detailed
-        from easybuy_user_address where
-        userId = #{userId} and isDelete = 0 order by createTime desc limit #{form},#{pageSize}
+        select id,
+               userId,
+               address,
+               createTime,
+               isDefault,
+               remark,
+               isDelete,
+               province,
+               city,
+               county,
+               consignee,
+               tel,
+               detailed
+        from easybuy_user_address
+        where userId = #{userId}
+          and isDelete = 0
+        order by createTime desc
+        limit #{form},#{pageSize}
     </select>
     <select id="getAddressById" resultType="Address">
         select id, userId, address, createTime, isDefault, remark,province,city,county,consignee,tel,detailed
