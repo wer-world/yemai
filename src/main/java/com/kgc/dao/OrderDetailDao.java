@@ -20,6 +20,14 @@ public interface OrderDetailDao {
     List<OrderDetail> getOrderDetailList(OrderDetail orderDetail);
 
     /**
+     * 获取手机订单详情列表
+     *
+     * @param orderDetail 手机订单id
+     * @return 返回订单列表
+     */
+    List<OrderDetail> getOrderDetailMobileList(OrderDetail orderDetail);
+
+    /**
      * 根据条件删除订单详情
      *
      * @param orderDetail 删除条件(id, orderId)

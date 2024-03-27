@@ -11,6 +11,7 @@ import lombok.Getter;
 @Getter
 public enum BuyCarExceptionEnum {
     DELETE_PRODUCT_FAILURE("failed to delete shopping cart product information","购物车商品信息删除失败!"),
+    DELETE_UPDATE_FAILURE("failed to update shopping cart product information","购物车商品信息更新失败!"),
     ;
 
     private final String message;

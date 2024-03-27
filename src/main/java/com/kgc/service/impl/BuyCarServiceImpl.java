@@ -50,6 +50,15 @@ public class BuyCarServiceImpl implements BuyCarService {
     }
 
     @Override
+    public Message modBuyCarProductNumById(BuyCar buyCar) {
+        Integer flag = buyCarDao.modBuyCar(buyCar);
+        if (flag == 0){
+            throw new ServiceException(BuyCarExceptionEnum.DELETE_UPDATE_FAILURE.getMessage(), BuyCarExceptionEnum.DELETE_UPDATE_FAILURE.getMsg());
+        }
+        return Message.success();
+    }
+
+    @Override
     public Message delBuyCarProductById(Integer id) {
         BuyCar buyCar = new BuyCar();
         buyCar.setId(id);

@@ -48,4 +48,12 @@ public class BuyCarController {
         }
         return buyCarService.delBuyCarProductById(id);
     }
+
+    @PutMapping("modBuyCarProductNumById")
+    public Message modBuyCarProductNumById(@RequestBody BuyCar buyCar) {
+        if (buyCar.getId() == null || buyCar.getProductNum() == null) {
+            return Message.error("商品id或商品数量不能为空!");
+        }
+        return buyCarService.modBuyCarProductNumById(buyCar);
+    }
 }

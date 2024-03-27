@@ -42,4 +42,12 @@ public interface BuyCarService {
      * @return 返回消息类
      */
     Message addBuyCar(BuyCar buyCar);
+
+    /**
+     * 修改购物车商品数量
+     *
+     * @param buyCar 条件
+     * @return 返回消息类
+     */
+    Message modBuyCarProductNumById(BuyCar buyCar);
 }

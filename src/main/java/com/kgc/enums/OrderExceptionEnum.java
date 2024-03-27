@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 public enum OrderExceptionEnum {
     ORDER_TABLE_STATUS("order status update failed", "订单状态更新失败!"),
-    USER_NOT_EXIST("user does not exist", "用户不存在!"),
+    USER_NOT_SELECT_DEFAULT_ADDRESS("the user did not select the default address", "用户未选择默认地址!"),
     CREATE_ORDER_ERROR("failed to create order", "创建订单失败!"),
     PRODUCT_GET_ERROR("commodity acquisition failed", "商品获取失败!"),
     PRODUCT_STOCK_LACK("insufficient inventory of goods", "商品库存不足!"),

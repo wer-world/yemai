@@ -128,10 +128,6 @@ public class ProductServiceImpl implements ProductService {
         highlightBuilder.postTags("</font>");
 
         NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
-        if (isSearch) {
-            builder.withQuery(queryBuilder);
-        }
-
         if (isSales != null) {
             if (isSales) {
                 builder.withSorts(SortBuilders.fieldSort("sales").order(SortOrder.DESC));
@@ -152,7 +148,10 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         builder.withPageable(PageRequest.of(currentPage - 1, pageSize));
-        builder.withHighlightBuilder(highlightBuilder);
+        if (isSearch) {
+            builder.withQuery(queryBuilder);
+            builder.withHighlightBuilder(highlightBuilder);
+        }
 
         SearchHits<Product> hits = template.search(builder.build(), Product.class);
         Pages pages = new Pages(currentPage, pageSize, hits.getTotalHits(), null);
@@ -210,6 +209,7 @@ public class ProductServiceImpl implements ProductService {
         }
         return Message.error();
     }
+
     @Override
     @Transactional
     public Message modProduct(Product product) {
@@ -256,7 +256,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getProductById(Integer id) {
         Product productById = productDao.getProductById(id);
-        if(productById != null){
+        if (productById != null) {
             Message picPathByFileId = fileService.getPicPathByFileId(productById.getPicId());
             File file = (File) picPathByFileId.getData();
             productById.setPicPath(file.getPicPath());

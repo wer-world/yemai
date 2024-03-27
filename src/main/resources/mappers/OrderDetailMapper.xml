@@ -12,6 +12,13 @@
           and orderId = #{orderId}
     </select>
 
+    <select id="getOrderDetailMobileList" resultType="OrderDetail">
+        select id, orderId, mobile, quantity, cost
+        from easybuy_order_detail
+        where isDelete = 0
+          and orderId = #{orderId}
+    </select>
+
     <select id="getOrderDetailListPage" resultType="OrderDetail">
         select d.id, orderId, productId, name productName, price productPrice, quantity, cost
         from easybuy_order_detail d,
