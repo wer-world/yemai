@@ -183,4 +183,13 @@ public class OrderServiceImpl implements OrderService {
         orderDetailService.addOrderDetail(orderDetail);
         return Message.success(order);
     }
+
+    @Override
+    public Message modOrder(Order order) {
+        int affectRow = orderDao.modOrder(order);
+        if (affectRow>0){
+            return Message.success("修改订单状态成功!");
+        }
+        return Message.error("修改订单状态失败");
+    }
 }

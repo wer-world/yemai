@@ -31,6 +31,13 @@ public interface OrderDetailService {
     List<OrderDetail> getOrderDetailMobileListByOrderId(Integer id);
 
     /**
+     * 查询订单详情列表
+     * @param id
+     * @return
+     */
+    public Message getOrderDetailList(Integer id);
+
+    /**
      * 根据订单id删除订单详情信息
      *
      * @param id 订单id

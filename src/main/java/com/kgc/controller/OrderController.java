@@ -89,16 +89,15 @@ public class OrderController {
         return orderService.getOrderList(pages, order);
     }
 
-    @GetMapping("getUserOrderList")
-    public Message getUserOrderList(Pages pages) {
-        if (pages.getCurrentPage() == null) {
-            pages.setCurrentPage(1);
-        }
-        if (pages.getPageSize() == null) {
-            pages.setPageSize(5);
+    @PostMapping("getUserOrderList")
+    public Message getUserOrderList(@RequestBody Map<String, Object> params) {
+        Pages pages = PagesUtil.parseMapToPages(params);
+        Order order = new Order();
+        if (params.get("status")!=null){
+            Integer status = Integer.parseInt(params.get("status").toString());
+            order.setStatus(status);
         }
         User user = ThreadLocalUtil.get();
-        Order order = new Order();
         order.setUserId(user.getId());
         return orderService.getOrderList(pages, order);
     }
@@ -113,5 +112,16 @@ public class OrderController {
             return Message.success(resultOrder);
         }
         return Message.error();
+    }
+
+    @GetMapping("modOrder")
+    public Message modOrder(Order order){
+        if (order.getId() == null) {
+            return Message.error("修改订单状态,需传入订单id！");
+        }
+        if (order.getStatus()==null){
+            return Message.error("修改订单状态,需传入订单状态号！");
+        }
+        return orderService.modOrder(order);
     }
 }

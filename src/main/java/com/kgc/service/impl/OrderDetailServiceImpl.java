@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.kgc.dao.OrderDetailDao;
 import com.kgc.entity.Message;
+import com.kgc.entity.Order;
 import com.kgc.entity.OrderDetail;
 import com.kgc.entity.Pages;
 import com.kgc.enums.OrderDetailExceptionEnum;
@@ -38,6 +39,16 @@ public class OrderDetailServiceImpl implements OrderDetailService {
             return orderDetailList;
         }
         return null;
+    }
+
+    public Message getOrderDetailList(Integer id){
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setOrderId(id);
+        List<OrderDetail> orderDetailList = orderDetailDao.getOrderDetailList(orderDetail);
+        if (orderDetailList != null && !orderDetailList.isEmpty()) {
+            return Message.success(orderDetailList);
+        }
+        return Message.error();
     }
 
     @Override

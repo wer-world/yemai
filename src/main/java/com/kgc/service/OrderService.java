@@ -66,4 +66,11 @@ public interface OrderService {
      * @return 返回消息类
      */
     Message createMobilePaymentOrder(OrderDetail orderDetail, User user);
+
+    /**
+     * 修改订单状态
+     * @param order
+     * @return
+     */
+    Message modOrder(Order order);
 }

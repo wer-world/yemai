@@ -52,6 +52,9 @@
         <if test="userId != null and userId != ''">
             and userId = #{userId}
         </if>
+        <if test="status != null">
+            and o.status = #{status}
+        </if>
         <if test="serialNumber != null and serialNumber != ''">
             and serialNumber like concat('%', #{serialNumber}, '%')
         </if>
