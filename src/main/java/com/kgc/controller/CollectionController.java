@@ -27,7 +27,7 @@ public class CollectionController {
     @RequestMapping("addCollection")
     public Message addCollection(@RequestBody Map<String, Object> params) {
         User user = ThreadLocalUtil.get();
-        String productIdStr = (String) params.get("productId");
+        String productIdStr = String.valueOf(params.get("productId"));
         if (productIdStr == null || productIdStr.isEmpty()) {
             return Message.error("收藏商品，商品id不能为空!");
         }

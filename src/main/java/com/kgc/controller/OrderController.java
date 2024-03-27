@@ -100,7 +100,7 @@ public class OrderController {
 
     @PostMapping("getOrder")
     public Message getOrder(@RequestBody Order order) {
-        if (order.getId() == null || order.getSerialNumber() == null) {
+        if (order.getId() == null && order.getSerialNumber() == null) {
             return Message.error("获取订单数据,需传入订单id或订单号!");
         }
         Order resultOrder = orderService.getOrder(order);
