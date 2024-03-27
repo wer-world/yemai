@@ -109,7 +109,7 @@ public class ProductController {
 
     @RequestMapping("getSimilarProducts")
     public Message getSimilarProducts(@RequestBody Product product) {
-        if (product.getId() == null) {
+        if (product.getCategoryLevelId() == null) {
             return Message.error("商品id不能为空!");
         }
         return productService.getSimilarProducts(product);

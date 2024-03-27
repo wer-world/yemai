@@ -121,6 +121,7 @@
             sex,
             email,
             mobile,
+            identityCode,
             type
         from easybuy_user
         where isDelete = 0
