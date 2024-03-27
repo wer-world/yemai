@@ -27,17 +27,19 @@ public class OrderDetailController {
 
     @PostMapping("getOrderDetailListPage")
     public Message getOrderDetailListPage(@RequestBody Map<String, Object> params) {
-        String currentPage = (String) params.get("currentPage");
-        String pageSize = (String) params.get("pageSize");
+        params.putIfAbsent("currentPage", 1); // 当前页码
+        params.putIfAbsent("pageSize", 5); // 分页容量
+        String orderIdStr = (String) params.get("orderId");
+        if (orderIdStr==null || orderIdStr.isEmpty()){
+            return Message.error("请传入orderId！");
+        }
+        Integer orderId = Integer.valueOf(orderIdStr);
         String productName = (String) params.get("productName");
         Pages pages = new Pages();
         OrderDetail orderDetail = new OrderDetail();
-        if (currentPage != null && !currentPage.isEmpty()) {
-            pages.setCurrentPage(Integer.parseInt(currentPage));
-        }
-        if (pageSize != null && !pageSize.isEmpty()) {
-            pages.setPageSize(Integer.parseInt(pageSize));
-        }
+        pages.setCurrentPage(Integer.parseInt(params.get("currentPage").toString()));
+        pages.setPageSize(Integer.parseInt(params.get("pageSize").toString()));
+        orderDetail.setOrderId(orderId);
         orderDetail.setProductName(productName);
         return orderDetailService.getOrderDetailListPage(pages, orderDetail);
     }
