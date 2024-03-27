@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
     public Message checkLoginName(String loginName) {
         User user = userDao.checkName(loginName);
         if (user != null) {
-            return Message.success("该账号可以使用");
+            return Message.success(user);
         }
         return Message.loginError("该账号不存在");
     }
@@ -101,9 +101,9 @@ public class UserServiceImpl implements UserService {
     public Message checkRegisterName(String loginName) {
         User user = userDao.checkName(loginName);
         if (user != null) {
-            return Message.success("该账号可以使用");
+            return Message.loginError("该账号不可使用");
         }
-        return Message.loginError("该账号不存在");
+        return Message.success("该账号可以使用");
     }
 
 
@@ -120,9 +120,9 @@ public class UserServiceImpl implements UserService {
     public Message identityCheck(String identityCode) {
         User user = userDao.identityCheck(identityCode);
         if (user != null) {
-            return Message.success(user);
+            return Message.error();
         }
-        return Message.error();
+        return Message.success(user);
     }
 
     @Override

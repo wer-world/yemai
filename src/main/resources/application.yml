@@ -47,7 +47,26 @@ alipay:
   notify-url: http://raedek.natappfree.cc/EasyBuy/alipay/notifyUrlAlipay #进行内网穿透生成
   return-url: http://localhost:5173/esay_buy_pages/index.html
 web-config:
-  exclude-token: [ "/user/login", "/alipay/notifyUrlAlipay", "/user/checkLoginName","/user/register", "/replay/getRandom", "/error", "/category/getCategoryList", "/news/getNewsList", "/product/getProductListPages", "/product/downLoad" , "/brand/getBrandAllList" ] #登录拦截开发
+  exclude-token: [ "/user/login",
+                   "/user/checkRegisterName",
+                   "/user/identityCheck",
+                   "/user/checkPermission",
+                   "/user/sendEmailCode",
+                   "/user/checkEmailCode",
+                   "/user/modifyPasswordById",
+                   "/alipay/notifyUrlAlipay",
+                   "/user/checkLoginName",
+                   "/user/register",
+                   "/replay/getRandom",
+                   "/error",
+                   "/category/getCategoryList",
+                   "/news/getNewsList",
+                   "/product/getProductListPages",
+                   "/product/downLoad" ,
+                   "/brand/getBrandAllList",
+                   "/product/getProductsByHigHestId",
+                   "/product/getProductById",
+                   "/product/getSimilarProducts" ] #登录拦截开发
   exclude-replay: [ "/replay/getRandom", "/alipay/notifyUrlAlipay", "/error" ] #重放攻击开发
 # 权限等级分类
 permission:
