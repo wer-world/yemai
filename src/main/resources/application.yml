@@ -47,13 +47,13 @@ alipay:
   notify-url: http://iytfyg.natappfree.cc/EasyBuy/alipay/notifyUrlAlipay #进行内网穿透生成
   return-url: http://localhost:5173/esay_buy_pages/index.html
 web-config:
-  exclude-token: [ "/user/login", "/alipay/notifyUrlAlipay", "/user/checkLoginName","/user/register", "/replay/getRandom", "/error", "/category/getCategoryList", "/news/getNewsList", "/product/getProductListPages", "/product/downLoad" , "/brand/getBrandAllList", "/product/getProductsByHigHestId", "/product/getProductById", "/product/getSimilarProducts","/orderDetail/getOrderDetailListPage" ] #登录拦截开发
+  exclude-token: [ "/user/login","/user/checkRegisterName","/user/identityCheck", "/user/sendEmailCode","/user/checkEmailCode","/user/modifyPasswordById", "/alipay/notifyUrlAlipay", "/user/checkLoginName","/user/register", "/replay/getRandom", "/error", "/category/getCategoryList", "/news/getNewsList", "/product/getProductListPages", "/product/downLoad" , "/brand/getBrandAllList", "/product/getProductsByHigHestId", "/product/getProductById", "/product/getSimilarProducts" ] #登录拦截开发
   exclude-replay: [ "/replay/getRandom", "/alipay/notifyUrlAlipay", "/error" ] #重放攻击开发
 # 权限等级分类
 permission:
   or-permission: 3 #普通用户权限
   admin-permission: 2 #管理员权限
   super-admin-permission: 1 #超级管理员权限
-  or-permission-open: [ "/user/loginOut", "/buyCar/", "/order/", "/alipay/createAlipay", "/orderDetail/getOrderDetailListPage", "/user/getCurrentUser" ]
+  or-permission-open: [ "/user/loginOut", "/buyCar/", "/order/", "/alipay/createAlipay", "/orderDetail/getOrderDetailListPage", "/user/getCurrentUser", "/news/getNewsById" ]
   or-permission-close: [ "/order/getOrderList", "/user/checkPermission" ]
-  admin-permission-open: [ "/buyCar/", "/order/", "/alipay/", "/orderDetail/", "/user/", "/news/", "/product/", "/category/", "/collection/", "/file/" ]
+  admin-permission-open: [ "/buyCar/", "/order/", "/alipay/", "/orderDetail/", "/user/", "/news/", "/product/", "/category/", "/collection/", "/file/", "/type/", "/address/" ]

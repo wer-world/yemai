@@ -20,21 +20,24 @@ public class NewsController {
     private NewsService newsService;
 
     @RequestMapping("getNewsList")
-    public Message getNewsList(@RequestBody Map params) {
+    public Message getNewsList(@RequestBody Map<String, Object> params) {
         Object pageObj = params.get("page");
-        Pages page = JSON.parseObject(JSON.toJSONString(pageObj),Pages.class);
+        Pages page = JSON.parseObject(JSON.toJSONString(pageObj), Pages.class);
         String title = (String) params.get("title");
         if (page == null || page.getCurrentPage() == null || page.getPageSize() == null) {
             return Message.error("分页对象不存在,当前页码与当前页面容量未输入!");
         }
         int form = (page.getCurrentPage() - 1) * page.getPageSize();
         Message getNewsTotalCount = newsService.getNewsTotalCount(title);
+        if (!"200".equals(getNewsTotalCount.getCode())) {
+            return Message.error();
+        }
         long count = (Long) getNewsTotalCount.getData();
         page.setTotalCount(count);
         Map<String, Object> map = new HashMap<>();
         map.put("form", form);
         map.put("page", page);
-        map.put("title",title);
+        map.put("title", title);
         Message message = newsService.getNewsList(map);
         map.put("getNewsList", message.getData());
 

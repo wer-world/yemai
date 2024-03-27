@@ -86,6 +86,10 @@ public class UserController {
         return userService.register(user);
     }
 
+    @GetMapping("checkPermission")
+    public Message checkPermission() {
+        return Message.success();
+    }
 
     @RequestMapping("checkLoginName")
     public Message checkLoginName(@RequestBody Map<String, Object> map) {
@@ -169,15 +173,11 @@ public class UserController {
     @PostMapping("getUserListPage")
     public Message getUserListPage(@RequestBody Map<String, Object> paramMap) {
         String userName = (String) paramMap.get("userName");
-        String typeStr = (String) paramMap.get("type");
-        if (typeStr==null || typeStr.isEmpty()){
-            typeStr = "0";
-        }
-        Integer type = Integer.parseInt(typeStr);
-        Pages pages = PagesUtil.parseMapToPages(paramMap);
+        paramMap.putIfAbsent("type", 0);
         User user = new User();
+        user.setType(Integer.parseInt(paramMap.get("type").toString()));
+        Pages pages = PagesUtil.parseMapToPages(paramMap);
         user.setUserName(userName);
-        user.setType(type);
         return userService.getUserListPage(pages, user);
     }
 
@@ -234,16 +234,31 @@ public class UserController {
 
     @GetMapping("getUserById")
     public Message getUserById(User user) {
+        if (user.getId() == null) {
+            return Message.error("未传入用户id");
+        }
         return userService.getUserById(user.getId());
     }
 
     @GetMapping("getCurrentUser")
     public Message getCurrentUser() {
         User user = ThreadLocalUtil.get();
-        if (user==null){
+        if (user == null) {
             return Message.error();
         }
-        Message message = userService.getUserById(user.getId());
-        return message;
+        return userService.getUserById(user.getId());
+    }
+
+    @GetMapping("getUserInfoAndAddress")
+    public Message getUserInfoAndAddress() {
+        User user = ThreadLocalUtil.get();
+        if (user == null) {
+            return Message.error();
+        }
+        User resultUser = userService.getUser(user);
+        if (resultUser == null) {
+            return Message.error();
+        }
+        return Message.success(resultUser);
     }
 }

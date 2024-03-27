@@ -167,10 +167,9 @@ public class OrderServiceImpl implements OrderService {
     public Message createMobilePaymentOrder(OrderDetail orderDetail, User user) {
         // 1、创建订单类
         Order order = new Order();
-        user = userService.getUser(user);
+        user = (User) userService.getUserById(user.getId()).getData();
         order.setUserId(user.getId());
         order.setLoginName(user.getLoginName());
-        order.setUserAddress(user.getAddress());
         order.setCost(orderDetail.getCost());
         // 2.1 生成订单号
         String orderNum = UUID.randomUUID().toString();

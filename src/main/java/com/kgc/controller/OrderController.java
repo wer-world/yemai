@@ -78,12 +78,14 @@ public class OrderController {
     public Message getOrderList(@RequestBody Map<String, Object> params) {
         String userIdStr = (String) params.get("userId");
         String serialNumber = (String) params.get("serialNumber");
+        String loginName = (String) params.get("loginName");
         Pages pages = PagesUtil.parseMapToPages(params);
         Order order = new Order();
         if (userIdStr != null) {
             order.setUserId(Integer.parseInt(userIdStr));
         }
         order.setSerialNumber(serialNumber);
+        order.setLoginName(loginName);
         return orderService.getOrderList(pages, order);
     }
 
