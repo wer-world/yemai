@@ -27,9 +27,12 @@
     </update>
     <update id="cancelOrder">
         update easybuy_order
-        set status = 2
+        set
+        <if test="status != null and status > 0">
+            status = #{status}
+        </if>
         where isDelete = 0
-          and id = #{id}
+        and id = #{id}
     </update>
 
     <select id="getOrderList" resultType="Order">

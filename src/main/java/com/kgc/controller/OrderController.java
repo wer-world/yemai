@@ -68,6 +68,9 @@ public class OrderController {
         if (order.getId() == null) {
             return Message.error("取消订单,需传入订单id!");
         }
+        if (order.getStatus() == null) {
+            order.setStatus(2);
+        }
         return orderService.cancelOrder(order);
     }
 
