@@ -28,9 +28,9 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public Message getNewsTotalCount() {
+    public Message getNewsTotalCount(String title) {
         long count = 0;
-        count = newsDao.getNewsTotalCount();
+        count = newsDao.getNewsTotalCount(title);
         if (count != 0) {
             return Message.success(count);
         }

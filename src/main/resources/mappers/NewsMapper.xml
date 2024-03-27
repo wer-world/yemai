@@ -6,11 +6,17 @@
     <select id="getNewsList" resultType="News">
         select id,title,content,createTime,isDelete from easybuy_news
         where isDelete = 0
+        <if test="title !=null and title != ''">
+            and title like concat('%',#{title},'%')
+        </if>
         order by createTime desc
         limit #{form},#{page.pageSize}
     </select>
     <select id="getNewsTotalCount" resultType="long">
         select count(1) from easybuy_news where isDelete = 0
+        <if test="title !=null and title != ''">
+            and title like concat('%',#{title},'%')
+        </if>
     </select>
     <insert id="addNews">
         insert into easybuy_news(title,content,createTime) value(#{title},#{content},now())

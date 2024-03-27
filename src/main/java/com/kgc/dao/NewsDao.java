@@ -22,7 +22,7 @@ public interface NewsDao {
      * 获取新闻资讯总数
      * @return
      */
-    public long getNewsTotalCount();
+    public long getNewsTotalCount(String title);
 
     /**
      * 添加资讯
