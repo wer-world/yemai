@@ -1,5 +1,6 @@
 package com.kgc.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.kgc.entity.Message;
 import com.kgc.entity.News;
 import com.kgc.entity.Pages;
@@ -19,17 +20,21 @@ public class NewsController {
     private NewsService newsService;
 
     @RequestMapping("getNewsList")
-    public Message getNewsList(Pages page) {
+    public Message getNewsList(@RequestBody Map params) {
+        Object pageObj = params.get("page");
+        Pages page = JSON.parseObject(JSON.toJSONString(pageObj),Pages.class);
+        String title = (String) params.get("title");
         if (page == null || page.getCurrentPage() == null || page.getPageSize() == null) {
             return Message.error("分页对象不存在,当前页码与当前页面容量未输入!");
         }
         int form = (page.getCurrentPage() - 1) * page.getPageSize();
-        Message getNewsTotalCount = newsService.getNewsTotalCount();
+        Message getNewsTotalCount = newsService.getNewsTotalCount(title);
         long count = (Long) getNewsTotalCount.getData();
         page.setTotalCount(count);
         Map<String, Object> map = new HashMap<>();
         map.put("form", form);
         map.put("page", page);
+        map.put("title",title);
         Message message = newsService.getNewsList(map);
         map.put("getNewsList", message.getData());
 

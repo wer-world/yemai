@@ -21,7 +21,7 @@ public interface NewsService {
      * 获取新闻资讯总数
      * @return
      */
-    Message getNewsTotalCount();
+    Message getNewsTotalCount(String title);
 
     /**
      * 添加资讯
