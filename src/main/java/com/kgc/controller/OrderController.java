@@ -93,17 +93,36 @@ public class OrderController {
     public Message getUserOrderList(@RequestBody Map<String, Object> params) {
         Pages pages = PagesUtil.parseMapToPages(params);
         Order order = new Order();
-        if (params.get("status")!=null){
+        String serialNumber = (String) params.get("serialNumber");
+        if (params.get("status") != null) {
             Integer status = Integer.parseInt(params.get("status").toString());
             order.setStatus(status);
         }
         User user = ThreadLocalUtil.get();
         order.setUserId(user.getId());
+        if (serialNumber != null && !serialNumber.isEmpty()) {
+            order.setSerialNumber(serialNumber);
+        }
         return orderService.getOrderList(pages, order);
     }
 
     @PostMapping("getOrder")
     public Message getOrder(@RequestBody Order order) {
+        if (order.getId() == null && order.getSerialNumber() == null) {
+            return Message.error("获取订单数据,需传入订单id或订单号!");
+        }
+        if (order.getStatus() == null) {
+            order.setStatus(0);
+        }
+        Order resultOrder = orderService.getOrder(order);
+        if (resultOrder != null) {
+            return Message.success(resultOrder);
+        }
+        return Message.error();
+    }
+
+    @PostMapping("getAdminOrder")
+    public Message getAdminOrder(@RequestBody Order order) {
         if (order.getId() == null && order.getSerialNumber() == null) {
             return Message.error("获取订单数据,需传入订单id或订单号!");
         }
@@ -115,11 +134,11 @@ public class OrderController {
     }
 
     @GetMapping("modOrder")
-    public Message modOrder(Order order){
+    public Message modOrder(Order order) {
         if (order.getId() == null) {
             return Message.error("修改订单状态,需传入订单id！");
         }
-        if (order.getStatus()==null){
+        if (order.getStatus() == null) {
             return Message.error("修改订单状态,需传入订单状态号！");
         }
         return orderService.modOrder(order);

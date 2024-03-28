@@ -2,7 +2,6 @@ package com.kgc.util;
 
 import com.kgc.config.ReplayConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
@@ -75,7 +74,10 @@ public class ReplayUtil {
         String random = randomList.get(index);
         useRandomMap.put(random, String.valueOf(new Date(new Date().getTime() + 60 * 60 * 1000)));
         randomList.remove(index);
-        return random;
+        ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+        String encodedMd5 = MD5Util.encodeMd5(random, replayConfig.getReplayMd5Key());
+        operations.set(encodedMd5, random);
+        return encodedMd5;
     }
 
     /**

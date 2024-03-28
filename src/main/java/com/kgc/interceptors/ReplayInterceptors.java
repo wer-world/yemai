@@ -4,6 +4,7 @@ import com.kgc.config.ReplayConfig;
 import com.kgc.enums.TokenExceptionEnum;
 import com.kgc.exception.ServiceException;
 import com.kgc.util.DateCheckUtil;
+import com.kgc.util.MD5Util;
 import com.kgc.util.ReplayUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,12 @@ public class ReplayInterceptors implements HandlerInterceptor {
             // 随机数校验
             String checkRandom = replayUtil.checkRandom(random);
             if (!checkUrlTime || checkRandom == null) {
+                logger.error("ReplayInterceptors preHandle replay error");
+                throw new ServiceException("ReplayInterceptors preHandle " + TokenExceptionEnum.ILLEGAL_REQUEST.getMessage(), TokenExceptionEnum.ILLEGAL_REQUEST.getMsg());
+            }
+            // md5校验
+            boolean verify = MD5Util.verify(checkRandom, replayConfig.getReplayMd5Key(), random);
+            if (!verify) {
                 logger.error("ReplayInterceptors preHandle replay error");
                 throw new ServiceException("ReplayInterceptors preHandle " + TokenExceptionEnum.ILLEGAL_REQUEST.getMessage(), TokenExceptionEnum.ILLEGAL_REQUEST.getMsg());
             }

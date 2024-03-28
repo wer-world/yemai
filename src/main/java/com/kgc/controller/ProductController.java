@@ -81,8 +81,14 @@ public class ProductController {
 
     @PostMapping("modifyProductById")
     public Message modifyProductById(Product product, @RequestParam(value = "filePath", required = false) MultipartFile file) {
-        if (file.getOriginalFilename() == null || file.getOriginalFilename().isEmpty()) {
-            return Message.error("文件路径为空!");
+        if (file == null) {
+            if (product.getPicPath() == null){
+                return Message.error("文件路径为空!");
+            }
+        } else {
+            if (file.getOriginalFilename() == null || file.getOriginalFilename().isEmpty()) {
+                return Message.error("文件路径为空!");
+            }
         }
         return productService.modifyProductById(product,file);
     }

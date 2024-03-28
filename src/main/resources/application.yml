@@ -27,6 +27,7 @@ replay:
   maxRandom: 100
   minRandom: 20
   is-replay: true # 开启重放攻击检测
+  replay-md5-key: "EasyBuy"
 token:
   token-sign: EasyBuyNet #令牌签名
   token-over-hours: 1 #令牌超时时间(单位小时)

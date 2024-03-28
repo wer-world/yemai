@@ -77,8 +77,10 @@
         from easybuy_order o,
         easybuy_order_type t,
         easybuy_user u
-        where o.status = 0
-        and o.isDelete = 0
+        where o.isDelete = 0
+        <if test="status != null and status > 0">
+            and o.status = 0
+        </if>
         and o.status = t.id
         and o.userId = u.id
         <if test="id != null and id > 0">

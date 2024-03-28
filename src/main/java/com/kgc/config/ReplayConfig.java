@@ -21,4 +21,5 @@ public class ReplayConfig {
     private Integer maxRandom; // 最大储存的随机数
     private Integer minRandom; // 最小储存的随机数
     private Boolean isReplay; // 是否开启重放攻击
+    private String replayMd5Key; // md5加密秘钥
 }
