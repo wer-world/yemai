@@ -41,6 +41,45 @@
           and p.categoryLevelId = c1.L3_id;
     </select>
 
+    <select id="getAddProduct" resultType="Product">
+        select p.id,
+               p.brandId,
+               b.name                                                                                   brandName,
+               p.name,
+               p.description,
+               p.price,
+               p.stock,
+               p.categoryLevelId,
+               L3                                                                                       categoryLeve3Name,
+               L2                                                                                       categoryLeve2Name,
+               L1                                                                                       categoryLeve1Name,
+               p.picId,
+               f.picPath,
+               (select sum(quantity) from easybuy_order_detail where productId = p.id and isDelete = 0) sales,
+               (select true from easybuy_product where id = p.id and YEAR(createTime) >= YEAR(NOW()))   newProduct
+        from easybuy_product p,
+             easybuy_product_brand b,
+             easybuy_product_category c,
+             easybuy_file f,
+             (SELECT (SELECT `id` FROM easybuy_product_category WHERE id = L3)   L3_id,
+                     (SELECT `name` FROM easybuy_product_category WHERE id = L3) L3,
+                     (SELECT `id` FROM easybuy_product_category WHERE id = L2)   L2_id,
+                     (SELECT `name` FROM easybuy_product_category WHERE id = L2) L2,
+                     (SELECT `id` FROM easybuy_product_category WHERE id = L1)   L1_id,
+                     (SELECT `name` FROM easybuy_product_category WHERE id = L1) L1
+              FROM (SELECT zid                                                                     L3,
+                           pid                                                                     L2,
+                           (SELECT parentId FROM easybuy_product_category c2 WHERE c1.pid = c2.id) L1
+                    FROM (SELECT id zid, (SELECT id FROM easybuy_product_category c2 WHERE c2.id = c1.parentId) pid
+                          FROM easybuy_product_category c1) c1) c) c1
+        where p.isDelete = 0
+          and p.brandId = b.id
+          and p.categoryLevelId = c.id
+          and p.picId = f.id
+          and p.categoryLevelId = c1.L3_id
+          and p.id = #{id};
+    </select>
+
     <select id="getProductById" resultType="Product">
         SELECT p.id,
                p.brandId,

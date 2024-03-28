@@ -88,6 +88,7 @@ public class ProductServiceImpl implements ProductService {
 
         // 条件拼接
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        // 是否开启条件查询
         boolean isSearch = false;
         if (globalCondition != null && !globalCondition.isEmpty()) {
             isSearch = true;
@@ -203,8 +204,9 @@ public class ProductServiceImpl implements ProductService {
         file.setId(product.getPicId());
         file.setProduct_id(product1.getId());
         fileService.modifyProIdById(file);
+        Product resultProduct = productDao.getAddProduct(product);
         if (flag > 0) {
-            template.save(product);
+            template.save(resultProduct);
             return Message.success();
         }
         return Message.error();

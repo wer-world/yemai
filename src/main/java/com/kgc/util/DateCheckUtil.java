@@ -56,6 +56,7 @@ public class DateCheckUtil {
         long tarTime = parseTime(time).getTime();
         long newTime = new Date().getTime();
         long targetTime = newTime - tarTime;
-        return targetTime >= 0 && targetTime < 1800000;
+        targetTime = Math.abs(targetTime);
+        return targetTime >= 0 && targetTime < 60000;
     }
 }

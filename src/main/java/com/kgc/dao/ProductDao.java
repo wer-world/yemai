@@ -60,6 +60,14 @@ public interface ProductDao {
     Product getProductById(Integer id);
 
     /**
+     * 获取添加商品信息
+     *
+     * @param product 条件
+     * @return 返回添加商品信息
+     */
+    Product getAddProduct(Product product);
+
+    /**
      * 根据商品类型id获取同类商品
      *
      * @param product 商品类型id
@@ -74,8 +82,10 @@ public interface ProductDao {
      * @return 返回商品列表
      */
     List<Product> getProductsByHigHestId(Category category);
+
     /**
      * 根据图片ID找到商品ID
+     *
      * @param picId
      * @return
      */

@@ -39,8 +39,16 @@ public class BuyCarServiceImpl implements BuyCarService {
     @Override
     public Message addBuyCar(BuyCar buyCar) {
         List<BuyCar> buyCarList = buyCarDao.getBuyCar(buyCar);
-        if (buyCarList != null && !buyCarList.isEmpty()) {
-            return Message.error("购物车中该数据已添加,请勿重复添加!");
+        for (BuyCar car : buyCarList) {
+            if (buyCar.getProductId().equals(car.getProductId())) {
+                buyCar.setId(car.getId());
+                buyCar.setProductNum(buyCar.getProductNum() + car.getProductNum());
+                Integer flag = buyCarDao.modBuyCar(buyCar);
+                if (flag == 0) {
+                    return Message.error();
+                }
+                return Message.success();
+            }
         }
         Integer flag = buyCarDao.addBuyCar(buyCar);
         if (flag > 0) {
@@ -52,7 +60,7 @@ public class BuyCarServiceImpl implements BuyCarService {
     @Override
     public Message modBuyCarProductNumById(BuyCar buyCar) {
         Integer flag = buyCarDao.modBuyCar(buyCar);
-        if (flag == 0){
+        if (flag == 0) {
             throw new ServiceException(BuyCarExceptionEnum.DELETE_UPDATE_FAILURE.getMessage(), BuyCarExceptionEnum.DELETE_UPDATE_FAILURE.getMsg());
         }
         return Message.success();

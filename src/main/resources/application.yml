@@ -13,7 +13,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/easybuy?characterEncoding=utf-8
     username: root
-    password: root
+    password: 1234
     type: com.alibaba.druid.pool.DruidDataSource
 
   jackson:
@@ -44,7 +44,7 @@ alipay:
   public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmsqBT+8IeeviHDBDrn8WaPtRh0Z8C53j/6Uh68Y2rYimmRwOAOmC7dwAK+TVjLwQ9bIJylO70DXUMXa1qHrlKga6VD6dogVVNpYDPWojYeh+24Qlz+AFmyxyay+SH9cqAfiRh/bYCQbtsme+V3cbQSZsRajkXnUeEejCKn5wU9xdoRpCh7mUjB46BhN4+bq67Y6WW6RdGbtf277zzW0ycMW4HWuoNszllpTnKzi8SfuYw39mEM2p/yTWrZTv4fMce5MK9ih2LKbIBhjlfYYsK3k4TaLJJ55o/pv8+90lOq6MUXqAevDU0vbzhIGH4GQ+ure2tpbd54+dVvB8c7uLkQIDAQAB
   private-key: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCayoFP7wh56+IcMEOufxZo+1GHRnwLneP/pSHrxjatiKaZHA4A6YLt3AAr5NWMvBD1sgnKU7vQNdQxdrWoeuUqBrpUPp2iBVU2lgM9aiNh6H7bhCXP4AWbLHJrL5If1yoB+JGH9tgJBu2yZ75XdxtBJmxFqORedR4R6MIqfnBT3F2hGkKHuZSMHjoGE3j5urrtjpZbpF0Zu1/bvvPNbTJwxbgda6g2zOWWlOcrOLxJ+5jDf2YQzan/JNatlO/h8xx7kwr2KHYspsgGGOV9hiwreThNosknnmj+m/z73SU6roxReoB68NTS9vOEgYfgZD66t7a2lt3nj51W8Hxzu4uRAgMBAAECggEAEzMlIQYUNhNFI5v0+TL4U6NAtJfQkRxPiIkyEO2wIIw/peQt9H0CaYCNYORsfJ1jOSaRQlBqjmPu4wfHdpNv02usNwDhSpSAwlmPI1ID+4P8IDxe+E7gQyQbOSJYbKyioEX1vzimCVCbsTJfELhMYCNk8KsHUJQUW8JUOzMdubj9NDC7ujFd2jOSTuYYbsXYoxkBTPmQzlCbNuL8afOPzicMYnuWNXeIQ5bhBK4TaJxoFhI/t7npJUkJGocEC5kQw88p8mHJaUlKwetvjUuPVI25J39V0yAzZk74Hg06VHiPNHj4+R42mABVF/dMsBPX3RFOanu4xPsVNnLCu45I5QKBgQDX7AElfR5Y9gV2E/KOgNWdM7jmTd3ZswU68v5qj/knmT9AKhrdQ5dDOpBHZlQUE5a1+7KZpD9Ltc9OJd+FUz5KDZ4JL/m32SfMQ4Ko55G/UunhTfCsCTg0SwxoCZR9tn0DGPnK6XGY0LpQBkJC3IJTZ+pYIAAxeCzLgMZAUp1J5wKBgQC3hbxfHUc93gsEzg6r5sMvpZCk8A0QDJFgSbXRvK64T1N/TYqnVKeMyJEvo6p8+8r+OgL4xA2ZzO8r5NPJxT9QLoi2hanaWhZVYVU40K8ndw70lCp/jH7A01s6d/0fw1a9DkwynvhEmW7lrip20u1KLkQUbkYz/KIU1dHEgxb/xwKBgQDAlSHMoxTvObdTQqVjzqs4RAqVdzv5UL/IfTTILNOIKxoMC8HcOc3vS4ul8zHomjQg6na4rJM73tQgmo0LaFy1RgH/pcev38KsYEZoieon4Db0GkUf3DVCBvHw1SKZIavMmHkrLx1/tCOI/pwY8H5ZD+UnZptlhA9IDvpEIqthXwKBgG//Wp0FJiP4bOsKwWNg2b8rICG4KZCgyttjQGV1636pUoB/Ft3VSMce45OaIwJRO2l4h7W/F7nDmjZEWIdrK59INsCEw8pwbe6/Dp40pJ/GBcd24JSkbfpJQgRlk4Ed2cJYhmHiKArdRBNA/cM0KAG8SGnbflZdl6B1eKWfhpqjAoGBALKXHl5KWk1k4zkxXbWQHx2LmRhStXDZ4hKYz95vpjafzER3a2fBIEc9ou18ek99ZdOM6t/u5BXSKFSFruM3Mukj1t41wcVrilnPNyuMS/71xzW/3Huh4qdrbAgwDjZTW/bnZ5FOpTT/29OjMge6SBRY1xd86L91sWLzVamwx9Jm
   ali-public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAppCOSwX3ZrDxT05BPJJ9Li2vQxQ2XIg9Gxx0c3zykA1KAVJxZLjry6eubwGkktY7DL00HfZ/eSBcvP4mKtmbwAMiL/reK9KaToZCnoW8wbizJgpRPts/ya3hWbrpEMdhIfKON4gdjjMn3ZYGV7L6/Lc++QLmqMQoOrgjbENTawzLv8xQFCfESXBU8eVxya2mMGiBgpWiOsOlHJPKgOIoVNoiAawT8KpBw56yLYA+BC4Bt+Skj/HVkY8AZZrkxyfEqfMLVJJgRLTEeGuCyZFtYp8A8YbzGPFJhyoSQqH/IiYH6ptD6brwvhr6F++EJXaMr7Sz81Y4XbEAu8EDYlDFUwIDAQAB
-  notify-url: http://iytfyg.natappfree.cc/EasyBuy/alipay/notifyUrlAlipay #进行内网穿透生成
+  notify-url: http://4hpgic.natappfree.cc/EasyBuy/alipay/notifyUrlAlipay #进行内网穿透生成
   return-url: http://localhost:5173/esay_buy_pages/index.html
 web-config:
   exclude-token: [ "/user/login","/user/checkRegisterName","/user/identityCheck", "/user/sendEmailCode","/user/checkEmailCode","/user/modifyPasswordById", "/alipay/notifyUrlAlipay", "/user/checkLoginName","/user/register", "/replay/getRandom", "/error", "/category/getCategoryList", "/news/getNewsList", "/product/getProductListPages", "/product/downLoad" , "/brand/getBrandAllList", "/product/getProductsByHigHestId", "/product/getProductById", "/product/getSimilarProducts" ] #登录拦截开发
